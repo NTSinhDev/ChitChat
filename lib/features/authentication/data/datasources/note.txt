@@ -1,0 +1,2 @@
+các method của các lớp trong thư mục này sẽ chỉ return về 1 model hoặc 1 data
+nghĩa là nó là lớp lấy, thêm, xóa, sửa dữ liệu chứ không xử lý logic gì thêm
