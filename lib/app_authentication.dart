@@ -1,8 +1,7 @@
 import 'package:chat_app/main.dart';
-import 'package:chat_app/features/authentication/presentation/pages/login/login_screen.dart';
-import 'package:chat_app/features/authentication/presentation/pages/signup/signup_screen.dart';
-import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
-import 'package:chat_app/features/authentication/presentation/bloc/bloc_injector.dart';
+import 'package:chat_app/views/login/login_screen.dart';
+import 'package:chat_app/views/signup/signup_screen.dart';
+import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:chat_app/core/utils/functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/helpers/loading/loading_screen.dart';
+import 'view_model/providers/app_state_provider.dart';
 
 class AppAuthentication extends StatefulWidget {
   final SharedPreferences sharedPreferences;

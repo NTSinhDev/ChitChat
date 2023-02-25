@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:chat_app/main.dart';
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/models/profile.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,6 +13,13 @@ import '../models/chat_room.dart';
 import '../models/message.dart';
 import '../models/user_presence.dart';
 import 'constants.dart';
+
+Profile snapshotDataToProfile({required Object? data, required String id}) {
+  final encodeData = json.encode(data);
+  final convertToMap = json.decode(encodeData) as Map<String, dynamic>;
+  return Profile.fromMap(convertToMap, id);
+}
+
 
 /// This function to sort list user by online state
 List<dynamic> sortListUserToOnlState(List<dynamic> listUser) {

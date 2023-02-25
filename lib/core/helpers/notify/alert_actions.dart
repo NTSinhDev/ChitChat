@@ -1,5 +1,5 @@
 import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/presentation/widgets/custom_button_widget.dart';
+import 'package:chat_app/widgets/custom_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

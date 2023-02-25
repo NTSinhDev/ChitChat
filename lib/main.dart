@@ -1,5 +1,5 @@
 import 'package:chat_app/chitchat_app.dart';
-import 'package:chat_app/presentation/services/notifications.dart';
+import 'package:chat_app/services/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';

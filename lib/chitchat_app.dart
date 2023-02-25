@@ -1,14 +1,13 @@
-import 'package:chat_app/features/authentication/domain/usecases/usecases.dart';
 import 'package:chat_app/main.dart';
 import 'package:chat_app/app_authentication.dart';
 import 'package:chat_app/core/res/theme.dart';
-import 'package:chat_app/presentation/services/providers/language_provider.dart';
-import 'package:chat_app/presentation/services/providers/theme_provider.dart';
+import 'package:chat_app/repositories/authentication_repository.dart';
+import 'package:chat_app/repositories/profile_repository.dart';
+import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'presentation/services/app_state_provider/app_state_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChitChatApp extends StatefulWidget {
@@ -29,7 +28,7 @@ class _ChitChatAppState extends State<ChitChatApp> {
 
   @override
   void initState() {
-    _userID = GetUIDAtLocalStorage(sharedPref: sharedPref).userID;
+    _getUIDAtLocalStorage();
     super.initState();
   }
 
@@ -57,6 +56,12 @@ class _ChitChatAppState extends State<ChitChatApp> {
         },
       ),
     );
+  }
+
+  _getUIDAtLocalStorage() {
+    final AuthenticationRepository repository =
+        AuthenticationRepositoryImpl(widget.sharedPreferences);
+    _userID = repository.getUIDAtLocalStorage();
   }
 
   List<SingleChildWidget> _initProviders() {
