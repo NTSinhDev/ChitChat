@@ -1,44 +1,41 @@
-import 'dart:developer';
-
 import 'package:chat_app/main.dart';
 import 'package:chat_app/app_authentication.dart';
-import 'package:chat_app/presentation/res/theme.dart';
-import 'package:chat_app/presentation/services/providers/language_provider.dart';
-import 'package:chat_app/presentation/services/providers/theme_provider.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:chat_app/core/res/theme.dart';
+import 'package:chat_app/repositories/authentication_repository.dart';
+import 'package:chat_app/repositories/profile_repository.dart';
+import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'presentation/services/app_state_provider/app_state_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChitChatApp extends StatefulWidget {
   final SharedPreferences sharedPreferences;
-  const ChitChatApp({super.key, required this.sharedPreferences});
+  final String? deviceToken;
+  const ChitChatApp({
+    super.key,
+    required this.sharedPreferences,
+    this.deviceToken,
+  });
 
   @override
   State<ChitChatApp> createState() => _ChitChatAppState();
 }
 
 class _ChitChatAppState extends State<ChitChatApp> {
-  String tokenUser = '';
-  String deviceToken = '';
+  late String _userID;
 
   @override
   void initState() {
-    _getToken();
-    _getTokenDevice();
+    _getUIDAtLocalStorage();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AppStateProvider()),
-        ChangeNotifierProvider(create: (_) => ThemeProvider(widget.sharedPreferences)),
-        ChangeNotifierProvider(create: (_) => LanguageProvider(widget.sharedPreferences)),
-      ],
+      providers: _initProviders(),
       child: Consumer3<AppStateProvider, ThemeProvider, LanguageProvider>(
         builder: (context, appState, theme, language, child) {
           return MaterialApp(
@@ -52,8 +49,8 @@ class _ChitChatAppState extends State<ChitChatApp> {
             supportedLocales: AppLocalizations.supportedLocales,
             home: AppAuthentication(
               sharedPreferences: widget.sharedPreferences,
-              // tokenUser: tokenUser,
-              deviceToken: deviceToken,
+              userIDAtLocalStorage: _userID,
+              deviceToken: widget.deviceToken ?? '',
             ),
           );
         },
@@ -61,19 +58,19 @@ class _ChitChatAppState extends State<ChitChatApp> {
     );
   }
 
-  // Get token of device
-  _getTokenDevice() {
-    FirebaseMessaging firebaseMsging = FirebaseMessaging.instance;
-    firebaseMsging.getToken().then((value) {
-      if (value == null) return;
-      log('🚀log⚡: $value');
-      deviceToken = value;
-    });
+  _getUIDAtLocalStorage() {
+    final AuthenticationRepository repository =
+        AuthenticationRepositoryImpl(widget.sharedPreferences);
+    _userID = repository.getUIDAtLocalStorage();
   }
 
-  _getToken() {
-    final authToken = sharedPref.getString('auth_token');
-    if (authToken == null) return;
-    tokenUser = authToken;
+  List<SingleChildWidget> _initProviders() {
+    return [
+      ChangeNotifierProvider(create: (_) => AppStateProvider()),
+      ChangeNotifierProvider(
+          create: (_) => ThemeProvider(widget.sharedPreferences)),
+      ChangeNotifierProvider(
+          create: (_) => LanguageProvider(widget.sharedPreferences)),
+    ];
   }
 }

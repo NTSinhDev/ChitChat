@@ -1,30 +1,25 @@
-import 'package:chat_app/data/environment.dart';
-import 'package:chat_app/data/repository/auth_repository.dart';
-import 'package:chat_app/features/authentication/domain/usecases/logout.dart';
 import 'package:chat_app/main.dart';
-import 'package:chat_app/presentation/helper/loading/loading_screen.dart';
-import 'package:chat_app/presentation/pages/page_controller.dart';
-import 'package:chat_app/features/authentication/presentation/pages/login/login_screen.dart';
-import 'package:chat_app/features/authentication/presentation/pages/signup/signup_screen.dart';
-import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
-import 'package:chat_app/features/authentication/presentation/bloc/bloc.dart';
-import 'package:chat_app/presentation/utils/functions.dart';
+import 'package:chat_app/views/login/login_screen.dart';
+import 'package:chat_app/views/signup/signup_screen.dart';
+import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
+import 'package:chat_app/core/utils/functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'core/helpers/loading/loading_screen.dart';
+import 'view_model/providers/app_state_provider.dart';
 
 class AppAuthentication extends StatefulWidget {
   final SharedPreferences sharedPreferences;
-  final String? tokenUser;
+  final String userIDAtLocalStorage;
   final String deviceToken;
   const AppAuthentication({
     Key? key,
     required this.sharedPreferences,
-    this.tokenUser,
-    required this.deviceToken,
+    required this.deviceToken, required this.userIDAtLocalStorage,
   }) : super(key: key);
 
   @override
@@ -44,12 +39,9 @@ class _AppAuthenticationState extends State<AppAuthentication> {
 
     return BlocProvider<AuthenticationBloc>(
       create: (context) => AuthenticationBloc(
-        AuthRepository(
-          environment: Environment(isServerDev: true),
-        ),
         widget.sharedPreferences,
-      )..add(widget.tokenUser != null
-          ? LoginByAccessTokenEvent()
+      )..add(widget.userIDAtLocalStorage.isNotEmpty
+          ? CheckAuthenticationEvent(userID: widget.userIDAtLocalStorage)
           : InitLoginEvent()),
       child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
@@ -72,7 +64,8 @@ class _AppAuthenticationState extends State<AppAuthentication> {
           }
           // Home page
           if (state is LoggedState) {
-            final name = state.profile==null?"Unknowned":state.profile!.fullName;
+            final name =
+                state.profile == null ? "Unknowned" : state.profile!.fullName;
             return Scaffold(
               body: BlocListener<AuthenticationBloc, AuthenticationState>(
                 listener: (context, state) {
@@ -92,7 +85,9 @@ class _AppAuthenticationState extends State<AppAuthentication> {
                       Center(child: Text(name)),
                       TextButton(
                           onPressed: () {
-                            context.read<AuthenticationBloc>().add(LogoutEvent());
+                            context
+                                .read<AuthenticationBloc>()
+                                .add(LogoutEvent());
                           },
                           child: const Text('Logout'))
                     ],
