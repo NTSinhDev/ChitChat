@@ -1,4 +1,5 @@
-import 'package:chat_app/data/models/message.dart';
+
+import 'message.dart';
 
 class ChatRoom {
   String? sId;

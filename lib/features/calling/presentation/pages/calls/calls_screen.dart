@@ -1,7 +1,8 @@
-import 'package:chat_app/data/models/user.dart';
 import 'package:chat_app/presentation/widgets/list_chat_room.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../group/presentation/pages/groups/group_chat.dart';
 
 class CallsScreen extends StatelessWidget {
   const CallsScreen({super.key});

@@ -1,4 +1,3 @@
-import 'package:chat_app/data/models/auth_user.dart';
 import 'package:chat_app/features/add_new_friend/presentation/pages/add_friend/components/item_request_view.dart';
 import 'package:chat_app/presentation/widgets/title_widget.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +25,14 @@ class FriendRequestView extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: friendRequests.length,
             itemBuilder: (context, index) {
-              final user = User.fromJson(friendRequests[index]['user']);
+              // final user = User.fromJson(friendRequests[index]['user']);
               final time = friendRequests[index]['time'];
-              return ItemRequestView(
-                index: index,
-                user: user,
-                time: time,
-              );
+              return Container();
+              // return ItemRequestView(
+              //   index: index,
+              //   user: user,
+              //   time: time,
+              // );
             },
           ),
         ),

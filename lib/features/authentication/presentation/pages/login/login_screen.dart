@@ -1,14 +1,12 @@
-import 'package:chat_app/my_task.dart';
-import 'package:chat_app/presentation/helper/loading/loading_screen.dart';
 import 'package:chat_app/features/authentication/presentation/pages/login/components/signin_other_ways.dart';
 import 'package:chat_app/features/authentication/presentation/pages/login/components/signin_title.dart';
 import 'package:chat_app/features/authentication/presentation/pages/login/components/forgot_password_btn.dart';
 import 'package:chat_app/features/authentication/presentation/pages/login/components/signup_btn.dart';
 import 'package:chat_app/features/authentication/presentation/pages/login/components/social_btn_row.dart';
-import 'package:chat_app/presentation/res/colors.dart';
-import 'package:chat_app/presentation/res/style.dart';
-import 'package:chat_app/features/authentication/presentation/bloc/bloc.dart';
-import 'package:chat_app/presentation/utils/functions.dart';
+import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/res/style.dart';
+import 'package:chat_app/features/authentication/presentation/bloc/bloc_injector.dart';
+import 'package:chat_app/core/utils/functions.dart';
 import 'package:chat_app/presentation/widgets/input_text_field.dart';
 import 'package:chat_app/presentation/widgets/large_round_button.dart';
 import 'package:chat_app/presentation/widgets/warning_message_widget.dart';
@@ -16,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../../../core/helpers/loading/loading_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final String deviceToken;
@@ -101,21 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SocialBtnRow(),
                   const SignupBtn(),
                   SizedBox(height: 12.h),
-                  InkWell(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MytaskScreen(),
-                      ),
-                    ),
-                    child: Text(
-                      'My Task',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelLarge!
-                          .copyWith(color: Colors.white),
-                    ),
-                  )
                 ],
               ),
             ),

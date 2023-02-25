@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import '../models/profile.dart';
+import '../models/profile_model.dart';
 
-
-
-Profile snapshotDataToProfile({required Object? data, required String id}) {
+ProfileModel snapshotDataToProfile({required Object? data, required String id}) {
   final encodeData = json.encode(data);
   final convertToMap = json.decode(encodeData) as Map<String, dynamic>;
-  return Profile.fromMap(convertToMap, id);
+  return ProfileModel.fromMap(convertToMap, id);
 }

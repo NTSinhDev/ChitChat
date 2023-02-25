@@ -2,11 +2,12 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chat_app/features/personal/data/datasources/functions.dart';
-import 'package:chat_app/features/personal/data/models/profile.dart';
+import 'package:chat_app/features/personal/data/models/profile_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:chat_app/features/authentication/data/auth_constant.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+import '../../../../core/utils/constants.dart';
 
 class ProfileRemoteDataSource {
   final firestore = FirebaseFirestore.instance;
@@ -99,7 +100,7 @@ class ProfileRemoteDataSource {
     await profileDocument.doc(authUser.uid).set(profileMap);
   }
 
-  Future<Profile?> getProfileById({required String userID}) async {
+  Future<ProfileModel?> getProfileById({required String userID}) async {
     // final profile = profileDocument.doc(userID).get().then(
     //   (snapshot) async {
     //     if (!snapshot.exists || snapshot.id.isEmpty) return null;

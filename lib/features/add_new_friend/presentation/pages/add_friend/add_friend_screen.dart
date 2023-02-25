@@ -1,7 +1,7 @@
 import 'package:chat_app/features/chat/presentation/bloc/bloc.dart';
 import 'package:chat_app/features/add_new_friend/presentation/pages/add_friend/components/list_search.dart';
 import 'package:chat_app/features/add_new_friend/presentation/pages/add_friend/components/friend_requests.dart';
-import 'package:chat_app/presentation/res/colors.dart';
+import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
 import 'package:chat_app/presentation/widgets/input_text_field_search.dart';
 import 'package:flutter/material.dart';

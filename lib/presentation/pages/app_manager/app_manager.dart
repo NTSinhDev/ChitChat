@@ -1,10 +1,9 @@
-import 'package:chat_app/data/models/auth_user.dart';
 import 'package:chat_app/features/chat/presentation/bloc/bloc.dart';
 import 'package:chat_app/features/calling/presentation/pages/calls/calls_screen.dart';
 import 'package:chat_app/features/group/presentation/pages/groups/group_chat.dart';
 import 'package:chat_app/features/chat/presentation/pages/home/home_screen.dart';
 import 'package:chat_app/features/personal/presentation/pages/setting/setting_screen.dart';
-import 'package:chat_app/presentation/res/colors.dart';
+import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
 import 'package:chat_app/presentation/widgets/app_bar_page_managar.dart';
 import 'package:chat_app/presentation/widgets/state_bottom_navigation_bar.dart';
@@ -14,13 +13,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:socket_io_client/socket_io_client.dart'
-    as IO; // ignore: library_prefixes
+
+import '../../../features/personal/domain/entity/profile.dart';
+
 
 class AppManager extends StatefulWidget {
-  final AuthUser authUser;
-  final IO.Socket socket;
-  const AppManager({super.key, required this.authUser, required this.socket});
+  final Profile profile;
+  const AppManager({super.key, required this.profile});
 
   @override
   State<AppManager> createState() => _AppManagerState();
@@ -41,13 +40,11 @@ class _AppManagerState extends State<AppManager> {
 
     final List<Widget> pages = [
       HomeScreen(
-        socket: widget.socket,
       ),
       const GroupChatScreen(),
       const CallsScreen(),
       SettingScreen(
-        socket: widget.socket,
-        authUser: widget.authUser,
+        profile: widget.profile,
       )
     ];
     List<dynamic>? valueRequest = context.watch<ChatBloc>().requests;
@@ -61,8 +58,8 @@ class _AppManagerState extends State<AppManager> {
           titlesPage[currentPage],
           context,
           urlImage,
-          widget.authUser.user?.name ?? '',
-          widget.socket,
+           '',
+          
           valueRequest != null ? valueRequest.length : 0,
           () {
             setState(() {

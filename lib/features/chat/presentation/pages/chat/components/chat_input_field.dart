@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chat_app/features/chat/presentation/bloc/bloc.dart';
-import 'package:chat_app/presentation/res/colors.dart';
+import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/cupertino.dart';

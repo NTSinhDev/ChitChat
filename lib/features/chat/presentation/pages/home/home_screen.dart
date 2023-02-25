@@ -1,21 +1,19 @@
 import 'package:chat_app/features/chat/presentation/bloc/bloc.dart';
-import 'package:chat_app/presentation/helper/error/no_internet.dart';
 import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
-import 'package:chat_app/presentation/utils/functions.dart';
+import 'package:chat_app/core/utils/functions.dart';
 import 'package:chat_app/presentation/widgets/new_list_chat_room.dart';
 import 'package:chat_app/presentation/widgets/search_bar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../core/helpers/error/no_internet.dart';
 import 'components/list_online_user.dart';
 import 'package:socket_io_client/socket_io_client.dart'
     as IO; // ignore: library_prefixes
 
 class HomeScreen extends StatefulWidget {
-  final IO.Socket socket;
   const HomeScreen({
     super.key,
-    required this.socket,
   });
 
   @override
@@ -40,12 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   const NoInternetText(),
                 ],
                 SearchBar(theme: appState.darkMode),
-                ListOnlineUser(listFriend: sortListUserToOnlState(listFriend!)),
+                // ListOnlineUser(listFriend: sortListUserToOnlState(listFriend!)),
                 if (state.listRoom.isNotEmpty) ...[
-                  NewListChatRoom(
-                    listRoom: sortListRoomToLastestTime(state.listRoom),
-                    isGroup: false,
-                  ),
+                  // NewListChatRoom(
+                  //   listRoom: sortListRoomToLastestTime(state.listRoom),
+                  //   isGroup: false,
+                  // ),
                 ],
                 
               ],

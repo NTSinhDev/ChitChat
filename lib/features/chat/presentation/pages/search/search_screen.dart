@@ -1,5 +1,5 @@
 import 'package:chat_app/features/chat/presentation/bloc/bloc.dart';
-import 'package:chat_app/presentation/res/colors.dart';
+import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
 import 'package:chat_app/presentation/widgets/list_user_widget.dart';
 import 'package:chat_app/presentation/widgets/input_text_field_search.dart';
@@ -39,10 +39,10 @@ class SearchScreen extends StatelessWidget {
                   isUpper: true,
                 ),
                 SizedBox(height: 20.h),
-                ListUserWidget(
-                  listUser: listFriend!,
-                  isAddFriend: false,
-                ),
+                // ListUserWidget(
+                //   listUser: listFriend!,
+                //   isAddFriend: false,
+                // ),
               ],
             ),
           ),

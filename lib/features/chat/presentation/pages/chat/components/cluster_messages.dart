@@ -1,7 +1,6 @@
-import 'package:chat_app/data/models/message.dart';
 import 'package:chat_app/features/chat/presentation/pages/chat/components/message_item.dart';
-import 'package:chat_app/presentation/res/colors.dart';
-import 'package:chat_app/presentation/utils/functions.dart';
+import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/utils/functions.dart';
 import 'package:chat_app/presentation/widgets/state_avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,7 +44,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
     final height4 = SizedBox(height: 4.h);
 
     int currentIndex = 0;
-    final timeMessageItem = Message.fromJson(widget.messages.last).time;
+    // final timeMessageItem = Message.fromJson(widget.messages.last).time;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -73,19 +72,21 @@ class _ClusterMessagesState extends State<ClusterMessages> {
                     });
                     _changeStateLastMsg(currentIndex);
                   }
-                  final msg = Message.fromJson(item);
-                  return MessageItem(
-                    message: msg,
-                    theme: widget.theme,
-                    isSender: widget.isSender,
-                  );
+                  return Container();
+                  // final msg = Message.fromJson(item);
+                  // return MessageItem(
+                  //   message: msg,
+                  //   theme: widget.theme,
+                  //   isSender: widget.isSender,
+                  // );
                 }).toList(),
               ),
               height4,
               Row(
                 children: [
                   Text(
-                    formatTime(timeMessageItem),
+                    // formatTime(timeMessageItem)
+                    '',
                     style: Theme.of(context)
                         .textTheme
                         .labelSmall!
@@ -132,20 +133,20 @@ class _ClusterMessagesState extends State<ClusterMessages> {
       _loading = false;
       _sended = false;
       _seen = false;
-      final stateLastMsg = Message.fromJson(widget.messages.last).state;
-      if (stateLastMsg == 'viewed') {
-        setState(() {
-          _seen = true;
-        });
-      } else if (stateLastMsg == 'loading') {
-        setState(() {
-          _loading = true;
-        });
-      } else if (stateLastMsg == 'sended') {
-        setState(() {
-          _sended = true;
-        });
-      }
+      // final stateLastMsg = Message.fromJson(widget.messages.last).state;
+      // if (stateLastMsg == 'viewed') {
+      //   setState(() {
+      //     _seen = true;
+      //   });
+      // } else if (stateLastMsg == 'loading') {
+      //   setState(() {
+      //     _loading = true;
+      //   });
+      // } else if (stateLastMsg == 'sended') {
+      //   setState(() {
+      //     _sended = true;
+      //   });
+      // }
     }
   }
 }

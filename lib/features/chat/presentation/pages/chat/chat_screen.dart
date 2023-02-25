@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
         body: Column(
           children: [
-            const MessageView(),
+            // const MessageView(),
             ChatInputField(
               controllerChat: _controllerChat,
               idRoom: widget.idRoom,

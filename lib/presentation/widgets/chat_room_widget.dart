@@ -1,14 +1,15 @@
-import 'package:chat_app/data/models/auth_user.dart';
-import 'package:chat_app/data/models/chat_room.dart';
-import 'package:chat_app/data/models/user_presence.dart';
 import 'package:chat_app/features/chat/presentation/bloc/bloc.dart';
-import 'package:chat_app/presentation/res/colors.dart';
-import 'package:chat_app/presentation/utils/functions.dart';
+import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/utils/functions.dart';
 import 'package:chat_app/presentation/widgets/state_avatar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
+import '../../core/models/auth_user.dart';
+import '../../core/models/chat_room.dart';
+import '../../core/models/user_presence.dart';
 
 class ChatRoomWidget extends StatefulWidget {
   final ChatRoom chatRoom;
@@ -35,12 +36,14 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
   @override
   Widget build(BuildContext context) {
     // State text style which show notify that is not view
-    final styleNotView = _isNotification(context)
-        ? Theme.of(context)
-            .textTheme
-            .headlineSmall!
-            .copyWith(color: Colors.black, fontWeight: FontWeight.w600)
-        : Theme.of(context).textTheme.headlineSmall;
+    final styleNotView = 
+    // _isNotification(context)
+    //     ? Theme.of(context)
+    //         .textTheme
+    //         .headlineSmall!
+    //         .copyWith(color: Colors.black, fontWeight: FontWeight.w600)
+    //     :
+         Theme.of(context).textTheme.headlineSmall;
 
     return ListTile(
       onTap: () {
@@ -48,7 +51,6 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
           Provider.of<ChatBloc>(context, listen: false).add(
             JoinRoomEvent(
               roomID: widget.chatRoom.sId!,
-              friend: widget.user,
               isOnl: widget.presence.presence!,
             ),
           );
@@ -67,9 +69,11 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
         ),
         child: Text(
           widget.user.name ?? "Unknow",
-          style: !_isNotification(context)
-              ? Theme.of(context).textTheme.titleLarge
-              : Theme.of(context).textTheme.titleLarge!.copyWith(
+          style:
+          //  !_isNotification(context)
+          //     ? Theme.of(context).textTheme.titleLarge
+          //     :
+               Theme.of(context).textTheme.titleLarge!.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
         ),
@@ -79,7 +83,8 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
           bottom: 4.h,
         ),
         child: Text(
-          _isSender(context) + widget.chatRoom.lastMessage!.content,
+          // _isSender(context) + widget.chatRoom.lastMessage!.content
+          '',
           overflow: TextOverflow.ellipsis,
           style: styleNotView,
         ),
@@ -110,69 +115,69 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
           : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  formatTimeRoom(widget.chatRoom.lastMessage!.time),
-                  style: !_isNotification(context)
-                      ? Theme.of(context).textTheme.bodySmall
-                      : Theme.of(context).textTheme.bodySmall!.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                ),
-                if (_isNotification(context)) ...[
-                  SizedBox(height: 14.h),
-                  Badge(
-                    alignment: AlignmentDirectional.topEnd,
-                    child: Text(
-                      "${widget.chatRoom.state}",
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                            color: Colors.white,
-                            fontSize: 8.r,
-                          ),
-                    ),
-                  ),
-                  // Container(
-                  //   constraints: BoxConstraints(maxHeight: 20.h),
-                  //   child: CircleAvatar(
-                  //     backgroundColor: Colors.blue,
-                  //     child: Center(
-                  //       child: Text(
-                  //         "${widget.chatRoom.state}",
-                  //         style:
-                  //             Theme.of(context).textTheme.labelSmall!.copyWith(
-                  //                   color: Colors.white,
-                  //                   fontSize: 12.r,
-                  //                 ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                // Text(
+                //   formatTimeRoom(widget.chatRoom.lastMessage!.time),
+                //   style: !_isNotification(context)
+                //       ? Theme.of(context).textTheme.bodySmall
+                //       : Theme.of(context).textTheme.bodySmall!.copyWith(
+                //             fontWeight: FontWeight.w600,
+                //           ),
+                // ),
+                // if (_isNotification(context)) ...[
+                //   SizedBox(height: 14.h),
+                //   Badge(
+                //     alignment: AlignmentDirectional.topEnd,
+                //     child: Text(
+                //       "${widget.chatRoom.state}",
+                //       style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                //             color: Colors.white,
+                //             fontSize: 8.r,
+                //           ),
+                //     ),
+                //   ),
+                //   // Container(
+                //   //   constraints: BoxConstraints(maxHeight: 20.h),
+                //   //   child: CircleAvatar(
+                //   //     backgroundColor: Colors.blue,
+                //   //     child: Center(
+                //   //       child: Text(
+                //   //         "${widget.chatRoom.state}",
+                //   //         style:
+                //   //             Theme.of(context).textTheme.labelSmall!.copyWith(
+                //   //                   color: Colors.white,
+                //   //                   fontSize: 12.r,
+                //   //                 ),
+                //   //       ),
+                //   //     ),
+                //   //   ),
+                //   // ),
+                // ],
               ],
             ),
     );
   }
 
-  bool _isNotification(BuildContext context) {
-    final currentUserID = context.watch<ChatBloc>().currentUser.sId;
-    String senderID = widget.chatRoom.lastMessage!.idSender;
-    int value = widget.chatRoom.state!;
-    if (senderID != currentUserID && value > 0) {
-      return true;
-    }
-    return false;
-  }
+  // bool _isNotification(BuildContext context) {
+  //   final currentUserID = context.watch<ChatBloc>().currentUser.sId;
+  //   String senderID = widget.chatRoom.lastMessage!.idSender;
+  //   int value = widget.chatRoom.state!;
+  //   if (senderID != currentUserID && value > 0) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  String _isSender(BuildContext context) {
-    final currentUserID = context.watch<ChatBloc>().currentUser.sId;
-    String senderID = widget.chatRoom.lastMessage!.idSender;
+  // String _isSender(BuildContext context) {
+  //   final currentUserID = context.watch<ChatBloc>().currentUser.sId;
+  //   String senderID = widget.chatRoom.lastMessage!.idSender;
 
-    if (currentUserID != senderID) return '';
+  //   if (currentUserID != senderID) return '';
 
-    switch (widget.chatRoom.lastMessage!.type) {
-      case 'text':
-        return 'Bạn: ';
-      default:
-        return 'Bạn ';
-    }
-  }
+  //   switch (widget.chatRoom.lastMessage!.type) {
+  //     case 'text':
+  //       return 'Bạn: ';
+  //     default:
+  //       return 'Bạn ';
+  //   }
+  // }
 }

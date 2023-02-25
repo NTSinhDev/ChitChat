@@ -1,5 +1,5 @@
-import 'package:chat_app/presentation/res/colors.dart';
-import 'package:chat_app/presentation/utils/constants.dart';
+import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

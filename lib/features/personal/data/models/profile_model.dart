@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 
-part 'profile.g.dart';
+part 'profile_model.g.dart';
 
 @HiveType(typeId: 0)
-class Profile {
+class ProfileModel {
   @HiveField(0)
   String? id;
   @HiveField(1)
@@ -13,7 +13,7 @@ class Profile {
   @HiveField(3)
   String? messagingToken;
 
-  Profile({
+  ProfileModel({
     this.id,
     required this.email,
     required this.fullName,
@@ -29,8 +29,8 @@ class Profile {
     };
   }
 
-  factory Profile.fromMap(Map<String, dynamic> map, String id) {
-    return Profile(
+  factory ProfileModel.fromMap(Map<String, dynamic> map, String id) {
+    return ProfileModel(
       id: id,
       email: map['email'] as String,
       fullName: map['fullname'] as String,

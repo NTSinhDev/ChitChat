@@ -1,6 +1,6 @@
+import 'package:chat_app/core/models/user_presence.dart';
 
-import 'package:chat_app/data/models/access_token.dart';
-import 'package:chat_app/data/models/user_presence.dart';
+import 'access_token.dart';
 
 class AuthUser {
   AccessToken? accessToken;

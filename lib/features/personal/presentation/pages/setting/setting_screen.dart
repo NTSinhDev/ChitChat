@@ -1,24 +1,19 @@
 // ignore_for_file: library_prefixes
-import 'package:chat_app/data/models/auth_user.dart';
 import 'package:chat_app/features/personal/presentation/pages/setting/components/change_dark_mode.dart';
 import 'package:chat_app/features/personal/presentation/pages/setting/components/feature_setting.dart';
 import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
-import 'package:chat_app/features/authentication/presentation/bloc/bloc.dart';
+import 'package:chat_app/features/authentication/presentation/bloc/bloc_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'components/user_avatar.dart';
+import '../../../domain/entity/profile.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingScreen extends StatelessWidget {
-  final IO.Socket socket;
-  final AuthUser authUser;
+  final Profile profile;
   const SettingScreen({
-    super.key,
-    required this.authUser,
-    required this.socket,
+    super.key, required this.profile,
   });
   @override
   Widget build(BuildContext context) {
@@ -34,14 +29,14 @@ class SettingScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           sizedBox50,
-          UserAvatar(
-            avatar: appStateProvider.urlImage,
-            userID: authUser.user!.sId!,
-            theme: appStateProvider.darkMode,
-          ),
+          // UserAvatar(
+          //   avatar: appStateProvider.urlImage,
+          //   userID: authUser.user!.sId!,
+          //   theme: appStateProvider.darkMode,
+          // ),
           sizedBox12,
           Text(
-            authUser.user?.name ?? "unknow",
+            profile.fullName,
             maxLines: 4,
             style: Theme.of(context).textTheme.displayLarge!.copyWith(
                   fontSize: 20.h,
@@ -101,21 +96,10 @@ class SettingScreen extends StatelessWidget {
   }
 
   _changeDarkMode(bool value, BuildContext context) {
-    Provider.of<AppStateProvider>(context, listen: false).changeDarkMode(
-      value,
-      authUser.user!.sId!,
-    );
+
   }
 
   _changeUserInfo(BuildContext context) {
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => PersonalInformation(
-    //       avatar: authUser.user?.urlImage ?? '',
-    //       name: authUser.user?.name ?? "unknow",
-    //     ),
-    //   ),
-    // );
+
   }
 }

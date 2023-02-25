@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:chat_app/data/models/auth_user.dart';
-import 'package:chat_app/data/models/chat_room.dart';
-import 'package:chat_app/data/models/message.dart';
-import 'package:chat_app/data/models/user_presence.dart';
 import 'package:chat_app/main.dart';
-import 'package:chat_app/presentation/res/colors.dart';
+import 'package:chat_app/core/res/colors.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import '../models/auth_user.dart';
+import '../models/chat_room.dart';
+import '../models/message.dart';
+import '../models/user_presence.dart';
 import 'constants.dart';
 
 /// This function to sort list user by online state

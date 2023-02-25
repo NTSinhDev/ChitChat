@@ -1,8 +1,6 @@
-import 'package:chat_app/presentation/helper/loading/loading_screen.dart';
-import 'package:chat_app/presentation/helper/notify/alert_error.dart';
 import 'package:chat_app/features/authentication/presentation/pages/signup/components/signin_btn.dart';
-import 'package:chat_app/presentation/res/style.dart';
-import 'package:chat_app/features/authentication/presentation/bloc/bloc.dart';
+import 'package:chat_app/core/res/style.dart';
+import 'package:chat_app/features/authentication/presentation/bloc/bloc_injector.dart';
 import 'package:chat_app/presentation/widgets/input_text_field.dart';
 import 'package:chat_app/presentation/widgets/large_round_button.dart';
 import 'package:chat_app/presentation/widgets/warning_message_widget.dart';
@@ -11,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../../../core/helpers/loading/loading_screen.dart';
+import '../../../../../core/helpers/notify/alert_error.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

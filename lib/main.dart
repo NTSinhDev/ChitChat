@@ -6,34 +6,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'presentation/utils/functions.dart';
+import 'core/utils/functions.dart';
 
 late SharedPreferences sharedPref;
 late NotificationService notificationService;
+late String? deviceToken;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
 
   // Change default system UI
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
-  // Hide status bar and bottom bar
-  // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
-  // SystemChrome.setEnabledSystemUIMode(
-  //   SystemUiMode.immersiveSticky,
-  //   overlays: [SystemUiOverlay.bottom],
-  // );
 
   // Firebase
   await Firebase.initializeApp();
+
   // Notification
   FirebaseMessaging.onBackgroundMessage(firebaseOnBackgroundMessageHandle);
+  deviceToken = await FirebaseMessaging.instance.getToken();
   notificationService = NotificationService();
 
-  await Hive.initFlutter();
-    
   // Local storage
   sharedPref = await SharedPreferences.getInstance();
 
-  runApp(ChitChatApp(sharedPreferences: sharedPref));
+  runApp(ChitChatApp(sharedPreferences: sharedPref, deviceToken: deviceToken));
 }

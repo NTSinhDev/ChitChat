@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 abstract class AuthenticationEvent {
   const AuthenticationEvent();
 }
@@ -13,7 +14,6 @@ class RegisterEvent extends AuthenticationEvent {
   });
 }
 
-class InitRegisterEvent extends AuthenticationEvent {}
 
 class NormalLoginEvent extends AuthenticationEvent {
   final String email;
@@ -26,9 +26,16 @@ class NormalLoginEvent extends AuthenticationEvent {
   });
 }
 
+class CheckAuthenticationEvent extends AuthenticationEvent {
+  final String userID;
+  CheckAuthenticationEvent({
+    required this.userID,
+  });
+}
+
 class InitLoginEvent extends AuthenticationEvent {}
 
-class LoginByAccessTokenEvent extends AuthenticationEvent {}
+class InitRegisterEvent extends AuthenticationEvent {}
 
 class GoogleLoginEvent extends AuthenticationEvent {}
 

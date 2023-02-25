@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:chat_app/features/authentication/data/datasources/auth_local_datasource.dart';
 import 'package:chat_app/features/personal/data/datasources/profile_remote_datasource.dart';
-import 'package:chat_app/features/authentication/data/services/authentication_services.dart';
+import 'package:chat_app/features/authentication/domain/services/authentication_services.dart';
 import 'package:chat_app/features/authentication/domain/repositories/authentication_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,6 +46,11 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
 
   @override
   Future<void> saveUIdToLocal(String uid) async {
-    // await localDataSource.saveUIDToLocal(uid);
+    await localDataSource.saveUIDToLocal(uid);
+  }
+  
+  @override
+  String getUIDAtLocalStorage() {
+    return localDataSource.getUID() ?? '';
   }
 }

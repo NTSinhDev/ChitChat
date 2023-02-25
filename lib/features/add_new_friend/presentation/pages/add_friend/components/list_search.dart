@@ -31,12 +31,13 @@ class ListSearchUsers extends StatelessWidget {
                 );
               }
               if (state.cuccessed! && state.user != null) {
-                return ListUserWidget(
-                  listUser: [state.user!],
-                  isAddFriend: true,
-                  loadding: state.addFriendloading ?? false,
-                  success: state.addFriendSuccess ?? false,
-                );
+                return Container();
+                // return ListUserWidget(
+                //   listUser: [state.user!],
+                //   isAddFriend: true,
+                //   loadding: state.addFriendloading ?? false,
+                //   success: state.addFriendSuccess ?? false,
+                // );
               }
             }
             return Center(

@@ -1,6 +1,6 @@
 import 'package:chat_app/features/chat/presentation/pages/chat/components/cannot_load_img.dart';
 import 'package:chat_app/features/chat/presentation/pages/chat/components/loading_msg.dart';
-import 'package:chat_app/presentation/utils/functions.dart';
+import 'package:chat_app/core/utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';

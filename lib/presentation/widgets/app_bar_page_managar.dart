@@ -1,20 +1,17 @@
 import 'package:chat_app/features/chat/presentation/bloc/bloc.dart';
-import 'package:chat_app/presentation/res/colors.dart';
+import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/presentation/services/app_state_provider/app_state_provider.dart';
 import 'package:chat_app/presentation/widgets/state_avatar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:socket_io_client/socket_io_client.dart'
-    as IO; // ignore: library_prefixes
 
 AppBar appBarPageManagar(
   String currentPage,
   BuildContext context,
   String img,
   String name,
-  IO.Socket socket,
   int requests,
   Function() ontapAvatar,
 ) {

@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:chat_app/data/environment.dart';
-import 'package:chat_app/data/repository/user_repository.dart';
-import 'package:chat_app/presentation/res/colors.dart';
+import 'package:chat_app/core/res/colors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,7 +13,6 @@ class AppStateProvider extends ChangeNotifier {
   bool get hasConnect => _hasConnect;
 
   // setup dark mode
-  late UserRepository userRepo;
   bool _darkMode = false;
   bool get darkMode => _darkMode;
   set darkMode(bool darkMode) {
@@ -39,35 +36,17 @@ class AppStateProvider extends ChangeNotifier {
     );
 
     // Init Repository
-    userRepo = UserRepository(environment: Environment(isServerDev: true));
   }
 
   // post request change darkmode to server
   changeDarkMode(bool darkMode, String userID) async {
     _darkMode = darkMode;
     notifyListeners();
-    await userRepo.changeDarkMode(
-      data: {'userID': userID, 'isDarkMode': darkMode},
-      header: {'Content-Type': 'application/json'},
-    );
+
   }
 
   Future uploadAvatar(String path, String userID) async {
-    final responseUrl = await userRepo.uploadAvatar(
-      path: path,
-      userID: userID,
-    );
-    if (responseUrl == null) {
-      return Fluttertoast.showToast(
-        msg: 'Không thể cập nhật ảnh đại diện',
-        fontSize: 12,
-        textColor: _darkMode ? Colors.white : Colors.black,
-        backgroundColor: _darkMode ? darkGreyDarkMode : lightGreyLightMode,
-      );
-    }
-    _urlImage = responseUrl;
-    notifyListeners();
-    return responseUrl;
+
   }
 
   // Check connect network

@@ -1,6 +1,5 @@
 import 'package:chat_app/features/chat/presentation/bloc/bloc.dart';
 import 'package:chat_app/features/chat/presentation/pages/information_chat_room/information_chat_room.dart';
-import 'package:chat_app/presentation/utils/functions.dart';
 import 'package:chat_app/presentation/widgets/state_avatar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,7 @@ AppBar buildAppBar({
   required BuildContext context,
   required String roomID,
 }) {
-  final friend = context.watch<ChatBloc>().friend;
+  // final friend = context.watch<ChatBloc>().friend;
   return AppBar(
     toolbarHeight: 72.h,
     leading: BlocBuilder<ChatBloc, ChatState>(
@@ -34,7 +33,8 @@ AppBar buildAppBar({
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               StateAvatar(
-                avatar: state.friend.urlImage!,
+                avatar: '',
+                // avatar: state.friend.urlImage!,
                 isStatus: state.isOnl,
                 radius: 40.r,
               ),
@@ -45,7 +45,8 @@ AppBar buildAppBar({
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    formatName(name: state.friend.name!),
+                    // formatName(name: state.friend.name!),
+                    '',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   if (state.isOnl) ...[
@@ -71,8 +72,8 @@ AppBar buildAppBar({
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    InformationChatRoomScreen(friend: friend!),
+                builder: (context) =>Container()
+                    // InformationChatRoomScreen(friend: null),
               ));
         },
         icon: Icon(

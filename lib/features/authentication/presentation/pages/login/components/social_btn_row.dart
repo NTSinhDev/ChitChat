@@ -1,6 +1,5 @@
-import 'package:chat_app/features/authentication/domain/usecases/login_with_google.dart';
 import 'package:chat_app/features/authentication/presentation/bloc/authentication_event.dart';
-import 'package:chat_app/presentation/res/images_animations.dart';
+import 'package:chat_app/core/res/images_animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

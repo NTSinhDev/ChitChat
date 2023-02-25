@@ -1,5 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_app/data/models/auth_user.dart';
+// import 'package:chat_app/data/models/auth_user.dart';
 
 abstract class ChatEvent {
   const ChatEvent();
@@ -17,23 +16,23 @@ class ExitRoomEvent extends ChatEvent {
 
 class JoinRoomEvent extends ChatEvent {
   final String roomID;
-  final User friend;
+  // final User friend;
   final bool isOnl;
   JoinRoomEvent({
     required this.roomID,
-    required this.friend,
+    // required this.friend,
     required this.isOnl,
   });
 }
 
 class CheckHasRoomEvent extends ChatEvent {
   final String userID;
-  final User friend;
+  // final User friend;
   final bool isOnl;
   CheckHasRoomEvent({
     required this.isOnl,
     required this.userID,
-    required this.friend,
+    // required this.friend,
   });
 }
 

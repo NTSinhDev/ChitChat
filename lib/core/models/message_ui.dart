@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_app/presentation/enum/enums.dart';
+import 'package:chat_app/core/enum/enums.dart';
 
 class MessageUI {
   String? sId;

@@ -4,10 +4,12 @@ abstract class AuthenticationRepository {
   final SharedPreferences sharedPreferences;
 
   AuthenticationRepository(this.sharedPreferences);
-  
+
   Future<String>? loginWithGoogleAccount();
-  
+
   Future<void> saveUIdToLocal(String uid);
-  
+
   Future<bool> logout();
+
+  String getUIDAtLocalStorage();
 }
