@@ -1,4 +1,4 @@
-import 'package:chat_app/models/profile.dart';
+import 'package:chat_app/models/user_profile.dart';
 
 abstract class AuthenticationState {
   final bool loading;
@@ -13,26 +13,29 @@ abstract class AuthenticationState {
 class RegisterState extends AuthenticationState {
   final String? message;
   RegisterState({
-    this.message, required super.loading,
+    this.message,
+    required super.loading,
   });
 }
 
 class LoginState extends AuthenticationState {
   String? message;
   LoginState({
-    this.message, required super.loading,
+    this.message,
+    required super.loading,
   });
 }
 
 class LoggedState extends AuthenticationState {
-  final Profile? profile;
+  final UserProfile userProfile;
   final List<dynamic>? chatRooms;
   final List<dynamic>? friendRequests;
   final List<dynamic>? listFriend;
   LoggedState({
-    this.profile,
+    required this.userProfile,
     this.chatRooms,
     this.friendRequests,
-    this.listFriend, required super.loading,
+    this.listFriend,
+    required super.loading,
   });
 }

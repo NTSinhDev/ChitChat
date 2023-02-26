@@ -24,7 +24,7 @@ class ChitChatApp extends StatefulWidget {
 }
 
 class _ChitChatAppState extends State<ChitChatApp> {
-  late String _userID;
+  late String? _userID;
 
   @override
   void initState() {

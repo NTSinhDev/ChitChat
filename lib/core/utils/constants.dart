@@ -2,11 +2,12 @@ const int maxValueInteger = 10000000;
 const dateMsg = 'kk:mm dd/MM/yyyy';
 
 class StorageKey {
-  static const kUID = 'UID';
+  static const kUIDSHARED = 'UID';
   static const kPROFILEBOX = 'Profile';
+  static const kPROFILEPATH = 'Profile';
 }
 
-class AuthConstant{
+class AuthConstant {
   static const String idUserField = "idUser";
   static const String emailField = "email";
   static const String fullNameField = "fullname";

@@ -36,24 +36,28 @@ class AuthenticationServices {
   }
 
   Future<User?> signInWithGoogle() async {
-    // Attempt to sign in with Google
-    final GoogleSignInAccount? googleAccount = await _googleSignIn.signIn();
+    try {
+      // Attempt to sign in with Google
+      final GoogleSignInAccount? googleAccount = await _googleSignIn.signIn();
 
-    if (googleAccount == null) return null;
-    // Get the authentication details from the signed-in Google account
-    final GoogleSignInAuthentication googleAuthentication =
-        await googleAccount.authentication;
+      if (googleAccount == null) return null;
+      // Get the authentication details from the signed-in Google account
+      final GoogleSignInAuthentication googleAuthentication =
+          await googleAccount.authentication;
 
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuthentication.accessToken,
-      idToken: googleAuthentication.idToken,
-    );
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuthentication.accessToken,
+        idToken: googleAuthentication.idToken,
+      );
 
-    // Sign in to Firebase with the Google credentials
-    await _firebaseAuth.signInWithCredential(credential);
+      // Sign in to Firebase with the Google credentials
+      await _firebaseAuth.signInWithCredential(credential);
 
-    final user = currentUser;
-    return user;
+      final user = currentUser;
+      return user;
+    } catch (e) {
+      return null;
+    }
   }
 
   User? get currentUser {
