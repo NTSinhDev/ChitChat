@@ -1,29 +1,35 @@
 import 'dart:developer';
 
-import 'package:chat_app/datasources/profile_local_datasource.dart';
-import 'package:chat_app/datasources/profile_remote_datasource.dart';
+import 'package:chat_app/datasources/remote_datasources/profile_remote_datasource.dart';
 import 'package:chat_app/models/profile.dart';
+import 'package:chat_app/models/url_image.dart';
+import 'package:chat_app/models/user_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../datasources/local_datasources/injector.dart';
 
 abstract class ProfileRepository {
   Future<Profile?> createUserProfile({required User? authUser});
   Future<Profile?> getUserProfile({required String? userID});
-  Future<void> saveToProfileBox({required Profile profile});
-  Future<Profile?> getProfileAtLocalStorage({required String userID});
+  Future<void> saveToProfileBox({required Profile? profile});
+  Future<UserProfile?> getProfileAtLocalStorage({required String userID});
 }
 
-class ProfileRepositoryImpl extends ProfileRepository {
+class ProfileRepositoryImpl implements ProfileRepository {
   late final ProfileRemoteDataSource _profileRemoteDataSource;
+  late final StorageLocalDataSource _storageLocalDataSource;
+
   ProfileLocalDataSource? _profileLocalDataSource;
+  bool isInitLocalDataSource = false;
 
   ProfileRepositoryImpl() {
-    _profileRemoteDataSource = ProfileRemoteDataSource();
+    _profileRemoteDataSource = ProfileRemoteDataSourceImpl();
+    _storageLocalDataSource = StorageLocalDataSourceImpl();
   }
 
-  bool isInitLocalDataSource = false;
   Future initLocalDataSource() async {
     try {
-      _profileLocalDataSource = ProfileLocalDataSource();
+      _profileLocalDataSource = ProfileLocalDataSourceImpl();
 
       final box = await _profileLocalDataSource!
           .openBox()
@@ -53,6 +59,7 @@ class ProfileRepositoryImpl extends ProfileRepository {
   @override
   Future<Profile?> getUserProfile({required String? userID}) async {
     if (userID == null) return null;
+
     try {
       return await _profileRemoteDataSource.getProfileById(userID: userID);
     } catch (_) {
@@ -61,7 +68,9 @@ class ProfileRepositoryImpl extends ProfileRepository {
   }
 
   @override
-  Future<void> saveToProfileBox({required Profile profile}) async {
+  Future<void> saveToProfileBox({required Profile? profile}) async {
+    if (profile == null) return;
+
     await _checkInitLocalDataSource();
     try {
       await _profileLocalDataSource!.saveToProfileBox(profile);
@@ -70,12 +79,21 @@ class ProfileRepositoryImpl extends ProfileRepository {
     catch (e) {}
   }
 
-  getFile() {}
-
   @override
-  Future<Profile?> getProfileAtLocalStorage({required String userID}) async {
+  Future<UserProfile?> getProfileAtLocalStorage({
+    required String userID,
+  }) async {
     await _checkInitLocalDataSource();
-    return _profileLocalDataSource!.getProfile(userID);
+
+    try {
+      final Profile? profile = _profileLocalDataSource!.getProfile(userID);
+      final url = await _storageLocalDataSource.getFile(fileName: userID);
+      final urlImage = URLImage(url: url, type: TypeImage.local);
+      return UserProfile(urlImage: urlImage, profile: profile);
+    } catch (e) {
+      log('🚀log⚡ error get profile at local: $e');
+      return null;
+    }
   }
 
   Future _checkInitLocalDataSource() async {

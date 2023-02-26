@@ -1,42 +1,70 @@
+import 'package:chat_app/core/utils/constants.dart';
+import 'package:chat_app/models/profile.dart';
+import 'package:chat_app/models/url_image.dart';
+import 'package:chat_app/models/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
-import 'package:chat_app/datasources/auth_local_datasource.dart';
-import 'package:chat_app/datasources/profile_remote_datasource.dart';
+import 'package:chat_app/datasources/local_datasources/auth_local_datasource.dart';
+import 'package:chat_app/datasources/remote_datasources/profile_remote_datasource.dart';
 import 'package:chat_app/services/authentication_services.dart';
 
 abstract class AuthenticationRepository {
-  final SharedPreferences sharedPreferences;
-  AuthenticationRepository(this.sharedPreferences);
-  Future<String>? loginWithGoogleAccount();
-  Future<void> saveUIdToLocal(String uid);
+  Future<UserProfile?> loginWithGoogleAccount();
   Future<bool> logout();
-  String getUIDAtLocalStorage();
+  Future<void> saveUIdToLocal({required UserProfile? userProfile});
+  String? getUIDAtLocalStorage();
 }
 
-class AuthenticationRepositoryImpl extends AuthenticationRepository {
-  late final AuthLocalDataSource localDataSource;
-  late final ProfileRemoteDataSource remoteDataSource;
+class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final AuthenticationServices _authenticationServices =
       AuthenticationServices.getInstance();
 
-  AuthenticationRepositoryImpl(SharedPreferences sharedPreferences)
-      : super(sharedPreferences) {
-    localDataSource = AuthLocalDataSource(sharedPreferences: sharedPreferences);
-    remoteDataSource = ProfileRemoteDataSource();
+  late final AuthLocalDataSource _authLocalDataSource;
+  late final ProfileRemoteDataSource _profileRemoteDataSource;
+
+  AuthenticationRepositoryImpl(SharedPreferences sharedPreferences) {
+    _authLocalDataSource = AuthLocalDataSourceImpl(
+      sharedPreferences: sharedPreferences,
+    );
+    _profileRemoteDataSource = ProfileRemoteDataSourceImpl();
   }
 
   @override
-  Future<String> loginWithGoogleAccount() async {
+  Future<UserProfile?> loginWithGoogleAccount() async {
     try {
+      UserProfile? userProfile;
+      // authenticate
       final authUser = await _authenticationServices.signInWithGoogle();
-      if (authUser == null) return '';
-      // save token
-      await localDataSource.saveUIDToLocal(authUser.uid);
-      return authUser.uid;
+      if (authUser == null) return null;
+
+      // get information of this account
+      final String? urlImage =
+          await _profileRemoteDataSource.getFile(
+                filePath: StorageKey.kPROFILEPATH,
+                fileName: authUser.uid,
+              ) ??
+          await _profileRemoteDataSource.uploadFile(
+        url: authUser.photoURL!,
+        filePath: StorageKey.kPROFILEPATH,
+        fileName: authUser.uid,
+      );
+
+      final Profile? profile = await _profileRemoteDataSource.getProfileById(
+            userID: authUser.uid,
+          ) ??
+          await _profileRemoteDataSource.createProfile(
+            authUser: authUser,
+          );
+
+      userProfile = UserProfile(
+        profile: profile,
+        urlImage: URLImage(url: urlImage, type: TypeImage.remote),
+      );
+      return userProfile;
     } catch (e) {
       log('🚀Error: $e');
-      return '';
+      return null;
     }
   }
 
@@ -44,7 +72,7 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   Future<bool> logout() async {
     final isLogout = await _authenticationServices.logout();
     if (isLogout) {
-      localDataSource.removeUID();
+      _authLocalDataSource.removeUID();
       return true;
     } else {
       return false;
@@ -52,12 +80,13 @@ class AuthenticationRepositoryImpl extends AuthenticationRepository {
   }
 
   @override
-  Future<void> saveUIdToLocal(String uid) async {
-    await localDataSource.saveUIDToLocal(uid);
+  Future<void> saveUIdToLocal({required UserProfile? userProfile}) async {
+    if (userProfile == null ||
+        userProfile.profile == null ||
+        userProfile.profile?.id == null) return;
+    await _authLocalDataSource.saveUIDToLocal(userProfile.profile!.id!);
   }
-  
+
   @override
-  String getUIDAtLocalStorage() {
-    return localDataSource.getUID() ?? '';
-  }
+  String? getUIDAtLocalStorage() => _authLocalDataSource.getUID();
 }

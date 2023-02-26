@@ -4,9 +4,16 @@ import 'package:chat_app/core/utils/constants.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:hive/hive.dart';
 
-class ProfileLocalDataSource {
+abstract class ProfileLocalDataSource {
+  Future<Box<Profile>?> openBox();
+  Future<void> saveToProfileBox(Profile profile);
+  Profile? getProfile(String key);
+}
+
+class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
   late Box<Profile> _profileBox;
 
+  @override
   Future<Box<Profile>?> openBox() async {
     Box<Profile>? isOpen;
 
@@ -19,8 +26,8 @@ class ProfileLocalDataSource {
     return isOpen;
   }
 
+  @override
   Future<void> saveToProfileBox(Profile profile) async {
-    await openBox();
     final isOpen = !_profileBox.isOpen;
     final contain = _profileBox.containsKey(profile.id);
     if (isOpen || contain) return;
@@ -28,6 +35,7 @@ class ProfileLocalDataSource {
     await _profileBox.put(profile.id, profile);
   }
 
+  @override
   Profile? getProfile(String key) {
     if (!_profileBox.isOpen) {
       log('🚀log⚡ chua mo');

@@ -1,6 +1,5 @@
-import 'package:chat_app/models/profile.dart';
-import 'package:chat_app/repositories/authentication_repository.dart';
-import 'package:chat_app/repositories/profile_repository.dart';
+import 'package:chat_app/models/user_profile.dart';
+import 'package:chat_app/repositories/injector.dart';
 import 'package:chat_app/view_model/blocs/authentication/authentication_event.dart';
 import 'package:chat_app/view_model/blocs/authentication/authentication_state.dart';
 import 'package:chat_app/services/authentication_services.dart';
@@ -9,17 +8,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  Profile? profile;
-
   final authenticationServices = AuthenticationServices.getInstance();
+  UserProfile? userProfile;
 
   final SharedPreferences sharedPref;
-
-  late final ProfileRepository _profileRepository;
+  final ProfileRepository _profileRepository = ProfileRepositoryImpl();
+  final StorageRepository _storageRepository = StorageRepositoryImpl();
   late final AuthenticationRepository _authenticationRepository;
 
   AuthenticationBloc(this.sharedPref) : super(LoginState(loading: false)) {
-    _profileRepository = ProfileRepositoryImpl();
     _authenticationRepository = AuthenticationRepositoryImpl(sharedPref);
     on<NormalLoginEvent>(_normalLogin);
     on<RegisterEvent>(_registerEvent);
@@ -37,14 +34,16 @@ class AuthenticationBloc
   ) async {
     emit(LoginState(loading: true));
 
-    profile =
-        await _profileRepository.getProfileAtLocalStorage(userID: event.userID);
-    if (profile == null) return emit(LoginState(loading: false));
+    userProfile = await _profileRepository.getProfileAtLocalStorage(
+      userID: event.userID,
+    );
+
+    if (userProfile == null) return emit(LoginState(loading: false));
 
     emit(LoginState(loading: false));
     emit(LoggedState(
       loading: false,
-      profile: profile,
+      userProfile: userProfile!,
     ));
   }
 
@@ -54,30 +53,33 @@ class AuthenticationBloc
   ) async {
     emit(LoginState(loading: true));
 
-    final authUser = await authenticationServices.signInWithGoogle();
+    userProfile = await _authenticationRepository.loginWithGoogleAccount();
 
-    if (authUser == null) {
+    if (userProfile == null || userProfile?.profile == null) {
       return emit(LoginState(
           loading: false)); // TODO: hiển thị thông báo đăng nhập thất bại
     }
 
-    profile = await _profileRepository.getUserProfile(userID: authUser.uid) ??
-        await _profileRepository.createUserProfile(authUser: authUser);
-
-    await _storageData();
-
     emit(LoginState(loading: false));
-    emit(LoggedState(loading: false, profile: profile));
+    emit(LoggedState(loading: false, userProfile: userProfile!));
+    await _storageData();
   }
 
   Future<void> _storageData() async {
-    await _authenticationRepository.saveUIdToLocal(profile!.id!);
-    await _profileRepository.saveToProfileBox(profile: profile!);
+    await _authenticationRepository.saveUIdToLocal(userProfile: userProfile);
+    await _profileRepository.saveToProfileBox(profile: userProfile!.profile);
+    await _storageRepository.saveFileToStorage(userProfile: userProfile);
   }
 
   _logoutEvent(LogoutEvent event, Emitter<AuthenticationState> emit) async {
     final isLogout = await _authenticationRepository.logout();
-    if (!isLogout) return emit(LoggedState(loading: false));
+    if (!isLogout) {
+      return emit(LoggedState(
+        loading: false,
+        userProfile: userProfile!,
+      ));
+    }
+
     emit(LoginState(loading: false));
   }
 

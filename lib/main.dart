@@ -25,7 +25,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   // Notification
-  FirebaseMessaging.onBackgroundMessage(firebaseOnBackgroundMessageHandle);
+  // FirebaseMessaging.onBackgroundMessage(firebaseOnBackgroundMessageHandle);
   deviceToken = await FirebaseMessaging.instance.getToken();
   notificationService = NotificationService();
 

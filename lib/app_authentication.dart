@@ -14,12 +14,13 @@ import 'view_model/providers/app_state_provider.dart';
 
 class AppAuthentication extends StatefulWidget {
   final SharedPreferences sharedPreferences;
-  final String userIDAtLocalStorage;
+  final String? userIDAtLocalStorage;
   final String deviceToken;
   const AppAuthentication({
     Key? key,
     required this.sharedPreferences,
-    required this.deviceToken, required this.userIDAtLocalStorage,
+    required this.deviceToken,
+    required this.userIDAtLocalStorage,
   }) : super(key: key);
 
   @override
@@ -40,8 +41,8 @@ class _AppAuthenticationState extends State<AppAuthentication> {
     return BlocProvider<AuthenticationBloc>(
       create: (context) => AuthenticationBloc(
         widget.sharedPreferences,
-      )..add(widget.userIDAtLocalStorage.isNotEmpty
-          ? CheckAuthenticationEvent(userID: widget.userIDAtLocalStorage)
+      )..add(widget.userIDAtLocalStorage != null
+          ? CheckAuthenticationEvent(userID: widget.userIDAtLocalStorage!)
           : InitLoginEvent()),
       child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
@@ -64,34 +65,25 @@ class _AppAuthenticationState extends State<AppAuthentication> {
           }
           // Home page
           if (state is LoggedState) {
-            final name =
-                state.profile == null ? "Unknowned" : state.profile!.fullName;
+            final name = state.userProfile.profile == null
+                ? "Unknowned"
+                : state.userProfile.profile!.fullName;
             return Scaffold(
-              body: BlocListener<AuthenticationBloc, AuthenticationState>(
-                listener: (context, state) {
-                  if (state is LoggedState) {
-                    if (state.loading) {
-                      LoadingScreen().show(context: context);
-                    } else {
-                      LoadingScreen().hide();
-                    }
-                  }
-                },
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Center(child: Text(name)),
-                      TextButton(
-                          onPressed: () {
-                            context
-                                .read<AuthenticationBloc>()
-                                .add(LogoutEvent());
-                          },
-                          child: const Text('Logout'))
-                    ],
-                  ),
+              body: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(child: Text(name)),
+                    Text(state.userProfile.urlImage.url ?? 'null'),
+                    TextButton(
+                        onPressed: () {
+                          context
+                              .read<AuthenticationBloc>()
+                              .add(LogoutEvent());
+                        },
+                        child: const Text('Logout'))
+                  ],
                 ),
               ),
             );
