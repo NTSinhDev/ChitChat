@@ -1,23 +1,21 @@
 import 'dart:developer';
+import 'package:chat_app/core/enum/enums.dart';
+import 'package:chat_app/core/helpers/loading/loading_screen.dart';
+import 'package:chat_app/core/helpers/notify/flash_message.dart';
 import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/models/url_image.dart';
-import 'package:chat_app/view_model/providers/app_state_provider.dart';
+import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/widgets/state_avatar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class UserAvatar extends StatefulWidget {
-  final URLImage urlImage;
-  final String userID;
   const UserAvatar({
     super.key,
-    required this.urlImage,
-    required this.userID,
   });
 
   @override
@@ -27,64 +25,70 @@ class UserAvatar extends StatefulWidget {
 class _UserAvatarState extends State<UserAvatar> {
   @override
   Widget build(BuildContext context) {
+    final userProfile =
+        Provider.of<SettingBloc>(context, listen: false).userProfile;
     return Center(
       child: Stack(
         children: [
           Container(
             padding: EdgeInsets.all(12.h),
             child: StateAvatar(
-              urlImage: widget.urlImage,
+              urlImage: userProfile.urlImage,
               isStatus: false,
               radius: 120.r,
             ),
           ),
-          Positioned(
-            bottom: 4.h,
-            right: 4.w,
-            child: Container(
-              width: 52.w,
-              height: 52.h,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: InkWell(
-                onTap: _changeAvatar,
-                child: Container(
-                  margin: EdgeInsets.all(6.h),
-                  width: 44.w,
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    color: lightGreyLightMode,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black45,
-                        offset: Offset(1, 1),
-                        blurRadius: 2,
-                      ),
-                    ],
-                    borderRadius: BorderRadius.circular(
-                      30.r,
-                    ),
-                  ),
-                  child: Icon(
-                    CupertinoIcons.camera_fill,
-                    size: 20.h,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          _updateAvatarWidget(),
         ],
       ),
     );
   }
 
-  _changeAvatar() {
+  Widget _updateAvatarWidget() {
+    return Positioned(
+      bottom: 4.h,
+      right: 4.w,
+      child: Container(
+        width: 52.w,
+        height: 52.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30.r),
+        ),
+        child: InkWell(
+          onTap: () => _changeAvatar(context),
+          child: Container(
+            margin: EdgeInsets.all(6.h),
+            width: 44.w,
+            height: 44.h,
+            decoration: BoxDecoration(
+              color: lightGreyLightMode,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black45,
+                  offset: Offset(1, 1),
+                  blurRadius: 2,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(
+                30.r,
+              ),
+            ),
+            child: Icon(
+              CupertinoIcons.camera_fill,
+              size: 20.h,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _changeAvatar(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
+      builder: (BuildContext bcontext) {
         return Container(
           height: 180.h,
           padding: EdgeInsets.symmetric(
@@ -102,36 +106,42 @@ class _UserAvatarState extends State<UserAvatar> {
             child: Column(
               children: [
                 Text(
-                  AppLocalizations.of(context)!.change_avatar,
-                  style: Theme.of(context)
+                  AppLocalizations.of(bcontext)!.change_avatar,
+                  style: Theme.of(bcontext)
                       .textTheme
                       .bodyLarge!
                       .copyWith(color: Colors.black),
                 ),
                 SizedBox(height: 8.h),
                 ListTile(
-                  onTap: () => _pickImage(ImageSource.camera),
+                  onTap: () => _pickImage(
+                    source: ImageSource.camera,
+                    context: context,
+                  ),
                   leading: const Icon(
                     CupertinoIcons.camera_fill,
                     color: Colors.black,
                   ),
                   title: Text(
-                    AppLocalizations.of(context)!.take_a_photo,
-                    style: Theme.of(context)
+                    AppLocalizations.of(bcontext)!.take_a_photo,
+                    style: Theme.of(bcontext)
                         .textTheme
                         .titleMedium!
                         .copyWith(color: Colors.black),
                   ),
                 ),
                 ListTile(
-                  onTap: () => _pickImage(ImageSource.gallery),
+                  onTap: () => _pickImage(
+                    source: ImageSource.gallery,
+                    context: context,
+                  ),
                   leading: const Icon(
                     CupertinoIcons.photo,
                     color: Colors.black,
                   ),
                   title: Text(
-                    AppLocalizations.of(context)!.select_photo_gallery,
-                    style: Theme.of(context)
+                    AppLocalizations.of(bcontext)!.select_photo_gallery,
+                    style: Theme.of(bcontext)
                         .textTheme
                         .titleMedium!
                         .copyWith(color: Colors.black),
@@ -145,20 +155,25 @@ class _UserAvatarState extends State<UserAvatar> {
     );
   }
 
-  Future _pickImage(ImageSource source) async {
+  Future _pickImage({
+    required ImageSource source,
+    required BuildContext context,
+  }) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
-
       if (!mounted) return;
-      final urlImage = await Provider.of<AppStateProvider>(
-        context,
-        listen: false,
-      ).uploadAvatar(
-        image.path,
-        widget.userID,
-      );
-      if (urlImage == null) return;
+
+      if (image == null) {
+        return FlashMessage(
+          context: context,
+          message: AppLocalizations.of(context)!.could_not_update_avatar,
+          type: FlashMessageType.error,
+        );
+      }
+
+      final settingBloc = context.read<SettingBloc>();
+      settingBloc.add(UpdateAvatarEvent(path: image.path));
+
       if (!mounted) return;
       Navigator.pop(context);
     } on PlatformException catch (e) {

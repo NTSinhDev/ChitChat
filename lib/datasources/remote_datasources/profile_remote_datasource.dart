@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/utils/functions.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,9 +16,10 @@ abstract class ProfileRemoteDataSource {
   Future<Profile?> getProfileById({required String userID});
   Future<Profile?> createProfile({required User authUser});
   Future<String?> uploadFile({
-    required String url,
-    required String filePath,
+    required String image,
+    required FileUploadType type,
     required String fileName,
+    required String filePath,
     SettableMetadata? settableMetaData,
   });
 }
@@ -60,7 +62,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<String?> uploadFile({
-    required String url,
+    required String image,
+    required FileUploadType type,
     required String filePath,
     required String fileName,
     SettableMetadata? settableMetaData,
@@ -68,7 +71,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     String? urlImage;
 
     try {
-      final file = await getImageFileFromNetwork(url);
+      final file = type == FileUploadType.url
+          ? await getImageFileFromNetwork(image)
+          : File(image);
       if (file == null) return null;
 
       final storageRef = _storage.ref("$filePath/$fileName");

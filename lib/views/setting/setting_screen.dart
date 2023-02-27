@@ -1,6 +1,8 @@
 import 'package:chat_app/core/enum/enums.dart';
+import 'package:chat_app/core/helpers/loading/loading_screen.dart';
 import 'package:chat_app/core/helpers/notify/flash_message.dart';
 import 'package:chat_app/models/user_profile.dart';
+import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:chat_app/views/setting/components/change_laguage_feature.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
@@ -8,8 +10,8 @@ import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:chat_app/views/setting/components/user_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'components/change_darkmode_feature.dart';
@@ -25,14 +27,35 @@ class SettingScreen extends StatelessWidget {
     // app states
     AppStateProvider appStateProvider = context.watch<AppStateProvider>();
     final sizedBox24 = SizedBox(height: 24.h);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        sizedBox24,
-        _buildUserInformation(context),
-        sizedBox24,
-        _buildSettingOptions(context, appStateProvider),
-      ],
+    return BlocProvider<SettingBloc>(
+      create: (context) => SettingBloc(userProfile),
+      child: BlocListener<SettingBloc, SettingState>(
+        listener: (context, state) {
+          if (state is SettingInitial) {
+            if (state.loading) {
+              LoadingScreen().show(context: context);
+            } else {
+              LoadingScreen().hide();
+            }
+            if (state.error != null && state.error!) {
+              FlashMessage(
+                context: context,
+                message: AppLocalizations.of(context)!.could_not_update_avatar,
+                type: FlashMessageType.error,
+              );
+            }
+          }
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            sizedBox24,
+            _buildUserInformation(context),
+            sizedBox24,
+            _buildSettingOptions(context, appStateProvider),
+          ],
+        ),
+      ),
     );
   }
 
@@ -72,8 +95,7 @@ class SettingScreen extends StatelessWidget {
                 onTap: () {
                   FlashMessage(
                     context: context,
-                    title: "Thông báo",
-                    content: "đây là nội dung thông báo",
+                    message: "đây là nội dung thông báo",
                     type: FlashMessageType.info,
                   );
                 },
@@ -104,10 +126,7 @@ class SettingScreen extends StatelessWidget {
   Widget _buildUserInformation(BuildContext context) {
     return Column(
       children: [
-        UserAvatar(
-          urlImage: userProfile.urlImage,
-          userID: userProfile.profile!.id!,
-        ),
+        const UserAvatar(),
         SizedBox(height: 12.h),
         Text(
           userProfile.profile!.fullName,

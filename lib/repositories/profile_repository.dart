@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:chat_app/core/enum/enums.dart';
+import 'package:chat_app/core/utils/constants.dart';
 import 'package:chat_app/datasources/remote_datasources/profile_remote_datasource.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:chat_app/models/url_image.dart';
@@ -13,6 +15,7 @@ abstract class ProfileRepository {
   Future<Profile?> getUserProfile({required String? userID});
   Future<void> saveToProfileBox({required Profile? profile});
   Future<UserProfile?> getProfileAtLocalStorage({required String userID});
+  Future<URLImage?> updateAvatar({required String path, required String userID});
 }
 
 class ProfileRepositoryImpl implements ProfileRepository {
@@ -104,5 +107,20 @@ class ProfileRepositoryImpl implements ProfileRepository {
       }
       i++;
     } while (!isInitLocalDataSource);
+  }
+
+  @override
+  Future<URLImage?> updateAvatar({
+    required String path,
+    required String userID,
+  }) async {
+    final image = await _profileRemoteDataSource.uploadFile(
+      image: path,
+      type: FileUploadType.path,
+      filePath: StorageKey.pPROFILE,
+      fileName: userID,
+    );
+    if (image == null) return null;
+    return URLImage(url: image, type: TypeImage.remote);
   }
 }

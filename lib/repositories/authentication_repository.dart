@@ -1,3 +1,4 @@
+import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/utils/constants.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:chat_app/models/url_image.dart';
@@ -44,7 +45,8 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
             fileName: authUser.uid,
           ) ??
           await _profileRemoteDataSource.uploadFile(
-            url: authUser.photoURL!,
+            image: authUser.photoURL!,
+            type: FileUploadType.url,
             filePath: StorageKey.pPROFILE,
             fileName: authUser.uid,
           );

@@ -63,5 +63,10 @@
     "login_fail": "Đăng nhập thất bại!",
     "change_language": "Thay đổi ngôn ngữ",
     "viet_nam": "Tiếng Việt",
-    "english": "Tiếng Anh"
+    "english": "Tiếng Anh",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "info": "Thông báo",
+    "warning": "Cảnh báo",
+    "could_not_update_avatar": "Không thể cập nhật ảnh đại diện!"
 }

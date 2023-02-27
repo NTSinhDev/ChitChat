@@ -1,45 +1,104 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/core/res/images_animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:chat_app/core/enum/enums.dart';
 import 'package:lottie/lottie.dart';
 
+import 'package:chat_app/core/enum/enums.dart';
+import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/res/images_animations.dart';
+
 class FlashMessage {
-  final String title;
-  final String content;
+  final String message;
   final FlashMessageType type;
 
   FlashMessage({
     required BuildContext context,
-    required this.title,
-    required this.content,
+    required this.message,
     required this.type,
   }) {
     _showMessage(context);
   }
-
+  
   _showMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(FlashMessageScreen(
-      title: title,
-      content: content,
-      type: type,
+      flashMessageModel: _createFlashMessageModel(context),
     ).build(context));
+  }
+
+  FlashMessageModel _createFlashMessageModel(BuildContext context) {
+    switch (type) {
+      case FlashMessageType.error:
+        final Widget fontOf = Container(
+          margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+          width: 28,
+          child: Lottie.asset(
+            ImgAnmConstants.aFailed,
+            fit: BoxFit.fitWidth,
+          ),
+        );
+        const color = Colors.red;
+        final title = AppLocalizations.of(context)!.error;
+
+        return FlashMessageModel(
+          fontOfTitle: fontOf,
+          title: title,
+          color: color,
+          message: message,
+        );
+      case FlashMessageType.warning:
+        final Widget fontOf = Container(
+          margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+          width: 28,
+          child: Lottie.asset(
+            ImgAnmConstants.aWarning,
+            fit: BoxFit.fitWidth,
+          ),
+        );
+        const color = Colors.orange;
+        final title = AppLocalizations.of(context)!.warning;
+
+        return FlashMessageModel(
+          fontOfTitle: fontOf,
+          title: title,
+          color: color,
+          message: message,
+        );
+      case FlashMessageType.info:
+        const Widget fontOf = Icon(
+          Icons.info,
+          color: Colors.blue,
+          size: 24,
+        );
+        const color = Colors.blue;
+        final title = AppLocalizations.of(context)!.info;
+        return FlashMessageModel(
+          fontOfTitle: fontOf,
+          title: title,
+          color: color,
+          message: message,
+        );
+      case FlashMessageType.success:
+        const Widget fontOf =
+            Icon(Icons.check_circle, color: Colors.green, size: 22);
+        const color = Colors.green;
+        final title = AppLocalizations.of(context)!.success;
+        return FlashMessageModel(
+          fontOfTitle: fontOf,
+          title: title,
+          color: color,
+          message: message,
+        );
+    }
   }
 }
 
 class FlashMessageScreen extends StatelessWidget {
-  final String title;
-  final String content;
-  final FlashMessageType type;
+  final FlashMessageModel flashMessageModel;
 
   const FlashMessageScreen({
     super.key,
-    required this.title,
-    required this.content,
-    required this.type,
+    required this.flashMessageModel,
   });
 
   @override
@@ -65,7 +124,7 @@ class FlashMessageScreen extends StatelessWidget {
             Container(
               width: 10.w,
               decoration: BoxDecoration(
-                color: _handleColor(),
+                color: flashMessageModel.color,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(14.h),
                   bottomLeft: Radius.circular(14.h),
@@ -85,10 +144,10 @@ class FlashMessageScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              _fontOfTitleWidget(),
+                              flashMessageModel.fontOfTitle,
                               SizedBox(width: 4.w),
                               Text(
-                                title,
+                                flashMessageModel.title,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleMedium!
@@ -98,7 +157,7 @@ class FlashMessageScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            content,
+                            flashMessageModel.message,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelSmall!
@@ -124,52 +183,17 @@ class FlashMessageScreen extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _fontOfTitleWidget() {
-    switch (type) {
-      case FlashMessageType.error:
-        return Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-          width: 28,
-          child: Lottie.asset(
-            ImgAnmConstants.aFailed,
-            fit: BoxFit.fitWidth,
-          ),
-        );
-      case FlashMessageType.warning:
-        return Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-          width: 28,
-          child: Lottie.asset(
-            ImgAnmConstants.aWarning,
-            fit: BoxFit.fitWidth,
-          ),
-        );
-      case FlashMessageType.info:
-        return const Icon(
-          Icons.info,
-          color: Colors.blue,
-          size: 24,
-        );
-      case FlashMessageType.success:
-        return const Icon(Icons.check_circle, color: Colors.green, size: 22);
-      default:
-        return const Icon(Icons.check_circle, color: Colors.green, size: 22);
-    }
-  }
-
-  Color _handleColor() {
-    switch (type) {
-      case FlashMessageType.error:
-        return Colors.red;
-      case FlashMessageType.warning:
-        return Colors.orange;
-      case FlashMessageType.info:
-        return Colors.blue;
-      case FlashMessageType.success:
-        return Colors.green;
-      default:
-        return Colors.green;
-    }
-  }
+class FlashMessageModel {
+  final Widget fontOfTitle;
+  final Color color;
+  final String title;
+  final String message;
+  FlashMessageModel({
+    required this.fontOfTitle,
+    required this.color,
+    required this.title,
+    required this.message,
+  });
 }
