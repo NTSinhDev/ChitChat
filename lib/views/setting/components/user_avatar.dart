@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/providers/app_state_provider.dart';
 import 'package:chat_app/widgets/state_avatar_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,14 +12,12 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UserAvatar extends StatefulWidget {
-  final String avatar;
+  final URLImage urlImage;
   final String userID;
-  final bool theme;
   const UserAvatar({
     super.key,
-    required this.avatar,
+    required this.urlImage,
     required this.userID,
-    required this.theme,
   });
 
   @override
@@ -34,7 +33,7 @@ class _UserAvatarState extends State<UserAvatar> {
           Container(
             padding: EdgeInsets.all(12.h),
             child: StateAvatar(
-              avatar: widget.avatar,
+              urlImage: widget.urlImage,
               isStatus: false,
               radius: 120.r,
             ),
@@ -46,7 +45,6 @@ class _UserAvatarState extends State<UserAvatar> {
               width: 52.w,
               height: 52.h,
               decoration: BoxDecoration(
-                color: widget.theme ? darkColor : lightColor,
                 borderRadius: BorderRadius.circular(30.r),
               ),
               child: InkWell(

@@ -9,3 +9,8 @@ const JSON_SPINNER = '$animation/spinner.json';
 const JSON_QUESTION = '$animation/questions_mark.json';
 const JSON_MAN_ICON = '$animation/man_icon.json';
 const JSON_SIGNUP = '$animation/signup.json';
+
+class ImgAnmConstants {
+  static const aFailed = '$animation/failed.json';
+  static const aWarning = '$animation/warning.json';
+}

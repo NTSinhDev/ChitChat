@@ -99,11 +99,11 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Profile?> createProfile({required User authUser}) async {
     final profileMap = {
-      AuthConstant.idUserField: authUser.uid,
-      AuthConstant.emailField: authUser.email,
-      AuthConstant.fullNameField: authUser.displayName,
-      AuthConstant.urlImageField: "",
-      AuthConstant.userMessagingTokenField: "",
+      FireConstant.idUserField: authUser.uid,
+      FireConstant.emailField: authUser.email,
+      FireConstant.fullNameField: authUser.displayName,
+      FireConstant.urlImageField: "",
+      FireConstant.userMessagingTokenField: "",
     };
 
     await _profileDocument.doc(authUser.uid).set(profileMap);

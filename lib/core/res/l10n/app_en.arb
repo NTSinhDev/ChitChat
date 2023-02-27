@@ -31,7 +31,7 @@
 
     "add_friend": "Add friend",
     "recommend": "Recommend",
-
+    "search": "Search",
     "friend_request": "Friend requests",
     "accept": "Accept",
     "delete": "Delete",
@@ -60,5 +60,10 @@
     "chats": "Chats",
     "groups": "Groups",
     "calls": "Calls",
-    "personal": "Personal"
+    "personal": "Personal",
+    "login_fail": "Login failed!",
+    "change_language": "Change language",
+    "viet_nam": "Vietnam",
+    "english": "English"
+
 }

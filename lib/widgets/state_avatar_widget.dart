@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/providers/app_state_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +11,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class StateAvatar extends StatefulWidget {
-  final String avatar;
+  final URLImage urlImage;
   final bool isStatus;
   final double radius;
   const StateAvatar({
     Key? key,
-    required this.avatar,
+    required this.urlImage,
     required this.isStatus,
     required this.radius,
   }) : super(key: key);
@@ -28,45 +31,44 @@ class _StateAvatarState extends State<StateAvatar> {
     AppStateProvider appState = context.watch<AppStateProvider>();
     return Stack(
       children: [
-        _avatarWidget(appState),
+        _buildAvatar(appState),
         if (widget.isStatus) ...[
-          Positioned(
-            bottom: widget.radius == 40.r
-                ? -2.h
-                : 2.h,
-            right: widget.radius == 40.r
-                ? -1.w
-                : 2.w,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 2.w,
-                vertical: 2.h,
-              ),
-              decoration: BoxDecoration(
-                color:
-                    appState.darkMode ? const Color(0xFF303030) : Colors.white,
-                borderRadius: BorderRadius.circular(40.r),
-              ),
-              child: Container(
-                width: 10.h,
-                height: 10.h,
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(40.r),
-                ),
-              ),
-            ),
-          ),
+          _buildGreenTickOnline(appState),
         ],
       ],
     );
   }
 
-  SizedBox _avatarWidget(AppStateProvider appState) {
+  Widget _buildGreenTickOnline(AppStateProvider appState) {
+    return Positioned(
+      bottom: widget.radius == 40.r ? -2.h : 2.h,
+      right: widget.radius == 40.r ? -1.w : 2.w,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 2.w,
+          vertical: 2.h,
+        ),
+        decoration: BoxDecoration(
+          color: appState.darkMode ? const Color(0xFF303030) : Colors.white,
+          borderRadius: BorderRadius.circular(40.r),
+        ),
+        child: Container(
+          width: 10.h,
+          height: 10.h,
+          decoration: BoxDecoration(
+            color: Colors.green,
+            borderRadius: BorderRadius.circular(40.r),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAvatar(AppStateProvider appState) {
     return SizedBox(
       width: widget.radius,
       height: widget.radius,
-      child: widget.avatar == ''
+      child: widget.urlImage.url == null
           ? CircleAvatar(
               backgroundColor:
                   appState.darkMode ? darkGreyLightMode : lightGreyDarkMode,
@@ -78,9 +80,11 @@ class _StateAvatarState extends State<StateAvatar> {
             )
           : CircleAvatar(
               backgroundColor: Colors.grey.shade800,
-              backgroundImage: CachedNetworkImageProvider(
-                widget.avatar,
-              ),
+              backgroundImage: widget.urlImage.type == TypeImage.remote
+                  ? CachedNetworkImageProvider(
+                      widget.urlImage.url!,
+                    )
+                  : Image.file(File(widget.urlImage.url!)).image,
             ),
     );
   }

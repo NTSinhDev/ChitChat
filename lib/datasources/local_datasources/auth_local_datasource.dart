@@ -14,12 +14,11 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   AuthLocalDataSourceImpl({required this.sharedPreferences});
 
   @override
-  String? getUID() => sharedPreferences.getString(StorageKey.kUIDSHARED);
+  String? getUID() => sharedPreferences.getString(StorageKey.sUID);
 
   @override
   Future<void> saveUIDToLocal(String uid) async {
-    final isSaved =
-        await sharedPreferences.setString(StorageKey.kUIDSHARED, uid);
+    final isSaved = await sharedPreferences.setString(StorageKey.sUID, uid);
     //TODO: làm gì đó ở đây đi
     if (isSaved) {
       log('🚀log⚡ ngon!');
@@ -30,7 +29,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<void> removeUID() async {
-    final isRemoved = await sharedPreferences.remove(StorageKey.kUIDSHARED);
+    final isRemoved = await sharedPreferences.remove(StorageKey.sUID);
     //TODO: làm gì đó ở đây đi
     if (isRemoved) {
     } else {}

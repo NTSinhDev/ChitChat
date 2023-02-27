@@ -1,5 +1,5 @@
+import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
-import 'package:chat_app/views/information_chat_room/information_chat_room.dart';
 import 'package:chat_app/widgets/state_avatar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +33,7 @@ AppBar buildAppBar({
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               StateAvatar(
-                avatar: '',
-                // avatar: state.friend.urlImage!,
+                urlImage: URLImage(),
                 isStatus: state.isOnl,
                 radius: 40.r,
               ),
