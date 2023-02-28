@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,6 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/core/res/images_animations.dart';
+import 'package:provider/provider.dart';
 
 class FlashMessage {
   final String message;
@@ -19,11 +21,13 @@ class FlashMessage {
   }) {
     _showMessage(context);
   }
-  
+
   _showMessage(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(FlashMessageScreen(
-      flashMessageModel: _createFlashMessageModel(context),
-    ).build(context));
+    ScaffoldMessenger.of(context).showSnackBar(
+      FlashMessageScreen(
+        flashMessageModel: _createFlashMessageModel(context),
+      ).build(context),
+    );
   }
 
   FlashMessageModel _createFlashMessageModel(BuildContext context) {
@@ -103,6 +107,11 @@ class FlashMessageScreen extends StatelessWidget {
 
   @override
   SnackBar build(BuildContext context) {
+    final ThemeProvider themeProvider = Provider.of<ThemeProvider>(
+      context,
+      listen: false,
+    );
+
     return SnackBar(
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -133,7 +142,9 @@ class FlashMessageScreen extends StatelessWidget {
             ),
             Expanded(
               child: Container(
-                color: Colors.white,
+                color: themeProvider.isDarkMode
+                    ? Colors.grey.shade800
+                    : Colors.white,
                 child: Row(
                   children: [
                     SizedBox(width: 14.w),
@@ -169,9 +180,10 @@ class FlashMessageScreen extends StatelessWidget {
                     IconButton(
                       onPressed: () =>
                           ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.clear_rounded,
-                        color: darkColor,
+                        color:
+                            themeProvider.isDarkMode ? lightColor : darkColor,
                       ),
                     ),
                   ],
