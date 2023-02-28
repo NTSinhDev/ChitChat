@@ -1,4 +1,6 @@
+import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/helpers/loading/loading_screen.dart';
+import 'package:chat_app/core/helpers/notify/flash_message.dart';
 import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:chat_app/views/login/components/signin_other_ways.dart';
 import 'package:chat_app/views/login/components/signin_title.dart';
@@ -42,8 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
             LoadingScreen().hide();
           }
           if (state.message != null) {
-            showToast(state.message ??
-                AppLocalizations.of(context)!.cannot_connect_to_server);
+            FlashMessage(
+              context: context,
+              message: state.message!,
+              type: FlashMessageType.error,
+            );
           }
         }
       },

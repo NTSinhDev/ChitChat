@@ -1,5 +1,6 @@
 import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/helpers/loading/loading_screen.dart';
+import 'package:chat_app/core/helpers/notify/alert_error.dart';
 import 'package:chat_app/core/helpers/notify/flash_message.dart';
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
@@ -77,8 +78,8 @@ class SettingScreen extends StatelessWidget {
                 onTap: () {
                   FlashMessage(
                     context: context,
-                    message: "đây là nội dung thông báo",
-                    type: FlashMessageType.info,
+                    message: "Đây là nội dung thông báo",
+                    type: FlashMessageType.error,
                   );
                 },
               ),
