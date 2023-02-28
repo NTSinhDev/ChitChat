@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_app/models/user_profile.dart';
+
 abstract class AuthenticationEvent {
   const AuthenticationEvent();
 }
@@ -13,7 +15,6 @@ class RegisterEvent extends AuthenticationEvent {
     required this.password,
   });
 }
-
 
 class NormalLoginEvent extends AuthenticationEvent {
   final String email;
@@ -42,3 +43,10 @@ class GoogleLoginEvent extends AuthenticationEvent {}
 class FacebookLoginEvent extends AuthenticationEvent {}
 
 class LogoutEvent extends AuthenticationEvent {}
+
+class UpdateAuthInfoEvent extends AuthenticationEvent {
+  final UserProfile userProfile;
+  UpdateAuthInfoEvent({
+    required this.userProfile,
+  });
+}

@@ -71,12 +71,13 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     String? urlImage;
 
     try {
+      final path = "$filePath/$fileName";
       final file = type == FileUploadType.url
-          ? await getImageFileFromNetwork(image)
+          ? await getImageFileFromNetwork(image, path)
           : File(image);
       if (file == null) return null;
 
-      final storageRef = _storage.ref("$filePath/$fileName");
+      final storageRef = _storage.ref(path);
 
       await storageRef.putFile(file, settableMetaData);
 
@@ -89,11 +90,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     }
   }
 
-  Future<File?> getImageFileFromNetwork(String url) async {
-    var response = await http.get(Uri.parse(url));
+  Future<File?> getImageFileFromNetwork(String url, String path) async {
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      var file = File(
-          '${Directory.systemTemp.path}/${DateTime.now().millisecondsSinceEpoch}');
+      final file = File(path);
       await file.writeAsBytes(response.bodyBytes);
       return file;
     } else {

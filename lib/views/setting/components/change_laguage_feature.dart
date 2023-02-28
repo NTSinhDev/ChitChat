@@ -1,6 +1,7 @@
-import 'package:chat_app/view_model/blocs/authentication/authentication_bloc.dart';
+import 'package:chat_app/core/res/images_animations.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
+import 'package:chat_app/views/setting/components/setting_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,93 +23,57 @@ class ChangeLanguageFeature extends StatelessWidget {
 
   _changeLanguage(BuildContext context) {
     final langProvider = Provider.of<LanguageProvider>(context, listen: false);
-    final userID = Provider.of<AuthenticationBloc>(context, listen: false)
-            .userProfile
-            ?.profile
-            ?.id ??
-        '';
+
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return Container(
-          height: 180.h,
-          padding: EdgeInsets.symmetric(
-            vertical: 12.h,
-            horizontal: 20.w,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12.h),
-              topRight: Radius.circular(12.h),
-            ),
-          ),
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.change_language,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: Colors.black),
-                ),
-                SizedBox(height: 8.h),
-                ListTile(
-                  onTap: () => _changeLocale(context, 'vi_VN', langProvider),
-                  leading: SizedBox(
-                    width: 28.w,
-                    child: Image.asset(
-                      "assets/logos/vietname_icon.png",
-                      fit: BoxFit.fitWidth,
-                    ),
-                  ),
-                  title: Text(
-                    AppLocalizations.of(context)!.viet_nam,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: Colors.black),
-                  ),
-                  trailing: langProvider.locale.languageCode == 'vi'
-                      ? const Icon(
-                          CupertinoIcons.check_mark_circled,
-                          color: Colors.blue,
-                        )
-                      : null,
-                ),
-                ListTile(
-                    onTap: () => _changeLocale(context, 'en_US', langProvider),
-                    leading: SizedBox(
-                      width: 28.w,
-                      child: Image.asset(
-                        "assets/logos/english_icon.png",
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                    title: Text(
-                      AppLocalizations.of(context)!.english,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium!
-                          .copyWith(color: Colors.black),
-                    ),
-                    trailing: langProvider.locale.languageCode == 'en'
-                        ? const Icon(
-                            CupertinoIcons.check_mark_circled,
-                            color: Colors.blue,
-                          )
-                        : null),
-              ],
-            ),
-          ),
+      builder: (BuildContext bContext) {
+        final btmSheetItem1 = _createSettingBottomSheetItem(
+          context: bContext,
+          lang: langProvider,
+          locale: 'vi_VN',
+          code: 'vi',
+          img: ImgAnmConstants.iVietnam,
+          title: AppLocalizations.of(context)!.viet_nam,
+        );
+
+        final btmSheetItem2 = _createSettingBottomSheetItem(
+          context: bContext,
+          lang: langProvider,
+          locale: 'en_US',
+          code: 'en',
+          img: ImgAnmConstants.iEnglish,
+          title: AppLocalizations.of(context)!.english,
+        );
+
+        return SettingBtmSheet(
+          btmSheetTitle: AppLocalizations.of(bContext)!.change_language,
+          btmSheetItems: [btmSheetItem1, btmSheetItem2],
         );
       },
     );
   }
 
-  _changeLocale(BuildContext context, String locale, LanguageProvider lang) {
-    lang.toggleLocale(language: locale);
-  }
+  SettingBottomSheetItem _createSettingBottomSheetItem({
+    required BuildContext context,
+    required LanguageProvider lang,
+    required String locale,
+    required String code,
+    required String img,
+    required String title,
+  }) =>
+      SettingBottomSheetItem(
+        leading: SizedBox(
+          width: 28.w,
+          child: Image.asset(img, fit: BoxFit.fitWidth),
+        ),
+        title: title,
+        ontap: () => lang.toggleLocale(language: locale),
+        trailing: lang.locale.languageCode == code
+            ? const Icon(
+                CupertinoIcons.check_mark_circled,
+                color: Colors.blue,
+              )
+            : null,
+      );
 }

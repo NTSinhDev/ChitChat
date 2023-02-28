@@ -13,7 +13,6 @@ abstract class StorageLocalDataSource {
 }
 
 class StorageLocalDataSourceImpl implements StorageLocalDataSource {
-  
   @override
   Future<String?> getFile({required String fileName}) async {
     try {
@@ -33,21 +32,15 @@ class StorageLocalDataSourceImpl implements StorageLocalDataSource {
   @override
   Future<void> uploadFile({
     required String fileName,
-    required String remotePath,
+    required String remotePath
   }) async {
     final directory = await getApplicationDocumentsDirectory();
 
     final filePath = '${directory.path}/$fileName';
 
-    if (filePath.isEmpty) {
-      return;
-    }
+    if (filePath.isEmpty) return;
 
-    final response = await http.get(
-      Uri.parse(
-        remotePath,
-      ),
-    );
+    final response = await http.get(Uri.parse(remotePath));
     if (response.statusCode == 200) {
       File file = File(filePath);
 

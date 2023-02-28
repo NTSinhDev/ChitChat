@@ -22,3 +22,4 @@ class FireConstant {
   static const String urlImageField = "urlImage";
   static const String userMessagingTokenField = "userMessagingToken";
 }
+

@@ -9,30 +9,43 @@ part 'setting_state.dart';
 
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
   UserProfile userProfile;
-  final ProfileRepository repository = ProfileRepositoryImpl();
+  final ProfileRepository profileRepository = ProfileRepositoryImpl();
+  final StorageRepository storageRepository = StorageRepositoryImpl();
   SettingBloc(
     this.userProfile,
   ) : super(SettingInitial(false)) {
     on<UpdateAvatarEvent>((event, emit) async {
-      emit(SettingInitial(true));
+      emit(UpdatedAvatarState(true, userProfile: userProfile));
 
       if (userProfile.profile!.id == null || userProfile.profile!.id!.isEmpty) {
-        return emit(SettingInitial(false));
+        return emit(UpdatedAvatarState(
+          false,
+          userProfile: userProfile,
+          error: true,
+        ));
       }
 
-      final urlImage = await repository.updateAvatar(
+      final urlImage = await profileRepository.updateAvatar(
         path: event.path,
         userID: userProfile.profile!.id!,
       );
 
-      if (urlImage == null) return emit(SettingInitial(false, error: true));
+      if (urlImage == null) {
+        return emit(UpdatedAvatarState(
+          false,
+          error: true,
+          userProfile: userProfile,
+        ));
+      }
 
       userProfile = UserProfile(
         profile: userProfile.profile,
         urlImage: urlImage,
       );
+
+      await storageRepository.saveFileToStorage(userProfile: userProfile);
       
-      emit(SettingInitial(false));
+      emit(UpdatedAvatarState(false, userProfile: userProfile));
     });
   }
 }

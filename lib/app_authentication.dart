@@ -65,9 +65,6 @@ class _AppAuthenticationState extends State<AppAuthentication> {
           }
           // Home page
           if (state is LoggedState) {
-            final name = state.userProfile.profile == null
-                ? "Unknowned"
-                : state.userProfile.profile!.fullName;
             // return Scaffold(
             //   body: Center(
             //     child: Column(

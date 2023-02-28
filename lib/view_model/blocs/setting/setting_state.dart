@@ -7,6 +7,15 @@ abstract class SettingState {
 }
 
 class SettingInitial extends SettingState {
+  SettingInitial(super.loading);
+}
+
+class UpdatedAvatarState extends SettingState {
+  final UserProfile userProfile;
   final bool? error;
-  SettingInitial(super.loading, {this.error});
+  UpdatedAvatarState(
+    super.loading, {
+    required this.userProfile,
+    this.error,
+  });
 }

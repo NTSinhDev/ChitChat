@@ -29,32 +29,14 @@ class SettingScreen extends StatelessWidget {
     final sizedBox24 = SizedBox(height: 24.h);
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(userProfile),
-      child: BlocListener<SettingBloc, SettingState>(
-        listener: (context, state) {
-          if (state is SettingInitial) {
-            if (state.loading) {
-              LoadingScreen().show(context: context);
-            } else {
-              LoadingScreen().hide();
-            }
-            if (state.error != null && state.error!) {
-              FlashMessage(
-                context: context,
-                message: AppLocalizations.of(context)!.could_not_update_avatar,
-                type: FlashMessageType.error,
-              );
-            }
-          }
-        },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            sizedBox24,
-            _buildUserInformation(context),
-            sizedBox24,
-            _buildSettingOptions(context, appStateProvider),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          sizedBox24,
+          _buildUserInformation(context),
+          sizedBox24,
+          _buildSettingOptions(context, appStateProvider),
+        ],
       ),
     );
   }
