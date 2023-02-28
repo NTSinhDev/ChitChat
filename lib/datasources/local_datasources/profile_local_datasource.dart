@@ -21,7 +21,7 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
       Hive.registerAdapter(ProfileAdapter());
     }
 
-    _profileBox = await Hive.openBox<Profile>(StorageKey.kPROFILEBOX);
+    _profileBox = await Hive.openBox<Profile>(StorageKey.bPROFILE);
     isOpen = _profileBox;
     return isOpen;
   }

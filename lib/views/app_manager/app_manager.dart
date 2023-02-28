@@ -1,4 +1,5 @@
 import 'package:chat_app/models/profile.dart';
+import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/view_model/providers/app_state_provider.dart';
 import 'package:chat_app/views/calling/calling_screen.dart';
@@ -16,8 +17,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AppManager extends StatefulWidget {
-  final Profile profile;
-  const AppManager({super.key, required this.profile});
+  final UserProfile userProfile;
+  const AppManager({super.key, required this.userProfile});
 
   @override
   State<AppManager> createState() => _AppManagerState();
@@ -29,49 +30,52 @@ class _AppManagerState extends State<AppManager> {
 
   @override
   Widget build(BuildContext context) {
-    final List<String> titlesPage = [
-      AppLocalizations.of(context)!.chats,
-      AppLocalizations.of(context)!.groups,
-      AppLocalizations.of(context)!.calls,
-      AppLocalizations.of(context)!.personal,
-    ];
+    // final List<String> titlesPage = [
+    //   // AppLocalizations.of(context)!.chats,
+    //   // AppLocalizations.of(context)!.groups,
+    //   // AppLocalizations.of(context)!.calls,
+    //   AppLocalizations.of(context)!.personal,
+    // ];
 
-    final List<Widget> pages = [
-      HomeScreen(),
-      const GroupChatScreen(),
-      const CallingScreen(),
-      SettingScreen(
-        profile: widget.profile,
-      )
-    ];
-    List<dynamic>? valueRequest = context.watch<ChatBloc>().requests;
-    bool theme = context.watch<AppStateProvider>().darkMode;
-    String urlImage = context.watch<AppStateProvider>().urlImage;
+    // final List<Widget> pages = [
+    //   // HomeScreen(),
+    //   // const GroupChatScreen(),
+    //   // const CallingScreen(),
+    //   SettingScreen(
+    //     userProfile: widget.userProfile,
+    //   )
+    // ];
+    // List<dynamic>? valueRequest = context.watch<ChatBloc>().requests;
+    // bool theme = context.watch<AppStateProvider>().darkMode;
+    // String urlImage = context.watch<AppStateProvider>().urlImage;
 
     return WillPopScope(
-      onWillPop: () => _exitApp(theme),
+      onWillPop: () => _exitApp(true),
       child: Scaffold(
         appBar: appBarPageManagar(
-          titlesPage[currentPage],
-          context,
-          urlImage,
-          '',
-          valueRequest != null ? valueRequest.length : 0,
-          () {
+          currentPage: AppLocalizations.of(context)!.personal,
+          context: context,
+          urlImage: widget.userProfile.urlImage,
+          name: widget.userProfile.profile!.fullName,
+          requests: 0,
+          ontapAvatar: () {
             setState(() {
               currentPage = 3;
             });
           },
         ),
-        body: SafeArea(child: pages[currentPage]),
+        body: SafeArea(
+            child: SettingScreen(
+          userProfile: widget.userProfile,
+        )),
         bottomNavigationBar: SizedBox(
           height: 76.h,
           child: BottomNavigationBar(
             currentIndex: currentPage,
             onTap: (currentIndex) {
-              setState(() {
-                currentPage = currentIndex;
-              });
+              // setState(() {
+              //   currentPage = currentIndex;
+              // });
             },
             selectedItemColor:
                 Theme.of(context).textSelectionTheme.selectionColor,
@@ -79,27 +83,27 @@ class _AppManagerState extends State<AppManager> {
               BottomNavigationBarItem(
                 icon: const StateBottomNavigationBar(
                   icon: CupertinoIcons.chat_bubble_fill,
-                  valueState: '1',
+                  valueState: '0',
                 ),
-                label: titlesPage[0],
+                label: AppLocalizations.of(context)!.chats,
               ),
               BottomNavigationBarItem(
                 icon: const StateBottomNavigationBar(
                   icon: CupertinoIcons.group_solid,
                 ),
-                label: titlesPage[1],
+                label: AppLocalizations.of(context)!.groups,
               ),
               BottomNavigationBarItem(
                 icon: const StateBottomNavigationBar(
                   icon: CupertinoIcons.phone_solid,
                 ),
-                label: titlesPage[2],
+                label: AppLocalizations.of(context)!.calls,
               ),
               BottomNavigationBarItem(
                 icon: const StateBottomNavigationBar(
                   icon: Icons.settings,
                 ),
-                label: titlesPage[3],
+                label:    AppLocalizations.of(context)!.personal,
               ),
             ],
           ),

@@ -5,13 +5,14 @@ class FeatureSetting extends StatelessWidget {
   final IconData icon;
   final String title;
   final Color color;
-  final Function() onTap;
+  final Widget? trailing;
+  final Function()? onTap;
   const FeatureSetting({
     super.key,
     required this.icon,
     required this.title,
     required this.color,
-    required this.onTap,
+    this.onTap, this.trailing,
   });
 
   @override
@@ -25,8 +26,8 @@ class FeatureSetting extends StatelessWidget {
           6.w,
           0,
         ),
-        width: 50.w,
-        height: 50.h,
+        width: 44.w,
+        height: 44.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(40.r),
           color: color,
@@ -43,6 +44,7 @@ class FeatureSetting extends StatelessWidget {
         title,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
+      trailing: trailing,
     );
   }
 }

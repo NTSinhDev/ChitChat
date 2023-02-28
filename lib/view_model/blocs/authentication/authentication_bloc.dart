@@ -25,7 +25,19 @@ class AuthenticationBloc
     on<LogoutEvent>(_logoutEvent);
     on<InitRegisterEvent>((event, emit) => emit(RegisterState(loading: false)));
     on<InitLoginEvent>((event, emit) => emit(LoginState(loading: false)));
-    on<FacebookLoginEvent>((event, emit) {});
+    on<UpdateAuthInfoEvent>(_updateAuthInfo);
+  }
+
+  _updateAuthInfo(
+    UpdateAuthInfoEvent event,
+    Emitter<AuthenticationState> emit,
+  ) {
+    if (event.userProfile.profile == null ||
+        event.userProfile.urlImage.url == null) {
+      return;
+    }
+    userProfile = event.userProfile;
+    emit(LoggedState(userProfile: userProfile!, loading: false));
   }
 
   _checkAuthEvent(

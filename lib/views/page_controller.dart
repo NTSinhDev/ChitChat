@@ -1,15 +1,16 @@
-import 'package:chat_app/models/profile.dart';
+import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/views/setting/setting_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppPageController extends StatefulWidget {
-  final Profile profile; 
+  final UserProfile userProfile;
   // final List<dynamic>? chatRooms;
   // final List<dynamic>? friendRequests;
   // final List<dynamic>? listFriend;
   const AppPageController({
-    super.key, required this.profile,
+    super.key,
+    required this.userProfile,
     // required this.chatRooms,
     // this.friendRequests,
     // required this.listFriend,
@@ -27,7 +28,7 @@ class _AppPageControllerState extends State<AppPageController> {
 
   @override
   Widget build(BuildContext context) {
-    return SettingScreen(profile: widget.profile);
+    return SettingScreen(userProfile: widget.userProfile);
     // return BlocProvider<ChatBloc>(
     //   create: (_) => ChatBloc(
     //     listDataRoom: widget.chatRooms!,

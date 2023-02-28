@@ -1,12 +1,9 @@
-import 'package:chat_app/main.dart';
 import 'package:chat_app/app_authentication.dart';
 import 'package:chat_app/core/res/theme.dart';
 import 'package:chat_app/repositories/authentication_repository.dart';
-import 'package:chat_app/repositories/profile_repository.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -35,14 +32,14 @@ class _ChitChatAppState extends State<ChitChatApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: _initProviders(),
+      providers: injectProviders(sharedPreferences: widget.sharedPreferences),
       child: Consumer3<AppStateProvider, ThemeProvider, LanguageProvider>(
         builder: (context, appState, theme, language, child) {
           return MaterialApp(
             title: 'ChitChat App',
             debugShowCheckedModeBanner: false,
             themeMode: theme.themeMode,
-            theme: appState.darkMode ? AppTheme.dark() : AppTheme.light(),
+            theme: AppTheme.light(),
             darkTheme: AppTheme.dark(),
             locale: language.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -62,15 +59,5 @@ class _ChitChatAppState extends State<ChitChatApp> {
     final AuthenticationRepository repository =
         AuthenticationRepositoryImpl(widget.sharedPreferences);
     _userID = repository.getUIDAtLocalStorage();
-  }
-
-  List<SingleChildWidget> _initProviders() {
-    return [
-      ChangeNotifierProvider(create: (_) => AppStateProvider()),
-      ChangeNotifierProvider(
-          create: (_) => ThemeProvider(widget.sharedPreferences)),
-      ChangeNotifierProvider(
-          create: (_) => LanguageProvider(widget.sharedPreferences)),
-    ];
   }
 }

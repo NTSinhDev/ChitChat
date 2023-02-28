@@ -1,3 +1,4 @@
+import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/views/chat/components/message_item.dart';
 import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/core/utils/functions.dart';
@@ -116,7 +117,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
               if (_seen && widget.isSender) ...[
                 height4,
                 StateAvatar(
-                  avatar: widget.avatarFriend,
+                  urlImage: URLImage(),
                   isStatus: false,
                   radius: 16.r,
                 ),

@@ -1,5 +1,4 @@
 {
-
     "login": "Sign In", 
     "register": "Sign Up",
 
@@ -31,7 +30,7 @@
 
     "add_friend": "Add friend",
     "recommend": "Recommend",
-
+    "search": "Search",
     "friend_request": "Friend requests",
     "accept": "Accept",
     "delete": "Delete",
@@ -50,7 +49,7 @@
     "cannot_load_video": "Cannot load a video!",
     "loading_video": "Loading a video!",
     "darkmode": "Dark Mode",
-    "change_avatar": "Change avatar",
+    "change_avatar": "Update avatar",
     "take_a_photo": "Take a photo",
     "select_photo_gallery": "Select a photo from gallery",
     "personal_info": "Personal information",
@@ -60,5 +59,14 @@
     "chats": "Chats",
     "groups": "Groups",
     "calls": "Calls",
-    "personal": "Personal"
+    "personal": "Personal",
+    "login_fail": "Login failed!",
+    "change_language": "Change language",
+    "viet_nam": "Vietnam",
+    "english": "English",
+    "error": "Error",
+    "success": "Success",
+    "info": "Info",
+    "warning": "Warning",
+    "could_not_update_avatar": "Oops! Something went wrong when updated avatar!"
 }

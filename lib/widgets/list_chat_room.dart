@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/providers/app_state_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +56,7 @@ class _ListChatRoomState extends State<ListChatRoom> {
       onTap: () {},
       visualDensity: const VisualDensity(vertical: 0.7),
       leading: StateAvatar(
-        avatar:
-            "assets/avatars/${widget.listUsers[index][0].avatar}", //* avatar
+        urlImage: URLImage(), //* avatar
         isStatus: widget.listUsers[index][0].state, //* state
         radius: 60.r,
       ),

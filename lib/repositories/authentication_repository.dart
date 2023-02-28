@@ -1,3 +1,4 @@
+import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/utils/constants.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:chat_app/models/url_image.dart';
@@ -39,16 +40,16 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       if (authUser == null) return null;
 
       // get information of this account
-      final String? urlImage =
-          await _profileRemoteDataSource.getFile(
-                filePath: StorageKey.kPROFILEPATH,
-                fileName: authUser.uid,
-              ) ??
+      final String? urlImage = await _profileRemoteDataSource.getFile(
+            filePath: StorageKey.pPROFILE,
+            fileName: authUser.uid,
+          ) ??
           await _profileRemoteDataSource.uploadFile(
-        url: authUser.photoURL!,
-        filePath: StorageKey.kPROFILEPATH,
-        fileName: authUser.uid,
-      );
+            image: authUser.photoURL!,
+            type: FileUploadType.url,
+            filePath: StorageKey.pPROFILE,
+            fileName: authUser.uid,
+          );
 
       final Profile? profile = await _profileRemoteDataSource.getProfileById(
             userID: authUser.uid,

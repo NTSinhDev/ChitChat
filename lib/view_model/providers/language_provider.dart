@@ -1,3 +1,4 @@
+import 'package:chat_app/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,9 +10,8 @@ class LanguageProvider extends ChangeNotifier {
     _initLocale();
   }
 
-  Future toggleLocale(
-      {required String language, required String userID}) async {
-    final value = await sharedPref.setString('language', language);
+  Future toggleLocale({required String language}) async {
+    final value = await sharedPref.setString(StorageKey.sLanguage, language);
     if (value) {
       _setLocale(language: language);
     }
@@ -27,7 +27,7 @@ class LanguageProvider extends ChangeNotifier {
   }
 
   _initLocale() {
-    final language = sharedPref.getString('language');
+    final language = sharedPref.getString(StorageKey.sLanguage);
     if (language == null || language == "") {
       return locale = const Locale("vi", "VN");
     }

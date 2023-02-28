@@ -1,3 +1,4 @@
+import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/core/utils/functions.dart';
@@ -58,7 +59,7 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
       },
       visualDensity: const VisualDensity(vertical: 0.7),
       leading: StateAvatar(
-        avatar: widget.user.urlImage ?? '',
+        urlImage: URLImage(),
         isStatus: widget.presence.presence!,
         radius: 60.r,
       ),

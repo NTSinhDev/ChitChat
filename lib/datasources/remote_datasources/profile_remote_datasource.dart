@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/utils/functions.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,9 +16,10 @@ abstract class ProfileRemoteDataSource {
   Future<Profile?> getProfileById({required String userID});
   Future<Profile?> createProfile({required User authUser});
   Future<String?> uploadFile({
-    required String url,
-    required String filePath,
+    required String image,
+    required FileUploadType type,
     required String fileName,
+    required String filePath,
     SettableMetadata? settableMetaData,
   });
 }
@@ -60,7 +62,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<String?> uploadFile({
-    required String url,
+    required String image,
+    required FileUploadType type,
     required String filePath,
     required String fileName,
     SettableMetadata? settableMetaData,
@@ -68,10 +71,13 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     String? urlImage;
 
     try {
-      final file = await getImageFileFromNetwork(url);
+      final path = "$filePath/$fileName";
+      final file = type == FileUploadType.url
+          ? await getImageFileFromNetwork(image, path)
+          : File(image);
       if (file == null) return null;
 
-      final storageRef = _storage.ref("$filePath/$fileName");
+      final storageRef = _storage.ref(path);
 
       await storageRef.putFile(file, settableMetaData);
 
@@ -84,11 +90,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     }
   }
 
-  Future<File?> getImageFileFromNetwork(String url) async {
-    var response = await http.get(Uri.parse(url));
+  Future<File?> getImageFileFromNetwork(String url, String path) async {
+    final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
-      var file = File(
-          '${Directory.systemTemp.path}/${DateTime.now().millisecondsSinceEpoch}');
+      final file = File(path);
       await file.writeAsBytes(response.bodyBytes);
       return file;
     } else {
@@ -99,11 +104,11 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Profile?> createProfile({required User authUser}) async {
     final profileMap = {
-      AuthConstant.idUserField: authUser.uid,
-      AuthConstant.emailField: authUser.email,
-      AuthConstant.fullNameField: authUser.displayName,
-      AuthConstant.urlImageField: "",
-      AuthConstant.userMessagingTokenField: "",
+      FireConstant.idUserField: authUser.uid,
+      FireConstant.emailField: authUser.email,
+      FireConstant.fullNameField: authUser.displayName,
+      FireConstant.urlImageField: "",
+      FireConstant.userMessagingTokenField: "",
     };
 
     await _profileDocument.doc(authUser.uid).set(profileMap);

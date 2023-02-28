@@ -1,3 +1,4 @@
+import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/view_model/providers/app_state_provider.dart';
@@ -7,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-AppBar appBarPageManagar(
-  String currentPage,
-  BuildContext context,
-  String img,
-  String name,
-  int requests,
-  Function() ontapAvatar,
-) {
+AppBar appBarPageManagar({
+  required String currentPage,
+  required BuildContext context,
+  required URLImage urlImage,
+  required String name,
+  required int requests,
+  required Function() ontapAvatar,
+}) {
   AppStateProvider appState = context.watch<AppStateProvider>();
   return AppBar(
     toolbarHeight: 72.h,
@@ -26,7 +27,7 @@ AppBar appBarPageManagar(
             margin: EdgeInsets.only(right: 16.w),
             child: Center(
               child: StateAvatar(
-                avatar: img,
+                urlImage: urlImage,
                 isStatus: false,
                 radius: 40.r,
               ),

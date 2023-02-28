@@ -1,24 +1,24 @@
 import 'dart:developer';
+import 'package:chat_app/core/enum/enums.dart';
+import 'package:chat_app/core/helpers/notify/flash_message.dart';
 import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/view_model/providers/app_state_provider.dart';
+import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
+import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
+import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/views/setting/components/setting_bottom_sheet.dart';
 import 'package:chat_app/widgets/state_avatar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class UserAvatar extends StatefulWidget {
-  final String avatar;
-  final String userID;
-  final bool theme;
   const UserAvatar({
     super.key,
-    required this.avatar,
-    required this.userID,
-    required this.theme,
   });
 
   @override
@@ -28,143 +28,165 @@ class UserAvatar extends StatefulWidget {
 class _UserAvatarState extends State<UserAvatar> {
   @override
   Widget build(BuildContext context) {
+    final userProfile =
+        Provider.of<SettingBloc>(context, listen: false).userProfile;
+    final isDarkmode = context.watch<ThemeProvider>().isDarkMode;
+
     return Center(
       child: Stack(
         children: [
           Container(
             padding: EdgeInsets.all(12.h),
-            child: StateAvatar(
-              avatar: widget.avatar,
-              isStatus: false,
-              radius: 120.r,
-            ),
-          ),
-          Positioned(
-            bottom: 4.h,
-            right: 4.w,
-            child: Container(
-              width: 52.w,
-              height: 52.h,
-              decoration: BoxDecoration(
-                color: widget.theme ? darkColor : lightColor,
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: InkWell(
-                onTap: _changeAvatar,
-                child: Container(
-                  margin: EdgeInsets.all(6.h),
-                  width: 44.w,
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    color: lightGreyLightMode,
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.black45,
-                        offset: Offset(1, 1),
-                        blurRadius: 2,
+            child: BlocConsumer<SettingBloc, SettingState>(
+              listener: _updateAvatarListen,
+              builder: (context, state) {
+                if (state is UpdatedAvatarState) {
+                  if (state.loading) {
+                    return SizedBox(
+                      width: 120.w,
+                      height: 120.h,
+                      child: CircleAvatar(
+                        backgroundColor:
+                            isDarkmode ? darkGreyLightMode : lightGreyDarkMode,
+                        child: const Center(child: CircularProgressIndicator()),
                       ),
-                    ],
-                    borderRadius: BorderRadius.circular(
-                      30.r,
-                    ),
-                  ),
-                  child: Icon(
-                    CupertinoIcons.camera_fill,
-                    size: 20.h,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
+                    );
+                  } else {
+                    return StateAvatar(
+                      urlImage: state.userProfile.urlImage,
+                      isStatus: false,
+                      radius: 120.r,
+                    );
+                  }
+                }
+                return StateAvatar(
+                  urlImage: userProfile.urlImage,
+                  isStatus: false,
+                  radius: 120.r,
+                );
+              },
             ),
           ),
+          _updateAvatarWidget(context),
         ],
       ),
     );
   }
 
-  _changeAvatar() {
+  Widget _updateAvatarWidget(BuildContext context) {
+    return Positioned(
+      bottom: 4.h,
+      right: 4.w,
+      child: Container(
+        width: 52.w,
+        height: 52.h,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30.r),
+        ),
+        child: InkWell(
+          onTap: () => _changeAvatar(context),
+          child: Container(
+            margin: EdgeInsets.all(6.h),
+            width: 44.w,
+            height: 44.h,
+            decoration: BoxDecoration(
+              color: lightGreyLightMode,
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black45,
+                  offset: Offset(1, 1),
+                  blurRadius: 2,
+                ),
+              ],
+              borderRadius: BorderRadius.circular(
+                30.r,
+              ),
+            ),
+            child: Icon(
+              CupertinoIcons.camera_fill,
+              size: 20.h,
+              color: Colors.black,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _changeAvatar(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext context) {
-        return Container(
-          height: 180.h,
-          padding: EdgeInsets.symmetric(
-            vertical: 12.h,
-            horizontal: 20.w,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(12.h),
-              topRight: Radius.circular(12.h),
+      builder: (BuildContext bcontext) {
+        return SettingBtmSheet(
+          btmSheetTitle: AppLocalizations.of(bcontext)!.change_avatar,
+          btmSheetItems: [
+            SettingBottomSheetItem(
+              ontap: () => _pickImage(
+                source: ImageSource.camera,
+                context: context,
+              ),
+              leading: const Icon(
+                CupertinoIcons.camera_fill,
+                color: Colors.black,
+              ),
+              title: AppLocalizations.of(bcontext)!.take_a_photo,
             ),
-          ),
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  AppLocalizations.of(context)!.change_avatar,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: Colors.black),
-                ),
-                SizedBox(height: 8.h),
-                ListTile(
-                  onTap: () => _pickImage(ImageSource.camera),
-                  leading: const Icon(
-                    CupertinoIcons.camera_fill,
-                    color: Colors.black,
-                  ),
-                  title: Text(
-                    AppLocalizations.of(context)!.take_a_photo,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: Colors.black),
-                  ),
-                ),
-                ListTile(
-                  onTap: () => _pickImage(ImageSource.gallery),
-                  leading: const Icon(
-                    CupertinoIcons.photo,
-                    color: Colors.black,
-                  ),
-                  title: Text(
-                    AppLocalizations.of(context)!.select_photo_gallery,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium!
-                        .copyWith(color: Colors.black),
-                  ),
-                ),
-              ],
-            ),
-          ),
+            SettingBottomSheetItem(
+              ontap: () => _pickImage(
+                source: ImageSource.gallery,
+                context: context,
+              ),
+              leading: const Icon(
+                CupertinoIcons.photo,
+                color: Colors.black,
+              ),
+              title: AppLocalizations.of(bcontext)!.select_photo_gallery,
+            )
+          ],
         );
       },
     );
   }
 
-  Future _pickImage(ImageSource source) async {
+  Future _pickImage({
+    required ImageSource source,
+    required BuildContext context
+  }) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return;
+      if (!mounted) return;
 
-      if (!mounted) return;
-      final urlImage = await Provider.of<AppStateProvider>(
-        context,
-        listen: false,
-      ).uploadAvatar(
-        image.path,
-        widget.userID,
-      );
-      if (urlImage == null) return;
-      if (!mounted) return;
+      if (image == null) {
+        return FlashMessage(
+          context: context,
+          message: AppLocalizations.of(context)!.could_not_update_avatar,
+          type: FlashMessageType.error,
+        );
+      }
       Navigator.pop(context);
+
+      final settingBloc = context.read<SettingBloc>();
+      settingBloc.add(UpdateAvatarEvent(path: image.path));
     } on PlatformException catch (e) {
       log('Pick image failed: $e');
+    }
+  }
+
+  _updateAvatarListen(BuildContext context, SettingState state) {
+    if (state is UpdatedAvatarState) {
+      if (state.error != null && state.error!) {
+        FlashMessage(
+          context: context,
+          message: AppLocalizations.of(context)!.could_not_update_avatar,
+          type: FlashMessageType.error,
+        );
+      }
+
+      if (!state.loading) {
+        final authBloc = context.read<AuthenticationBloc>();
+        authBloc.add(UpdateAuthInfoEvent(userProfile: state.userProfile));
+      }
     }
   }
 }

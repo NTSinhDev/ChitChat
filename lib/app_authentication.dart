@@ -1,4 +1,5 @@
 import 'package:chat_app/main.dart';
+import 'package:chat_app/views/app_manager/app_manager.dart';
 import 'package:chat_app/views/login/login_screen.dart';
 import 'package:chat_app/views/signup/signup_screen.dart';
 import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
@@ -9,7 +10,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'core/helpers/loading/loading_screen.dart';
 import 'view_model/providers/app_state_provider.dart';
 
 class AppAuthentication extends StatefulWidget {
@@ -65,34 +65,26 @@ class _AppAuthenticationState extends State<AppAuthentication> {
           }
           // Home page
           if (state is LoggedState) {
-            final name = state.userProfile.profile == null
-                ? "Unknowned"
-                : state.userProfile.profile!.fullName;
-            return Scaffold(
-              body: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Center(child: Text(name)),
-                    Text(state.userProfile.urlImage.url ?? 'null'),
-                    TextButton(
-                        onPressed: () {
-                          context
-                              .read<AuthenticationBloc>()
-                              .add(LogoutEvent());
-                        },
-                        child: const Text('Logout'))
-                  ],
-                ),
-              ),
-            );
-            // return AppPageController(
-            //   friendRequests: state.friendRequests,
-            //   chatRooms: state.chatRooms!,
-            //   authUser: state.authUser!,
-            //   listFriend: state.listFriend,
+            // return Scaffold(
+            //   body: Center(
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.center,
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         Center(child: Text(name)),
+            //         Text(state.userProfile.urlImage.url ?? 'null'),
+            //         TextButton(
+            //             onPressed: () {
+            //               context.read<AuthenticationBloc>().add(LogoutEvent());
+            //             },
+            //             child: const Text('Logout'))
+            //       ],
+            //     ),
+            //   ),
             // );
+            return AppManager(
+              userProfile: state.userProfile,
+            );
           }
           return LoginScreen(deviceToken: widget.deviceToken);
         },
