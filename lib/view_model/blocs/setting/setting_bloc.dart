@@ -1,4 +1,3 @@
-import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/repositories/injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,11 +8,12 @@ part 'setting_state.dart';
 
 class SettingBloc extends Bloc<SettingEvent, SettingState> {
   UserProfile userProfile;
-  final ProfileRepository profileRepository = ProfileRepositoryImpl();
-  final StorageRepository storageRepository = StorageRepositoryImpl();
-  SettingBloc(
-    this.userProfile,
-  ) : super(SettingInitial(false)) {
+
+  late final UserInformationRepository _userInforRepository;
+
+  SettingBloc(this.userProfile) : super(SettingInitial(false)) {
+    _userInforRepository = UserInformationRepositoryImpl();
+
     on<UpdateAvatarEvent>((event, emit) async {
       emit(UpdatedAvatarState(true, userProfile: userProfile));
 
@@ -25,7 +25,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         ));
       }
 
-      final urlImage = await profileRepository.updateAvatar(
+      final urlImage = await _userInforRepository.rmUpdateAvatar(
         path: event.path,
         userID: userProfile.profile!.id!,
       );
@@ -43,8 +43,8 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         urlImage: urlImage,
       );
 
-      await storageRepository.saveFileToStorage(userProfile: userProfile);
-      
+      await _userInforRepository.lcSaveImageFile(userProfile: userProfile);
+
       emit(UpdatedAvatarState(false, userProfile: userProfile));
     });
   }

@@ -1,6 +1,7 @@
 import 'package:chat_app/main.dart';
 import 'package:chat_app/views/app_manager/app_manager.dart';
 import 'package:chat_app/views/login/login_screen.dart';
+import 'package:chat_app/views/search/search_screen.dart';
 import 'package:chat_app/views/signup/signup_screen.dart';
 import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:chat_app/core/utils/functions.dart';
@@ -9,9 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'view_model/providers/app_state_provider.dart';
-
 class AppAuthentication extends StatefulWidget {
   final SharedPreferences sharedPreferences;
   final String? userIDAtLocalStorage;
@@ -44,44 +42,17 @@ class _AppAuthenticationState extends State<AppAuthentication> {
       )..add(widget.userIDAtLocalStorage != null
           ? CheckAuthenticationEvent(userID: widget.userIDAtLocalStorage!)
           : InitLoginEvent()),
-      child: BlocConsumer<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-          // Check dark mode
-          if (state is LoggedState) {
-            // app states
-            AppStateProvider appState = context.read<AppStateProvider>();
-            // if (state.authUser != null) {
-            //   appState.darkMode = state.authUser!.user!.isDarkMode!;
-            //   if (state.authUser!.user!.urlImage != null) {
-            //     appState.urlImage = state.authUser!.user!.urlImage!;
-            //   }
-            // }
-          }
-        },
+      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+
         builder: (context, state) {
+
           // Register screen
           if (state is RegisterState) {
             return const SignUpScreen();
           }
           // Home page
           if (state is LoggedState) {
-            // return Scaffold(
-            //   body: Center(
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.center,
-            //       mainAxisAlignment: MainAxisAlignment.center,
-            //       children: [
-            //         Center(child: Text(name)),
-            //         Text(state.userProfile.urlImage.url ?? 'null'),
-            //         TextButton(
-            //             onPressed: () {
-            //               context.read<AuthenticationBloc>().add(LogoutEvent());
-            //             },
-            //             child: const Text('Logout'))
-            //       ],
-            //     ),
-            //   ),
-            // );
+           
             return AppManager(
               userProfile: state.userProfile,
             );

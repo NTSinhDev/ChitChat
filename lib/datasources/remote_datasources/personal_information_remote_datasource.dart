@@ -1,17 +1,17 @@
 import 'dart:developer';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:chat_app/core/enum/enums.dart';
+import 'package:chat_app/core/utils/constants.dart';
 import 'package:chat_app/core/utils/functions.dart';
-import 'package:chat_app/models/profile.dart';
+import 'package:chat_app/models/models_injector.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 
-import '../../core/utils/constants.dart';
-
-abstract class ProfileRemoteDataSource {
+abstract class PersonalInformationRemoteDataSource {
   Future<String?> getFile({required String filePath, required String fileName});
   Future<Profile?> getProfileById({required String userID});
   Future<Profile?> createProfile({required User authUser});
@@ -22,16 +22,79 @@ abstract class ProfileRemoteDataSource {
     required String filePath,
     SettableMetadata? settableMetaData,
   });
+  Future<List<Profile>> getAllProfile();
+  Future<List<Profile>> getAllProfileByName({required String name});
 }
 
-class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
+class PersonalInformationRemoteDataSourceImpl
+    implements PersonalInformationRemoteDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   late CollectionReference _profileDocument;
 
-  ProfileRemoteDataSourceImpl() {
-    _profileDocument = _firestore.collection('Profiles');
+  PersonalInformationRemoteDataSourceImpl() {
+    _profileDocument = _firestore.collection(ProfileField.collectionName);
+  }
+
+  @override
+  Future<List<Profile>> getAllProfileByName({required String name}) async {
+    final String text = "$name\uf8ff";
+    return await _profileDocument
+        .orderBy(ProfileField.fullNameField, descending: true)
+        .where(ProfileField.fullNameField, isGreaterThanOrEqualTo: name)
+        .where(ProfileField.fullNameField, isLessThanOrEqualTo: text)
+        .get()
+        .then(
+      (querySnapshot) async {
+        if (_isNullQuerySnapshot(querySnapshot)) return [];
+
+        final ReceivePort receivePort = ReceivePort();
+        final isolates = await Isolate.spawn(
+          _parsedListUserProfile,
+          [receivePort.sendPort, querySnapshot.docs],
+        );
+        final data = (await receivePort.first) as List<Profile>;
+        isolates.kill(priority: Isolate.immediate);
+        return data;
+      },
+    );
+  }
+
+  bool _isNullQuerySnapshot(QuerySnapshot<Object?> querySnapshot) =>
+      querySnapshot.size == 0 && querySnapshot.docs.isNotEmpty;
+
+  void _parsedListUserProfile(List<dynamic> message) {
+    SendPort sendPort = message[0];
+    final listValues = message[1] as List<QueryDocumentSnapshot<Object?>>;
+    sendPort.send(
+      listValues
+          .map(
+            (queryDocSnapshot) => snapshotDataToProfile(
+              data: queryDocSnapshot.data(),
+              id: queryDocSnapshot.id,
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  @override
+  Future<List<Profile>> getAllProfile() async {
+    return await _profileDocument.get().then(
+      (querySnapshot) async {
+        if (_isNullQuerySnapshot(querySnapshot)) return [];
+
+        final ReceivePort receivePort = ReceivePort();
+        final isolates = await Isolate.spawn(
+          _parsedListUserProfile,
+          [receivePort.sendPort, querySnapshot.docs],
+        );
+        final data = (await receivePort.first) as List<Profile>;
+        isolates.kill(priority: Isolate.immediate);
+        return data;
+      },
+    );
   }
 
   @override
@@ -104,11 +167,11 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Profile?> createProfile({required User authUser}) async {
     final profileMap = {
-      FireConstant.idUserField: authUser.uid,
-      FireConstant.emailField: authUser.email,
-      FireConstant.fullNameField: authUser.displayName,
-      FireConstant.urlImageField: "",
-      FireConstant.userMessagingTokenField: "",
+      ProfileField.idUserField: authUser.uid,
+      ProfileField.emailField: authUser.email,
+      ProfileField.fullNameField: authUser.displayName,
+      ProfileField.urlImageField: "",
+      ProfileField.userMessagingTokenField: "",
     };
 
     await _profileDocument.doc(authUser.uid).set(profileMap);

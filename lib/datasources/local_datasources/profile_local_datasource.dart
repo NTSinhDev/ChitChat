@@ -6,7 +6,7 @@ import 'package:hive/hive.dart';
 
 abstract class ProfileLocalDataSource {
   Future<Box<Profile>?> openBox();
-  Future<void> saveToProfileBox(Profile profile);
+  Future<void> saveProfileToBox(Profile profile);
   Profile? getProfile(String key);
 }
 
@@ -27,7 +27,7 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
   }
 
   @override
-  Future<void> saveToProfileBox(Profile profile) async {
+  Future<void> saveProfileToBox(Profile profile) async {
     final isOpen = !_profileBox.isOpen;
     final contain = _profileBox.containsKey(profile.id);
     if (isOpen || contain) return;

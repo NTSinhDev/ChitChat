@@ -9,15 +9,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final authenticationServices = AuthenticationServices.getInstance();
-  UserProfile? userProfile;
 
   final SharedPreferences sharedPref;
-  final ProfileRepository _profileRepository = ProfileRepositoryImpl();
-  final StorageRepository _storageRepository = StorageRepositoryImpl();
+  late final UserInformationRepository _userInforRepository;
   late final AuthenticationRepository _authenticationRepository;
+
+  UserProfile? userProfile;
 
   AuthenticationBloc(this.sharedPref) : super(LoginState(loading: false)) {
     _authenticationRepository = AuthenticationRepositoryImpl(sharedPref);
+    _userInforRepository = UserInformationRepositoryImpl();
     on<NormalLoginEvent>(_normalLogin);
     on<RegisterEvent>(_registerEvent);
     on<CheckAuthenticationEvent>(_checkAuthEvent);
@@ -46,7 +47,7 @@ class AuthenticationBloc
   ) async {
     emit(LoginState(loading: true));
 
-    userProfile = await _profileRepository.getProfileAtLocalStorage(
+    userProfile = await _userInforRepository.lcGetProfile(
       userID: event.userID,
     );
 
@@ -79,8 +80,8 @@ class AuthenticationBloc
 
   Future<void> _storageData() async {
     await _authenticationRepository.saveUIdToLocal(userProfile: userProfile);
-    await _profileRepository.saveToProfileBox(profile: userProfile!.profile);
-    await _storageRepository.saveFileToStorage(userProfile: userProfile);
+    await _userInforRepository.lcSaveProfile(profile: userProfile!.profile);
+    await _userInforRepository.lcSaveImageFile(userProfile: userProfile);
   }
 
   _logoutEvent(LogoutEvent event, Emitter<AuthenticationState> emit) async {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-class TextFieldWidget extends StatefulWidget {
-  const TextFieldWidget({
+class InputFieldWidget extends StatefulWidget {
+  const InputFieldWidget({
     Key? key,
     required this.onSubmitted,
     required this.onChanged,
@@ -46,10 +46,10 @@ class TextFieldWidget extends StatefulWidget {
   final bool enableRTLHintText;
   final Color cursorColor;
   @override
-  State<TextFieldWidget> createState() => _TextFieldWidgetState();
+  State<InputFieldWidget> createState() => _InputFieldWidgetState();
 }
 
-class _TextFieldWidgetState extends State<TextFieldWidget> {
+class _InputFieldWidgetState extends State<InputFieldWidget> {
   late final TextEditingController textEditingController;
   @override
   void initState() {
@@ -63,6 +63,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
 
   @override
   void dispose() {
+    textEditingController.dispose();
     super.dispose();
   }
 

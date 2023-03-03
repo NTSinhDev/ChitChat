@@ -14,7 +14,8 @@ class StorageKey {
   static const pPROFILE = 'Profile';
 }
 
-class FireConstant {
+class ProfileField {
+  static const String collectionName = "Profiles";
   static const String idUserField = "idUser";
   static const String emailField = "email";
   static const String fullNameField = "fullname";
@@ -23,3 +24,28 @@ class FireConstant {
   static const String userMessagingTokenField = "userMessagingToken";
 }
 
+class ConversationsField {
+  static const String collectionName = "Conversations";
+  static const String chatID = 'id';
+  static const String listUser = 'listUser';
+  static const String stampTimeLastText = 'stampTimeLastText';
+  static const String stampTime = 'stampTime';
+  static const String lastText = 'lastText';
+  static const String nameChat = 'nameChat';
+  static const String isActive = 'isActive';
+  static const String typeMessage = 'typeMessage';
+}
+
+class ConversationMessagesField {
+  static const String collectionName = "ConversationMessages";
+  static const String collectionChildName = "messages";
+  static const String idField = "id"; 
+  static const String chatIdField = "chatID"; 
+  static const String senderIdField = "senderID"; 
+  static const String stampTimeField = "stampTime"; 
+  static const String typeMessageField = "typeMessage"; 
+  static const String messageStatusField = "messageStatus"; 
+  static const String listNameImageField = "listNameImage"; 
+  static const String nameRecordField = "nameRecord"; 
+  static const String contentField = "content"; 
+}
