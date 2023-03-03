@@ -34,8 +34,7 @@ class FlashMessage {
     switch (type) {
       case FlashMessageType.error:
         final Widget fontOf = Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-          width: 28,
+          width: 24,
           child: Lottie.asset(
             ImgAnmConstants.aFailed,
             fit: BoxFit.fitWidth,
@@ -52,8 +51,7 @@ class FlashMessage {
         );
       case FlashMessageType.warning:
         final Widget fontOf = Container(
-          margin: const EdgeInsets.fromLTRB(0, 0, 8, 0),
-          width: 28,
+          width: 24,
           child: Lottie.asset(
             ImgAnmConstants.aWarning,
             fit: BoxFit.fitWidth,
@@ -156,7 +154,7 @@ class FlashMessageScreen extends StatelessWidget {
                           Row(
                             children: [
                               flashMessageModel.fontOfTitle,
-                              SizedBox(width: 4.w),
+                              SizedBox(width: 10.w),
                               Text(
                                 flashMessageModel.title,
                                 style: Theme.of(context)
@@ -166,9 +164,10 @@ class FlashMessageScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: 2.h),
                           Text(
                             flashMessageModel.message,
+                            overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelSmall!

@@ -69,8 +69,7 @@ class AuthenticationBloc
     userProfile = await _authenticationRepository.loginWithGoogleAccount();
 
     if (userProfile == null || userProfile?.profile == null) {
-      return emit(LoginState(
-          loading: false)); // TODO: hiển thị thông báo đăng nhập thất bại
+      return emit(LoginState(loading: false, message: "Đăng nhập thất bại"));
     }
 
     emit(LoginState(loading: false));
