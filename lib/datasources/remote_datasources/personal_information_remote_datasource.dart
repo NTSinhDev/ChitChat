@@ -28,13 +28,13 @@ abstract class PersonalInformationRemoteDataSource {
 
 class PersonalInformationRemoteDataSourceImpl
     implements PersonalInformationRemoteDataSource {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
-
   late CollectionReference _profileDocument;
 
   PersonalInformationRemoteDataSourceImpl() {
-    _profileDocument = _firestore.collection(ProfileField.collectionName);
+    _profileDocument = FirebaseFirestore.instance.collection(
+      ProfileField.collectionName,
+    );
   }
 
   @override
@@ -70,10 +70,11 @@ class PersonalInformationRemoteDataSourceImpl
     sendPort.send(
       listValues
           .map(
-            (queryDocSnapshot) => snapshotDataToProfile(
+            (queryDocSnapshot) =>
+                ParsedSnapshotData(parsedTo: ParsedTo.profile).to(
               data: queryDocSnapshot.data(),
               id: queryDocSnapshot.id,
-            ),
+            ) as Profile,
           )
           .toList(),
     );
@@ -197,7 +198,10 @@ class PersonalInformationRemoteDataSourceImpl
 
     if (!snapshot.exists || snapshot.id.isEmpty) return null;
 
-    return snapshotDataToProfile(data: snapshot.data(), id: userID);
+    return ParsedSnapshotData(parsedTo: ParsedTo.profile).to(
+      data: snapshot.data(),
+      id: userID,
+    ) as Profile;
   }
 
   //  @override

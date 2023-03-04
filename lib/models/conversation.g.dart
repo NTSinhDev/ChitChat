@@ -20,7 +20,7 @@ class ConversationAdapter extends TypeAdapter<Conversation> {
       id: fields[0] as String?,
       typeMessage: fields[6] as String,
       isActive: fields[5] as bool,
-      lastText: fields[3] as String,
+      lastMessage: fields[3] as String,
       nameChat: fields[4] as String?,
       stampTime: fields[1] as DateTime,
       stampTimeLastText: fields[2] as DateTime,
@@ -39,7 +39,7 @@ class ConversationAdapter extends TypeAdapter<Conversation> {
       ..writeByte(2)
       ..write(obj.stampTimeLastText)
       ..writeByte(3)
-      ..write(obj.lastText)
+      ..write(obj.lastMessage)
       ..writeByte(4)
       ..write(obj.nameChat)
       ..writeByte(5)

@@ -1,5 +1,5 @@
 import 'package:chat_app/models/url_image.dart';
-import 'package:chat_app/views/chat/components/message_item.dart';
+import 'package:chat_app/views/chat/messages_module/components/message_item.dart';
 import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/core/utils/functions.dart';
 import 'package:chat_app/widgets/state_avatar_widget.dart';
