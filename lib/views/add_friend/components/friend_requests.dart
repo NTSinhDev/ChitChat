@@ -1,3 +1,4 @@
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/views/add_friend/components/item_request_view.dart';
 import 'package:chat_app/widgets/title_widget.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class FriendRequestView extends StatelessWidget {
           title: AppLocalizations.of(context)!.friend_request,
           isUpper: false,
         ),
-        SizedBox(height: 20.h),
+        Spaces.h20,
         Container(
           constraints: BoxConstraints(maxHeight: maxHieght),
           child: ListView.builder(

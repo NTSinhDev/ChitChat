@@ -1,4 +1,5 @@
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/core/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,7 +41,7 @@ class LoadingMessage extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          SizedBox(width: 10.w),
+          Spaces.w10,
           Text(
             content,
             overflow: TextOverflow.ellipsis,

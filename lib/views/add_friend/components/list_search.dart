@@ -1,3 +1,4 @@
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/widgets/list_user_widget.dart';
 import 'package:chat_app/widgets/title_widget.dart';
@@ -18,7 +19,7 @@ class ListSearchUsers extends StatelessWidget {
           title: AppLocalizations.of(context)!.result,
           isUpper: true,
         ),
-        SizedBox(height: 20.h),
+        Spaces.h20,
         BlocBuilder<ChatBloc, ChatState>(
           builder: (context, state) {
             if (state is LookingForFriendState) {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:chat_app/views/chat/input_messages_module/components/emoji_widget.dart';
 import 'package:chat_app/views/chat/input_messages_module/components/icon_action_widget.dart';
@@ -88,7 +89,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
                   ontapEmoji: _hideOrShowEmoji,
                   onSubmitted: _sendMessage,
                 ),
-                SizedBox(width: 14.w),
+                Spaces.w14,
                 InkWell(
                   onTap: () => _sendMessage(inputController.text),
                   child: Icon(

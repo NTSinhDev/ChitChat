@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/helpers/notify/flash_message.dart';
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/models/models_injector.dart';
 import 'package:chat_app/view_model/blocs/search/bloc_injector.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
@@ -134,7 +135,7 @@ class _SearchScreenState extends State<SearchScreen> {
       children: [
         TitleWidget(title: label, isUpper: true),
         if (loading == null && listStream != null) ...[
-          SizedBox(height: 20.h),
+          Spaces.h20,
           ListUserWidget(userListStream: listStream),
         ] else ...[
           const Center(

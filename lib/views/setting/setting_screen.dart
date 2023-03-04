@@ -2,6 +2,7 @@ import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/helpers/loading/loading_screen.dart';
 import 'package:chat_app/core/helpers/notify/alert_error.dart';
 import 'package:chat_app/core/helpers/notify/flash_message.dart';
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
@@ -27,15 +28,14 @@ class SettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // app states
     AppStateProvider appStateProvider = context.watch<AppStateProvider>();
-    final sizedBox24 = SizedBox(height: 24.h);
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(userProfile),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          sizedBox24,
+          Spaces.h24,
           _buildUserInformation(context),
-          sizedBox24,
+          Spaces.h24,
           _buildSettingOptions(context, appStateProvider),
         ],
       ),
@@ -44,8 +44,6 @@ class SettingScreen extends StatelessWidget {
 
   Widget _buildSettingOptions(BuildContext context, appStateProvider) {
     // Size
-    final sizedBox24 = SizedBox(height: 24.h);
-    final sizedBox12 = SizedBox(height: 12.h);
 
     return Expanded(
       child: Container(
@@ -66,11 +64,11 @@ class SettingScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              sizedBox24,
+              Spaces.h24,
               const ChangeDarkmodeFeature(),
-              sizedBox12,
+              Spaces.h12,
               const ChangeLanguageFeature(),
-              sizedBox12,
+              Spaces.h12,
               FeatureSetting(
                 icon: CupertinoIcons.person_circle,
                 title: AppLocalizations.of(context)!.personal_info,
@@ -83,14 +81,14 @@ class SettingScreen extends StatelessWidget {
                   );
                 },
               ),
-              sizedBox12,
+              Spaces.h12,
               FeatureSetting(
                 icon: Icons.error_outline,
                 title: AppLocalizations.of(context)!.list_ban,
                 color: Colors.orange[400]!,
                 onTap: () {},
               ),
-              sizedBox12,
+              Spaces.h12,
               FeatureSetting(
                 icon: Icons.logout,
                 title: AppLocalizations.of(context)!.logout,
@@ -98,7 +96,7 @@ class SettingScreen extends StatelessWidget {
                 onTap: () =>
                     context.read<AuthenticationBloc>().add(LogoutEvent()),
               ),
-              sizedBox24
+              Spaces.h24,
             ],
           ),
         ),
@@ -110,7 +108,7 @@ class SettingScreen extends StatelessWidget {
     return Column(
       children: [
         const UserAvatar(),
-        SizedBox(height: 12.h),
+        Spaces.h12,
         Text(
           userProfile.profile!.fullName,
           maxLines: 4,

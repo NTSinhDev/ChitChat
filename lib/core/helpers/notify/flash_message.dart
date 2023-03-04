@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -145,7 +146,7 @@ class FlashMessageScreen extends StatelessWidget {
                     : Colors.white,
                 child: Row(
                   children: [
-                    SizedBox(width: 14.w),
+                    Spaces.w14,
                     Expanded(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -154,7 +155,7 @@ class FlashMessageScreen extends StatelessWidget {
                           Row(
                             children: [
                               flashMessageModel.fontOfTitle,
-                              SizedBox(width: 10.w),
+                              Spaces.w10,
                               Text(
                                 flashMessageModel.title,
                                 style: Theme.of(context)
@@ -164,7 +165,7 @@ class FlashMessageScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 2.h),
+                          Spaces.h2,
                           Text(
                             flashMessageModel.message,
                             overflow: TextOverflow.ellipsis,

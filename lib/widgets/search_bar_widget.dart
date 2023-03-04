@@ -1,3 +1,4 @@
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/core/res/colors.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,13 +33,13 @@ class SearchBar extends StatelessWidget {
         },
         child: Row(
           children: [
-            SizedBox(width: 14.w),
+            Spaces.w14,
             Icon(
               CupertinoIcons.search,
               color: theme ? Colors.white : darkGreyDarkMode,
               size: 20.r,
             ),
-            SizedBox(width: 14.w),
+            Spaces.w14,
             Text(
               'Tìm kiếm',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(

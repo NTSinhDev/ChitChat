@@ -1,3 +1,4 @@
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chat_app/core/res/colors.dart';
@@ -55,7 +56,7 @@ class _InputTextFieldState extends State<InputTextField> {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        SizedBox(height: 10.h),
+        Spaces.h10,
         Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(

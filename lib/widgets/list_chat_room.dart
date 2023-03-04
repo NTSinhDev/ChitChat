@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/providers/app_state_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -73,9 +74,7 @@ class _ListChatRoomState extends State<ListChatRoom> {
         ),
       ),
       subtitle: Container(
-        margin: EdgeInsets.only(
-          bottom: 4.h,
-        ),
+        margin: EdgeInsets.only(bottom: 4.h),
         child: Row(
           children: [
             SizedBox(
@@ -86,16 +85,10 @@ class _ListChatRoomState extends State<ListChatRoom> {
                 style: styleNotView,
               ),
             ),
-            SizedBox(width: 4.w),
-            Text(
-              '|',
-              style: styleNotView,
-            ),
-            SizedBox(width: 4.w),
-            Text(
-              widget.listUsers[index][2], //* time
-              style: styleNotView,
-            ),
+            Spaces.w4,
+            Text('|', style: styleNotView),
+            Spaces.w4,
+            Text(widget.listUsers[index][2], style: styleNotView),
           ],
         ),
       ),

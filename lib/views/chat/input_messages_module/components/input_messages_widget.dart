@@ -1,4 +1,5 @@
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,8 @@ class InputMessageWidget extends StatelessWidget {
     this.onchange,
     required this.ontapInput,
     required this.inputController,
-    required this.ontapEmoji, required this.onSubmitted,
+    required this.ontapEmoji,
+    required this.onSubmitted,
   });
 
   @override
@@ -31,7 +33,7 @@ class InputMessageWidget extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            SizedBox(width: 16.w),
+            Spaces.w16,
             Expanded(
               child: TextField(
                 maxLines: 6,
@@ -51,7 +53,7 @@ class InputMessageWidget extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 14.w),
+            Spaces.w14,
             InkWell(
               onTap: ontapEmoji,
               child: Container(

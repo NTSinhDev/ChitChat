@@ -1,3 +1,4 @@
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -37,7 +38,7 @@ class SettingBtmSheet extends StatelessWidget {
                   .bodyLarge!
                   .copyWith(color: Colors.black),
             ),
-            SizedBox(height: 8.h),
+            Spaces.h8,
             ...items,
           ],
         ),

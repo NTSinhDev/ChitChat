@@ -1,3 +1,4 @@
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/core/utils/functions.dart';
 import 'package:chat_app/models/models_injector.dart';
 import 'package:chat_app/views/chat/input_messages_module/input_messages_module.dart';
@@ -36,9 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
           toolbarHeight: 72.h,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -48,15 +47,15 @@ class _ChatScreenState extends State<ChatScreen> {
                 isStatus: widget.friendInfo.state?.presence ?? false,
                 radius: 40.r,
               ),
-              SizedBox(
-                width: 12.w,
-              ),
+              Spaces.w12,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    formatName(name: widget.friendInfo.informations.profile!.fullName),
-                                        style: Theme.of(context).textTheme.bodyLarge,
+                    formatName(
+                      name: widget.friendInfo.informations.profile!.fullName,
+                    ),
+                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   if (widget.friendInfo.state?.presence ?? false) ...[
                     Text(
@@ -80,9 +79,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 size: 30.r,
               ),
             ),
-            SizedBox(
-              width: 4.h,
-            ),
+            Spaces.w4,
           ],
         ),
         body: Column(

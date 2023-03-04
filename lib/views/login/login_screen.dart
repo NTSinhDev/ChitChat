@@ -1,6 +1,7 @@
 import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/helpers/loading/loading_screen.dart';
 import 'package:chat_app/core/helpers/notify/flash_message.dart';
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:chat_app/views/login/components/signin_other_ways.dart';
 import 'package:chat_app/views/login/components/signin_title.dart';
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const SignInTitle(),
-                  SizedBox(height: 40.h),
+                  Spaces.h40,
                   InputTextField(
                     title: AppLocalizations.of(context)!.email,
                     hint: AppLocalizations.of(context)!.enter_your_email,
@@ -81,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     isDataValid: _isValidEmail,
                     message: AppLocalizations.of(context)!.required_email,
                   ),
-                  SizedBox(height: 20.h),
+                  Spaces.h20,
                   InputTextField(
                     title: AppLocalizations.of(context)!.password,
                     hint: AppLocalizations.of(context)!.enter_your_password,
@@ -104,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SignInOtherWays(),
                   const SocialBtnRow(),
                   const SignupBtn(),
-                  SizedBox(height: 12.h),
+                  Spaces.h12,
                 ],
               ),
             ),

@@ -1,3 +1,4 @@
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,7 +27,7 @@ class SignupBtn extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 8.w),
+          Spaces.w8,
           InkWell(
             onTap: () =>
                 context.read<AuthenticationBloc>().add(InitRegisterEvent()),

@@ -1,4 +1,5 @@
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/models/models_injector.dart';
 import 'package:chat_app/view_model/blocs/search/bloc_injector.dart';
 import 'package:chat_app/view_model/blocs/search/search_bloc.dart';
@@ -38,7 +39,7 @@ class ListUserWidget extends StatelessWidget {
               child: Column(
                 children: [
                   const CircularProgressIndicator(color: redAccent),
-                  SizedBox(height: 20.h),
+                  Spaces.h20,
                   const Text('Đang tải danh sách bạn bè'),
                 ],
               ),

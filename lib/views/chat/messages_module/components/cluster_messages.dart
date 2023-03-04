@@ -1,3 +1,4 @@
+import 'package:chat_app/core/res/spaces.dart';
 import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/views/chat/messages_module/components/message_item.dart';
 import 'package:chat_app/core/res/colors.dart';
@@ -40,10 +41,6 @@ class _ClusterMessagesState extends State<ClusterMessages> {
 
   @override
   Widget build(BuildContext context) {
-    // size
-    final width4 = SizedBox(width: 4.w);
-    final height4 = SizedBox(height: 4.h);
-
     int currentIndex = 0;
     // final timeMessageItem = Message.fromJson(widget.messages.last).time;
 
@@ -82,7 +79,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
                   // );
                 }).toList(),
               ),
-              height4,
+              Spaces.h4,
               Row(
                 children: [
                   Text(
@@ -94,7 +91,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
                         .copyWith(color: lightGreyDarkMode),
                   ),
                   if (_sended && widget.isSender) ...[
-                    width4,
+                    Spaces.w4,
                     const Icon(
                       Icons.check,
                       size: 16,
@@ -102,7 +99,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
                     ),
                   ],
                   if (_loading && widget.isSender) ...[
-                    width4,
+                    Spaces.w4,
                     SizedBox(
                       height: 12.h,
                       width: 12.w,
@@ -115,7 +112,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
                 ],
               ),
               if (_seen && widget.isSender) ...[
-                height4,
+                Spaces.h4,
                 StateAvatar(
                   urlImage: URLImage(),
                   isStatus: false,
