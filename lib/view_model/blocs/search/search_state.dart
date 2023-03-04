@@ -1,4 +1,5 @@
 import 'package:chat_app/models/conversation.dart';
+import 'package:chat_app/models/models_injector.dart';
 import 'package:chat_app/models/user_profile.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -12,8 +13,11 @@ abstract class SearchState {
 // lấy danh sách bạn bè
 class SearchInitialState extends SearchState {
   final ReplaySubject<List<UserProfile>?> friendsSubject;
+  final String? error;
+
   SearchInitialState({
     required this.friendsSubject,
+    this.error,
     required super.currentUser,
   });
 }
@@ -28,12 +32,12 @@ class SearchingState extends SearchState {
   });
 }
 
-class GoToConversationRoomSearchChatState extends SearchState {
+class JoinConversationState extends SearchState {
   final Conversation conversation;
-  final String? searchText;
-  GoToConversationRoomSearchChatState({
+  final UserInformation friend;
+  JoinConversationState({
     required this.conversation,
-    required this.searchText,
     required super.currentUser,
+    required this.friend,
   });
 }

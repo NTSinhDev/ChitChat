@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:chat_app/main.dart';
 import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/models/conversation.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +15,23 @@ import '../models/message.dart';
 import '../models/user_presence.dart';
 import 'constants.dart';
 
-Profile snapshotDataToProfile({required Object? data, required String id}) {
-  final encodeData = json.encode(data);
-  final convertToMap = json.decode(encodeData) as Map<String, dynamic>;
-  return Profile.fromMap(convertToMap, id);
-}
+enum ParsedTo { profile, conversation }
 
+class ParsedSnapshotData {
+  final ParsedTo parsedTo;
+  ParsedSnapshotData({required this.parsedTo});
+
+  dynamic to({required Object? data, required String id}) {
+    final encodeData = json.encode(data);
+    final convertToMap = json.decode(encodeData) as Map<String, dynamic>;
+    switch (parsedTo) {
+      case ParsedTo.profile:
+        return Profile.fromMap(convertToMap, id);
+      default:
+        return Conversation.fromMap(convertToMap, id);
+    }
+  }
+}
 
 /// This function to sort list user by online state
 List<dynamic> sortListUserToOnlState(List<dynamic> listUser) {
@@ -86,10 +98,11 @@ String formatDuration(Duration d) {
 }
 
 /// Return last word of the name
-String formatName({required String name}) {
-  final arrayName = name.split(" ");
-  if (arrayName.length > 1) {
-    return "${arrayName[arrayName.length - 2]} ${arrayName[arrayName.length - 1]}";
+String formatName({required String name}) {//Trường Sinh Nguyễn
+  final arrayName = name.split(" ");// Trường || Sinh || Nguyễn
+  if (arrayName.length > 1) { // true
+    // "Sinh Nguyễn"
+    return "${arrayName[0]} ${arrayName[1]}";
   }
   return arrayName[0];
 }

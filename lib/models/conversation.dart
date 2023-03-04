@@ -12,7 +12,7 @@ class Conversation {
   @HiveField(2)
   final DateTime stampTimeLastText;
   @HiveField(3)
-  final String lastText;
+  final String lastMessage;
   @HiveField(4)
   String? nameChat = "";
   @HiveField(5)
@@ -26,7 +26,7 @@ class Conversation {
     this.id,
     required this.typeMessage,
     required this.isActive,
-    required this.lastText,
+    required this.lastMessage,
     this.nameChat,
     required this.stampTime,
     required this.stampTimeLastText,
@@ -39,7 +39,7 @@ class Conversation {
       ConversationsField.stampTime: stampTime.millisecondsSinceEpoch,
       ConversationsField.stampTimeLastText:
           stampTimeLastText.millisecondsSinceEpoch,
-      ConversationsField.lastText: lastText,
+      ConversationsField.lastText: lastMessage,
       ConversationsField.nameChat: nameChat,
       ConversationsField.isActive: isActive,
       ConversationsField.typeMessage: typeMessage,
@@ -56,7 +56,7 @@ class Conversation {
       stampTimeLastText: DateTime.fromMillisecondsSinceEpoch(
         map[ConversationsField.stampTimeLastText] as int,
       ),
-      lastText: map[ConversationsField.lastText] as String,
+      lastMessage: map[ConversationsField.lastText] as String,
       nameChat: map[ConversationsField.nameChat] != null
           ? map['nameChat'] as String
           : null,
@@ -80,7 +80,7 @@ class Conversation {
       id: id ?? this.id,
       stampTime: stampTime ?? this.stampTime,
       stampTimeLastText: stampTimeLastText,
-      lastText: lastText ?? this.lastText,
+      lastMessage: lastText ?? this.lastMessage,
       nameChat: nameChat ?? this.nameChat,
       isActive: isActive ?? this.isActive,
       typeMessage: typeMessage ?? this.typeMessage,
@@ -90,6 +90,6 @@ class Conversation {
 
   @override
   String toString() {
-    return 'Conversation(id: $id, stampTime: $stampTime, stampTimeLastText: $stampTimeLastText, lastText: $lastText, nameChat: $nameChat, isActive: $isActive, typeMessage: $typeMessage, listUser: $listUser)';
+    return 'Conversation(id: $id, stampTime: $stampTime, stampTimeLastText: $stampTimeLastText, lastText: $lastMessage, nameChat: $nameChat, isActive: $isActive, typeMessage: $typeMessage, listUser: $listUser)';
   }
 }

@@ -1,7 +1,12 @@
+import 'dart:developer';
+
+import 'package:chat_app/core/enum/enums.dart';
+import 'package:chat_app/core/helpers/notify/flash_message.dart';
 import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/models/models_injector.dart';
 import 'package:chat_app/view_model/blocs/search/bloc_injector.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/views/chat/chat_screen.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +72,35 @@ class _SearchScreenState extends State<SearchScreen> {
           margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: BlocBuilder<SearchBloc, SearchState>(
+            child: BlocConsumer<SearchBloc, SearchState>(
+              listener: (context, state) async {
+                if (state is SearchInitialState) {
+                  if (state.error != null) {
+                    FlashMessage(
+                      context: context,
+                      message: state.error!,
+                      type: FlashMessageType.error,
+                    );
+                  }
+                }
+                if (state is JoinConversationState) {
+                  log('🚀log⚡ ${state.conversation}');
+                  // await Navigator.of(context).push(
+                  //   MaterialPageRoute(
+                  //     builder: (nContext) {
+                  //       return ChatScreen(
+                  //         conversation: state.conversation,
+                  //         currentUser: state.currentUser,
+                  //         friendInfo: state.friend,
+                  //       );
+                  //     },
+                  //     settings: RouteSettings(
+                  //       name: "conversation:${state.conversation.id}",
+                  //     ),
+                  //   ),
+                  // );
+                }
+              },
               builder: (context, state) {
                 if (state is SearchInitialState) {
                   return _bodySearchScreenWidget(
