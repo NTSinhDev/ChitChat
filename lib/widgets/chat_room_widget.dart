@@ -49,12 +49,7 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
     return ListTile(
       onTap: () {
         if (!widget.isGroup) {
-          Provider.of<ChatBloc>(context, listen: false).add(
-            JoinRoomEvent(
-              roomID: widget.chatRoom.sId!,
-              isOnl: widget.presence.presence!,
-            ),
-          );
+          
         }
       },
       visualDensity: const VisualDensity(vertical: 0.7),

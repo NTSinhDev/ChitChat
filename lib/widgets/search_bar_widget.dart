@@ -29,7 +29,6 @@ class SearchBar extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          context.read<ChatBloc>().add(InitLookingForChatEvent());
         },
         child: Row(
           children: [

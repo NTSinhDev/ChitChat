@@ -1,6 +1,7 @@
-import 'package:chat_app/views/chat/messages_module/components/cluster_messages.dart';
-import 'package:chat_app/views/chat/messages_module/components/cluster_messages_time.dart';
+import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
+import 'package:chat_app/views/chat/messages_module/components/components_injector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageView extends StatefulWidget {
@@ -22,50 +23,66 @@ class _MessageViewState extends State<MessageView> {
           reverse: true,
           padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
           physics: const BouncingScrollPhysics(),
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 0,
-            itemBuilder: (context, index) {
-              // int indexShowTime = 0;
-              // bool isLastClusterTime = _checkIsLastCluster(
-              //   index,
-              //   0 - 1,
-              // );
-              // List<dynamic> sourceChatItem = state.sourceChat![index];
-              // return Column(
-              //   children: sourceChatItem.map((clusterMessage) {
-              //     final isSender = _checkIsSender(
-              //       clusterMessage,
-              //       state.currentUser.sId,
-              //     );
-              //     bool isLastClusterMessage = false;
-              //     if (isLastClusterTime) {
-              //       isLastClusterMessage = _checkIsLastCluster(
-              //         indexShowTime,
-              //         sourceChatItem.length - 1,
-              //       );
-              //     }
-              //     indexShowTime++;
-              //     return Column(
-              //       children: [
-              //         if (indexShowTime == 1) ...[
-              //           CluterMessagesTime(
-              //             theme: appState.darkMode,
-              //             time: state.listTime![index],
-              //           ),
-              //         ],
-              //         ClusterMessages(
-              //           avatarFriend: state.friend.urlImage!,
-              //           theme: appState.darkMode,
-              //           isSender: isSender,
-              //           messages: clusterMessage,
-              //           isLastCluster: isLastClusterMessage,
-              //         ),
-              //       ],
-              //     );
-              //   }).toList(),
-              // );
+          child: BlocBuilder<ChatBloc, ChatState>(
+            builder: (context, chatState) {
+              if (chatState is InitChatState) {
+                if (chatState.conversation == null) {
+                  return EmptyMessage(friend: chatState.friend);
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: 0,
+                  itemBuilder: (context, index) {
+                    return Container();
+                    // int indexShowTime = 0;
+                    // bool isLastClusterTime = _checkIsLastCluster(
+                    //   index,
+                    //   0 - 1,
+                    // );
+                    // List<dynamic> sourceChatItem = state.sourceChat![index];
+                    // return Column(
+                    //   children: sourceChatItem.map((clusterMessage) {
+                    //     final isSender = _checkIsSender(
+                    //       clusterMessage,
+                    //       state.currentUser.sId,
+                    //     );
+                    //     bool isLastClusterMessage = false;
+                    //     if (isLastClusterTime) {
+                    //       isLastClusterMessage = _checkIsLastCluster(
+                    //         indexShowTime,
+                    //         sourceChatItem.length - 1,
+                    //       );
+                    //     }
+                    //     indexShowTime++;
+                    //     return Column(
+                    //       children: [
+                    //         if (indexShowTime == 1) ...[
+                    //           CluterMessagesTime(
+                    //             theme: appState.darkMode,
+                    //             time: state.listTime![index],
+                    //           ),
+                    //         ],
+                    //         ClusterMessages(
+                    //           avatarFriend: state.friend.urlImage!,
+                    //           theme: appState.darkMode,
+                    //           isSender: isSender,
+                    //           messages: clusterMessage,
+                    //           isLastCluster: isLastClusterMessage,
+                    //         ),
+                    //       ],
+                    //     );
+                    //   }).toList(),
+                    // );
+                  },
+                );
+              }
+              return const Center(
+                child: Text(
+                  "Coi lại hộ cái state!",
+                  style: TextStyle(color: Colors.red),
+                ),
+              );
             },
           ),
         ),
