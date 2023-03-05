@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:chat_app/core/res/colors.dart';
 import 'package:chat_app/core/res/spaces.dart';
+import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:chat_app/views/chat/input_messages_module/components/emoji_widget.dart';
 import 'package:chat_app/views/chat/input_messages_module/components/icon_action_widget.dart';
@@ -15,7 +16,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
 import 'components/input_messages_widget.dart';
 
 class InputMessagesModule extends StatefulWidget {
@@ -28,6 +28,7 @@ class InputMessagesModule extends StatefulWidget {
 class _InputMessagesModuleState extends State<InputMessagesModule> {
   late bool isVisible;
   late bool emojiShowing;
+  late final ChatBloc chatBloc;
   final inputController = TextEditingController();
   final FlutterSoundRecorder recorder = FlutterSoundRecorder();
   List<Media> mediaList = []; // to save photos or videos have picked before
@@ -38,6 +39,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
   void initState() {
     isVisible = true;
     emojiShowing = false;
+    chatBloc = Provider.of(context, listen: false);
     super.initState();
   }
 
@@ -64,19 +66,16 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
           child: SafeArea(
             child: Row(
               children: [
-                // Button open camera
                 IconActionWidget(
                   icon: Icons.camera_alt,
                   onTap: () => _openCamera(),
                   visible: isVisible,
                 ),
-                // Button open gallery
                 IconActionWidget(
                   icon: CupertinoIcons.photo,
                   onTap: () => _openImagePicker(context),
                   visible: isVisible,
                 ),
-                // Button open record voice
                 IconActionWidget(
                   icon: isRecording ? Icons.stop : Icons.mic,
                   onTap: () => _recordVoice(),
@@ -162,19 +161,12 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
   }
 
   _sendMessage(String message) {
-    if (message.isNotEmpty) {
-      // Provider.of<ChatBloc>(context, listen: false).add(
-      //   SendMessageEvent(
-      //     message: value,
-      //     idRoom: widget.idRoom,
-      //     friendID: widget.idFriend,
-      //   ),
-      // );
-      setState(() {
-        isVisible = !isVisible;
-      });
-      inputController.clear();
-    }
+    if (message.isEmpty) return;
+    chatBloc.add(SendMessageEvent(message: message));
+    setState(() {
+      isVisible = !isVisible;
+    });
+    inputController.clear();
   }
 
   Future _initRecorder() async {

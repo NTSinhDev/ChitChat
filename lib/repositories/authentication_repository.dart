@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:developer';
 
 import 'package:chat_app/datasources/local_datasources/auth_local_datasource.dart';
-import 'package:chat_app/datasources/remote_datasources/personal_information_remote_datasource.dart';
+import 'package:chat_app/datasources/remote_datasources/profile_remote_datasource.dart';
 import 'package:chat_app/services/authentication_services.dart';
 
 abstract class AuthenticationRepository {
@@ -22,13 +22,13 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       AuthenticationServices.getInstance();
 
   late final AuthLocalDataSource _authLocalDataSource;
-  late final PersonalInformationRemoteDataSource _profileRemoteDataSource;
+  late final ProfileRemoteDataSource _profileRemoteDataSource;
 
   AuthenticationRepositoryImpl(SharedPreferences sharedPreferences) {
     _authLocalDataSource = AuthLocalDataSourceImpl(
       sharedPreferences: sharedPreferences,
     );
-    _profileRemoteDataSource = PersonalInformationRemoteDataSourceImpl();
+    _profileRemoteDataSource = ProfileRemoteDataSourceImpl();
   }
 
   @override

@@ -1,17 +1,8 @@
-import 'dart:developer';
-import 'dart:math';
-
-import 'package:chat_app/core/enum/enums.dart';
-import 'package:chat_app/models/conversation.dart';
 import 'package:chat_app/models/models_injector.dart';
-import 'package:chat_app/repositories/conversations_repository.dart';
 import 'package:chat_app/repositories/injector.dart';
-import 'package:chat_app/view_model/blocs/search/search_event.dart';
-import 'package:chat_app/view_model/blocs/search/search_state.dart';
+import 'package:chat_app/view_model/blocs/search/bloc_injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
-
-import 'package:chat_app/models/user_profile.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   List<UserProfile> friendList = [];
@@ -51,14 +42,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       final conversation = await _conversationRepo.getConversationData(
         userIDs: event.userIDs,
       );
-
-      if (conversation == null) {
-        return emit(SearchInitialState(
-          friendsSubject: event.usersSubject,
-          currentUser: currentUser,
-          error: "Error when get conversation data!",
-        ));
-      }
 
       final friendInformation = UserInformation(informations: event.friend);
       emit(JoinConversationState(

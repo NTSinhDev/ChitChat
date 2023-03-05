@@ -6,46 +6,66 @@ abstract class ConversationsRepository {
   Future<Conversation?> getConversationData({
     required List<String> userIDs,
   });
+  Future<Conversation?> createNewConversation({
+    required List<String> userIDs,
+    String? lastMsg,
+  });
+  Future<bool> updateConversation({
+    required String id,
+    required Map<String, dynamic> data,
+  });
 }
 
 class ConversationsRepositoryImpl extends ConversationsRepository {
   final _conversationsRemoteDS = ConversationsRemoteDataSourceImpl();
 
+  
+
+  @override
+  Future<bool> updateConversation({
+    required String id,
+    required Map<String, dynamic> data,
+  }) async {
+    return await _conversationsRemoteDS.updateConversation(id: id, data: data);
+  }
+
   @override
   Future<Conversation?> getConversationData({
     required List<String> userIDs,
   }) async {
-    // create id fields
     String createId = userIDs[0];
     String beCreatedId = userIDs[1];
 
-    // Check is existed conversation
     final conversationID = await _conversationsRemoteDS.isExistedConversation(
       createID: createId,
       beCreatedID: beCreatedId,
     );
 
-    Conversation? conversation = Conversation(
-      id: createId == beCreatedId ? createId : createId + beCreatedId,
+    // Get convarsation data and create if necessary
+    if (conversationID.isEmpty) {
+      return null;
+    }
+    return await _conversationsRemoteDS.getConversation(
+      conversationId: conversationID,
+    );
+  }
+
+  @override
+  Future<Conversation?> createNewConversation({
+    required List<String> userIDs,
+    String? lastMsg,
+  }) async {
+    final conversation = Conversation(
+      id: userIDs[0] == userIDs[1] ? userIDs[0] + userIDs[1] : userIDs[1],
       typeMessage: MessageType.text.toString(),
-      isActive: false,
-      lastMessage: '',
+      isActive: true,
+      lastMessage: lastMsg ?? '',
       stampTime: DateTime.now(),
       stampTimeLastText: DateTime.now(),
       listUser: userIDs,
     );
-
-    // Get convarsation data and create if necessary
-    if (conversationID.isEmpty) {
-      conversation = await _conversationsRemoteDS.createNewConversation(
-        conversation: conversation,
-      );
-    } else {
-      conversation = await _conversationsRemoteDS.getConversation(
-        conversationId: conversationID,
-      );
-    }
-
-    return conversation;
+    return await _conversationsRemoteDS.createNewConversation(
+      conversation: conversation,
+    );
   }
 }

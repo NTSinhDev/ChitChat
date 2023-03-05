@@ -85,21 +85,22 @@ class _SearchScreenState extends State<SearchScreen> {
                   }
                 }
                 if (state is JoinConversationState) {
-                  log('🚀log⚡ ${state.conversation}');
-                  // await Navigator.of(context).push(
-                  //   MaterialPageRoute(
-                  //     builder: (nContext) {
-                  //       return ChatScreen(
-                  //         conversation: state.conversation,
-                  //         currentUser: state.currentUser,
-                  //         friendInfo: state.friend,
-                  //       );
-                  //     },
-                  //     settings: RouteSettings(
-                  //       name: "conversation:${state.conversation.id}",
-                  //     ),
-                  //   ),
-                  // );
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (nContext) {
+                        return ChatScreen(
+                          conversation: state.conversation,
+                          currentUser: state.currentUser,
+                          friendInfo: state.friend,
+                        );
+                      },
+                      settings: RouteSettings(
+                        name: state.conversation == null
+                            ? null
+                            : "conversation:${state.conversation!.id}",
+                      ),
+                    ),
+                  );
                 }
               },
               builder: (context, state) {

@@ -38,14 +38,14 @@ class ConversationsField {
 
 class ConversationMessagesField {
   static const String collectionName = "ConversationMessages";
-  static const String collectionChildName = "messages";
-  static const String idField = "id"; 
-  static const String chatIdField = "chatID"; 
-  static const String senderIdField = "senderID"; 
-  static const String stampTimeField = "stampTime"; 
-  static const String typeMessageField = "typeMessage"; 
-  static const String messageStatusField = "messageStatus"; 
-  static const String listNameImageField = "listNameImage"; 
-  static const String nameRecordField = "nameRecord"; 
-  static const String contentField = "content"; 
+  static const String colChildName = "messages";
+  static const String id = "id";
+  static const String conversationId = "chatID";
+  static const String senderId = "senderID";
+  static const String stampTime = "stampTime";
+  static const String typeMessage = "typeMessage";
+  static const String messageStatus = "messageStatus";
+  static const String listNameImage = "listNameImage";
+  static const String nameRecord = "nameRecord";
+  static const String content = "content";
 }

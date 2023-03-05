@@ -11,7 +11,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 
-abstract class PersonalInformationRemoteDataSource {
+abstract class ProfileRemoteDataSource {
   Future<String?> getFile({required String filePath, required String fileName});
   Future<Profile?> getProfileById({required String userID});
   Future<Profile?> createProfile({required User authUser});
@@ -26,13 +26,12 @@ abstract class PersonalInformationRemoteDataSource {
   Future<List<Profile>> getAllProfileByName({required String name});
 }
 
-class PersonalInformationRemoteDataSourceImpl
-    implements PersonalInformationRemoteDataSource {
+class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  late CollectionReference _profileDocument;
+  late CollectionReference _profileCollection;
 
-  PersonalInformationRemoteDataSourceImpl() {
-    _profileDocument = FirebaseFirestore.instance.collection(
+  ProfileRemoteDataSourceImpl() {
+    _profileCollection = FirebaseFirestore.instance.collection(
       ProfileField.collectionName,
     );
   }
@@ -40,7 +39,7 @@ class PersonalInformationRemoteDataSourceImpl
   @override
   Future<List<Profile>> getAllProfileByName({required String name}) async {
     final String text = "$name\uf8ff";
-    return await _profileDocument
+    return await _profileCollection
         .orderBy(ProfileField.fullNameField, descending: true)
         .where(ProfileField.fullNameField, isGreaterThanOrEqualTo: name)
         .where(ProfileField.fullNameField, isLessThanOrEqualTo: text)
@@ -71,7 +70,7 @@ class PersonalInformationRemoteDataSourceImpl
       listValues
           .map(
             (queryDocSnapshot) =>
-                ParsedSnapshotData(parsedTo: ParsedTo.profile).to(
+                ParsedSnapshotData(parsedTo: ParsedTo.profile).parsed(
               data: queryDocSnapshot.data(),
               id: queryDocSnapshot.id,
             ) as Profile,
@@ -82,7 +81,7 @@ class PersonalInformationRemoteDataSourceImpl
 
   @override
   Future<List<Profile>> getAllProfile() async {
-    return await _profileDocument.get().then(
+    return await _profileCollection.get().then(
       (querySnapshot) async {
         if (_isNullQuerySnapshot(querySnapshot)) return [];
 
@@ -175,7 +174,7 @@ class PersonalInformationRemoteDataSourceImpl
       ProfileField.userMessagingTokenField: "",
     };
 
-    await _profileDocument.doc(authUser.uid).set(profileMap);
+    await _profileCollection.doc(authUser.uid).set(profileMap);
     return await getProfileById(userID: authUser.uid);
   }
 
@@ -194,11 +193,11 @@ class PersonalInformationRemoteDataSourceImpl
 
     // return profile;
 
-    final snapshot = await _profileDocument.doc(userID).get();
+    final snapshot = await _profileCollection.doc(userID).get();
 
     if (!snapshot.exists || snapshot.id.isEmpty) return null;
 
-    return ParsedSnapshotData(parsedTo: ParsedTo.profile).to(
+    return ParsedSnapshotData(parsedTo: ParsedTo.profile).parsed(
       data: snapshot.data(),
       id: userID,
     ) as Profile;

@@ -1,6 +1,6 @@
 enum MessageType { text, audio, image, video }
 
-enum ChatMessageStatus { notSend, notView, viewed }
+enum MessageStatus { sent, notSend, notView, viewed }
 
 enum FlashMessageType { info, warning, success, error }
 

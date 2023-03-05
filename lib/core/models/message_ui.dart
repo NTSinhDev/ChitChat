@@ -6,7 +6,7 @@ class MessageUI {
   final List<String>? content;
   // final String? message;
   final MessageType type;
-  final ChatMessageStatus status;
+  final MessageStatus status;
   String stampTime;
   final bool isSender;
   MessageUI({
@@ -22,7 +22,7 @@ class MessageUI {
 List<MessageUI> demoMessages = [
   MessageUI(
     isSender: false,
-    status: ChatMessageStatus.viewed,
+    status: MessageStatus.viewed,
     type: MessageType.text,
     content: [
       "Chào, Trường Sinh!",
@@ -32,7 +32,7 @@ List<MessageUI> demoMessages = [
   ),
   MessageUI(
     isSender: true,
-    status: ChatMessageStatus.viewed,
+    status: MessageStatus.viewed,
     type: MessageType.text,
     content: [
       "Chào, Nguyễn Dộ",
@@ -42,7 +42,7 @@ List<MessageUI> demoMessages = [
   ),
   MessageUI(
     isSender: false,
-    status: ChatMessageStatus.viewed,
+    status: MessageStatus.viewed,
     type: MessageType.text,
     content: [
       "Cảm ơn 🥰! thế nó sao rồi?",
@@ -51,7 +51,7 @@ List<MessageUI> demoMessages = [
   ),
   MessageUI(
     isSender: true,
-    status: ChatMessageStatus.viewed,
+    status: MessageStatus.viewed,
     type: MessageType.text,
     content: [
       "Nó mới vừa ăn tối xong",
@@ -62,7 +62,7 @@ List<MessageUI> demoMessages = [
   ),
   MessageUI(
     isSender: false,
-    status: ChatMessageStatus.viewed,
+    status: MessageStatus.viewed,
     type: MessageType.text,
     content: [
       "Khiếu hài hước của bạn làm tôi phải khóc đấy!",
@@ -74,7 +74,7 @@ List<MessageUI> demoMessages = [
   ),
   MessageUI(
     isSender: true,
-    status: ChatMessageStatus.viewed,
+    status: MessageStatus.viewed,
     type: MessageType.text,
     content: [
       "Tôi hả? Cũng bình thường.",
@@ -84,7 +84,7 @@ List<MessageUI> demoMessages = [
   ),
   MessageUI(
     isSender: false,
-    status: ChatMessageStatus.viewed,
+    status: MessageStatus.viewed,
     type: MessageType.text,
     content: [
       "Ohmm",

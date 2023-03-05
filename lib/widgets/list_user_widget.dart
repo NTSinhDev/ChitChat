@@ -64,30 +64,15 @@ class ListUserWidget extends StatelessWidget {
             child: ListTile(
               onTap: () async {
                 final searchBloc = context.read<SearchBloc>();
-                // final createID = searchBloc.currentUser.profile?.id ?? '';
-                // final userIDs = [createID, item.profile?.id ?? ''];
-                // final usersSubject =
-                //     userListStream as ReplaySubject<List<UserProfile>?>;
-                // searchBloc.add(JoinConversationEvent(
-                //   userIDs: userIDs,
-                //   usersSubject: usersSubject,
-                //   friend: item,
-                // ));
-
-                 await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (nContext) {
-                        return ChatScreen(
-                          currentUser: searchBloc.currentUser,
-                          friendInfo: UserInformation(informations: item),
-                        );
-                      },
-                      // ignore: prefer_const_constructors
-                      settings: RouteSettings(
-                        name: null,
-                      ),
-                    ),
-                  );
+                final createID = searchBloc.currentUser.profile?.id ?? '';
+                final userIDs = [createID, item.profile?.id ?? ''];
+                final usersSubject =
+                    userListStream as ReplaySubject<List<UserProfile>?>;
+                searchBloc.add(JoinConversationEvent(
+                  userIDs: userIDs,
+                  usersSubject: usersSubject,
+                  friend: item,
+                ));
               },
               leading: Container(
                 padding: EdgeInsets.only(right: 8.w),

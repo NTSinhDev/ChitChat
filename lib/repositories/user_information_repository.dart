@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:chat_app/core/enum/enums.dart';
 import 'package:chat_app/core/utils/constants.dart';
 import 'package:chat_app/datasources/local_datasources/injector.dart';
-import 'package:chat_app/datasources/remote_datasources/personal_information_remote_datasource.dart';
+import 'package:chat_app/datasources/remote_datasources/profile_remote_datasource.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/models/user_profile.dart';
@@ -20,14 +20,14 @@ abstract class UserInformationRepository {
 }
 
 class UserInformationRepositoryImpl implements UserInformationRepository {
-  late final PersonalInformationRemoteDataSource _personalInforRemoteDS;
+  late final ProfileRemoteDataSource _personalInforRemoteDS;
   late final StorageLocalDataSource _storageLocalDS;
 
   ProfileLocalDataSource? _profileLocalDS;
   bool isInitProfileLocalDS = false;
 
   UserInformationRepositoryImpl() {
-    _personalInforRemoteDS = PersonalInformationRemoteDataSourceImpl();
+    _personalInforRemoteDS = ProfileRemoteDataSourceImpl();
     _storageLocalDS = StorageLocalDataSourceImpl();
   }
 

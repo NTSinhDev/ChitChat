@@ -52,6 +52,7 @@ dependencies:
   rxdart: ^0.27.7
   shared_preferences: ^2.0.15
   socket_io_client: ^2.0.0
+  uuid: ^3.0.7
   video_player: ^2.4.7
 
 dev_dependencies:

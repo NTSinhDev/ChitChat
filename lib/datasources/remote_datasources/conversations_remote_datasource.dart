@@ -2,9 +2,8 @@ import 'dart:developer';
 
 import 'package:chat_app/core/utils/constants.dart';
 import 'package:chat_app/core/utils/functions.dart';
+import 'package:chat_app/models/models_injector.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../../models/conversation.dart';
 
 abstract class ConversationsRemoteDataSource {
   Future<Conversation?> createNewConversation({
@@ -17,26 +16,45 @@ abstract class ConversationsRemoteDataSource {
   });
 
   Future<Conversation?> getConversation({required String conversationId});
+
+  Future updateConversation({
+    required String id,
+    required Map<String, dynamic> data,
+  });
 }
 
 class ConversationsRemoteDataSourceImpl
     implements ConversationsRemoteDataSource {
-  late CollectionReference _conversationDoc;
+  late CollectionReference _conversationCollection;
 
   ConversationsRemoteDataSourceImpl() {
-    _conversationDoc = FirebaseFirestore.instance.collection(
+    _conversationCollection = FirebaseFirestore.instance.collection(
       ConversationsField.collectionName,
     );
+  }
+
+  @override
+  Future<bool> updateConversation({
+    required String id,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      await _conversationCollection.doc(id).update(data);
+      return true;
+    } catch (e) {
+      log("Lỗi khi cập nhật thông tin conversation ${e.toString()}");
+      return false;
+    }
   }
 
   @override
   Future<Conversation?> getConversation({
     required String conversationId,
   }) async {
-    return await _conversationDoc.doc(conversationId).get().then(
+    return await _conversationCollection.doc(conversationId).get().then(
       (docSnapshot) async {
         if (docSnapshot.exists) {
-          return ParsedSnapshotData(parsedTo: ParsedTo.conversation).to(
+          return ParsedSnapshotData(parsedTo: ParsedTo.conversation).parsed(
             data: docSnapshot.data(),
             id: docSnapshot.id,
           ) as Conversation;
@@ -51,7 +69,7 @@ class ConversationsRemoteDataSourceImpl
     required Conversation conversation,
   }) async {
     try {
-      return await _conversationDoc
+      return await _conversationCollection
           .doc(conversation.id)
           .set(conversation.toMap())
           .then((value) => getConversation(conversationId: conversation.id!));
@@ -75,7 +93,7 @@ class ConversationsRemoteDataSourceImpl
   }
 
   Future<String> _isExistedDocument(String conversationID) async {
-    return await _conversationDoc
+    return await _conversationCollection
             .doc(conversationID)
             .get()
             .then((docSnapshot) => docSnapshot.exists ? true : false)
