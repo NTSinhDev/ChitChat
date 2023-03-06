@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -38,7 +37,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     return WillPopScope(
       onWillPop: () async {
-        exitSearchScreen();
+        exitSearchScreen(context);
         return false;
       },
       child: Scaffold(
@@ -46,7 +45,7 @@ class _SearchScreenState extends State<SearchScreen> {
           toolbarHeight: 72.h,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: exitSearchScreen,
+            onPressed: () => exitSearchScreen(context),
           ),
           title: InputFieldWidget(
             padding: 0,
@@ -138,7 +137,8 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  exitSearchScreen() {
+  exitSearchScreen(BuildContext context) {
+    Navigator.pop(context);
     // Todo: exit search screen here
   }
 

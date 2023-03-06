@@ -3,6 +3,7 @@ import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/main.dart';
 import 'package:chat_app/data/repositories/authentication_repository.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/home/home_screen.dart';
 import 'package:chat_app/views/injector.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -63,15 +64,7 @@ class _ChitChatAppState extends State<ChitChatApp> {
                     return const SignUpScreen();
                   }
                   if (state is LoggedState) {
-                    return BlocProvider<SearchBloc>(
-                      create: (context) => SearchBloc(
-                        currentUser: state.userProfile,
-                      ),
-                      child: SearchScreen(
-                        currentUser: state.userProfile,
-                        listFriend: const [],
-                      ),
-                    );
+                    return HomeScreen(userProfile: state.userProfile);
                   }
                   return LoginScreen(deviceToken: widget.deviceToken!);
                 },
