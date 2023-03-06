@@ -1,9 +1,9 @@
-import 'package:chat_app/core/enum/enums.dart';
-import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/core/res/spaces.dart';
-import 'package:chat_app/core/utils/constants.dart';
-import 'package:chat_app/core/utils/functions.dart';
-import 'package:chat_app/models/models_injector.dart';
+import 'package:chat_app/res/enum/enums.dart';
+import 'package:chat_app/res/colors.dart';
+import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/utils/constants.dart';
+import 'package:chat_app/utils/functions.dart';
+import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:chat_app/views/chat/messages_module/components/components_injector.dart';

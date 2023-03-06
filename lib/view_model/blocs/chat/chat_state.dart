@@ -1,4 +1,4 @@
-import 'package:chat_app/models/models_injector.dart';
+import 'package:chat_app/models/injector.dart';
 
 abstract class ChatState {
   final UserProfile currentUser;

@@ -1,6 +1,6 @@
-import 'package:chat_app/core/res/spaces.dart';
-import 'package:chat_app/core/utils/functions.dart';
-import 'package:chat_app/models/models_injector.dart';
+import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/utils/functions.dart';
+import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/views/chat/input_messages_module/input_messages_module.dart';
 import 'package:chat_app/views/chat/messages_module/message_view.dart';

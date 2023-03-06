@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/res/colors.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';

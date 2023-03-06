@@ -1,5 +1,5 @@
-import 'package:chat_app/models/models_injector.dart';
-import 'package:chat_app/repositories/injector.dart';
+import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/data/repositories/injector.dart';
 import 'package:chat_app/view_model/blocs/search/bloc_injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';

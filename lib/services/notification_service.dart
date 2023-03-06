@@ -1,4 +1,4 @@
-import 'package:chat_app/core/utils/functions.dart';
+import 'package:chat_app/utils/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';

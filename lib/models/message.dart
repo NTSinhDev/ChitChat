@@ -1,4 +1,4 @@
-import 'package:chat_app/core/utils/constants.dart';
+import 'package:chat_app/utils/constants.dart';
 import 'package:hive/hive.dart';
 
 part 'message.g.dart';

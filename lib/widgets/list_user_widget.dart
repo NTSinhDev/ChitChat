@@ -1,6 +1,6 @@
-import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/core/res/spaces.dart';
-import 'package:chat_app/models/models_injector.dart';
+import 'package:chat_app/res/colors.dart';
+import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/view_model/blocs/search/bloc_injector.dart';
 import 'package:chat_app/view_model/blocs/search/search_bloc.dart';
 import 'package:chat_app/views/chat/chat_screen.dart';

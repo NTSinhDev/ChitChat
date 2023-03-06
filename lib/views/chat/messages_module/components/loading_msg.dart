@@ -1,6 +1,6 @@
-import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/core/res/spaces.dart';
-import 'package:chat_app/core/utils/constants.dart';
+import 'package:chat_app/res/colors.dart';
+import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -1,7 +1,7 @@
-import 'package:chat_app/core/res/theme.dart';
-import 'package:chat_app/core/utils/functions.dart';
+import 'package:chat_app/res/theme.dart';
+import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/main.dart';
-import 'package:chat_app/repositories/authentication_repository.dart';
+import 'package:chat_app/data/repositories/authentication_repository.dart';
 import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:chat_app/view_model/blocs/search/search_bloc.dart';
 import 'package:chat_app/view_model/blocs/search/search_event.dart';

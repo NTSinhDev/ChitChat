@@ -1,4 +1,4 @@
-import 'package:chat_app/repositories/injector.dart';
+import 'package:chat_app/data/repositories/injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:chat_app/models/user_profile.dart';

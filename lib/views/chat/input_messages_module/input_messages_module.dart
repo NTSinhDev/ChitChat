@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/core/res/spaces.dart';
+import 'package:chat_app/res/colors.dart';
+import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/view_model/providers/injector.dart';
 import 'package:chat_app/views/chat/input_messages_module/components/emoji_widget.dart';

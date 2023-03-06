@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_app/core/res/spaces.dart';
+import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/providers/app_state_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/res/colors.dart';
 import 'package:chat_app/widgets/state_avatar_widget.dart';
 
 class ListChatRoom extends StatefulWidget {

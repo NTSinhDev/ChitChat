@@ -1,5 +1,5 @@
 import 'package:chat_app/models/user_profile.dart';
-import 'package:chat_app/repositories/injector.dart';
+import 'package:chat_app/data/repositories/injector.dart';
 import 'package:chat_app/view_model/blocs/authentication/authentication_event.dart';
 import 'package:chat_app/view_model/blocs/authentication/authentication_state.dart';
 import 'package:chat_app/services/authentication_services.dart';

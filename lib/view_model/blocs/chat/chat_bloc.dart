@@ -1,13 +1,13 @@
 import 'dart:async';
 
-import 'package:chat_app/core/utils/constants.dart';
+import 'package:chat_app/utils/constants.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
-import 'package:chat_app/core/enum/enums.dart';
+import 'package:chat_app/res/enum/enums.dart';
 
-import 'package:chat_app/models/models_injector.dart';
-import 'package:chat_app/repositories/injector.dart';
+import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/data/repositories/injector.dart';
 
 import 'bloc_injector.dart';
 

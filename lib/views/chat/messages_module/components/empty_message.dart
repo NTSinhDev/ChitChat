@@ -1,5 +1,5 @@
-import 'package:chat_app/core/utils/constants.dart';
-import 'package:chat_app/models/models_injector.dart';
+import 'package:chat_app/utils/constants.dart';
+import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/widgets/state_avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

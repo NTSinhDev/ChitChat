@@ -1,8 +1,8 @@
-import 'package:chat_app/core/enum/enums.dart';
-import 'package:chat_app/core/helpers/loading/loading_screen.dart';
-import 'package:chat_app/core/helpers/notify/alert_error.dart';
-import 'package:chat_app/core/helpers/notify/flash_message.dart';
-import 'package:chat_app/core/res/spaces.dart';
+import 'package:chat_app/res/enum/enums.dart';
+import 'package:chat_app/res/helpers/loading/loading_screen.dart';
+import 'package:chat_app/res/helpers/notify/alert_error.dart';
+import 'package:chat_app/res/helpers/notify/flash_message.dart';
+import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/view_model/providers/injector.dart';

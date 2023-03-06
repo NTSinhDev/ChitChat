@@ -3,7 +3,7 @@ import 'package:chat_app/views/chat/messages_module/components/components_inject
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:chat_app/models/models_injector.dart';
+import 'package:chat_app/models/injector.dart';
 
 class MessageView extends StatefulWidget {
   const MessageView({

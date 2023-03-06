@@ -1,32 +1,29 @@
 import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
-import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/core/utils/functions.dart';
+import 'package:chat_app/res/colors.dart';
+import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/widgets/state_avatar_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../core/models/auth_user.dart';
-import '../core/models/chat_room.dart';
-import '../core/models/user_presence.dart';
 
 class ChatRoomWidget extends StatefulWidget {
-  final ChatRoom chatRoom;
+  // final ChatRoom chatRoom;
   final bool isDarkMode;
   final bool isGroup;
   final bool? isCall;
-  final User user;
-  final UserPresence presence;
+  // final User user;
+  // final UserPresence presence;
   const ChatRoomWidget({
     super.key,
-    required this.chatRoom,
+    // required this.chatRoom,
     required this.isDarkMode,
     required this.isGroup,
     this.isCall,
-    required this.user,
-    required this.presence,
+    // required this.user,
+    // required this.presence,
   });
 
   @override
@@ -55,7 +52,8 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
       visualDensity: const VisualDensity(vertical: 0.7),
       leading: StateAvatar(
         urlImage: URLImage(),
-        isStatus: widget.presence.presence!,
+        isStatus: false,
+        // isStatus: widget.presence.presence!,
         radius: 60.r,
       ),
       title: Container(
@@ -64,7 +62,8 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
           bottom: 8.h,
         ),
         child: Text(
-          widget.user.name ?? "Unknow",
+          // widget.user.name ?? "Unknow",
+          '',
           style:
           //  !_isNotification(context)
           //     ? Theme.of(context).textTheme.titleLarge
