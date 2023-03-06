@@ -20,7 +20,7 @@ class Message {
   @HiveField(6)
   final DateTime stampTime;
   @HiveField(7)
-  final String typeMessage;
+  final String messageType;
   @HiveField(8)
   final String messageStatus;
 
@@ -32,7 +32,7 @@ class Message {
     this.listNameImage = const [],
     this.nameRecord = '',
     DateTime? stampTime,
-    required this.typeMessage,
+    required this.messageType,
     required this.messageStatus,
   }) : stampTime = stampTime ?? DateTime.now();
 
@@ -45,7 +45,7 @@ class Message {
       ConversationMessagesField.listNameImage: listNameImage,
       ConversationMessagesField.nameRecord: nameRecord,
       ConversationMessagesField.stampTime: stampTime.millisecondsSinceEpoch,
-      ConversationMessagesField.typeMessage: typeMessage,
+      ConversationMessagesField.typeMessage: messageType,
       ConversationMessagesField.messageStatus: messageStatus,
     };
   }
@@ -72,13 +72,13 @@ class Message {
       stampTime: DateTime.fromMillisecondsSinceEpoch(
         map[ConversationMessagesField.stampTime] as int,
       ),
-      typeMessage: map[ConversationMessagesField.typeMessage] as String,
+      messageType: map[ConversationMessagesField.typeMessage] as String,
       messageStatus: map[ConversationMessagesField.messageStatus] as String,
     );
   }
 
   @override
   String toString() {
-    return 'Message(id: $id, senderId: $senderId, chatId: $conversationId, content: $content, listNameImage: $listNameImage, nameRecord: $nameRecord, stampTime: $stampTime, typeMessage: $typeMessage, messageStatus: $messageStatus)';
+    return 'Message(id: $id, senderId: $senderId, chatId: $conversationId, content: $content, listNameImage: $listNameImage, nameRecord: $nameRecord, stampTime: $stampTime, typeMessage: $messageType, messageStatus: $messageStatus)';
   }
 }

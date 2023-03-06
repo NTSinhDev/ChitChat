@@ -24,7 +24,7 @@ class MessageAdapter extends TypeAdapter<Message> {
       listNameImage: (fields[4] as List).cast<String>(),
       nameRecord: fields[5] as String?,
       stampTime: fields[6] as DateTime,
-      typeMessage: fields[7] as String,
+      messageType: fields[7] as String,
       messageStatus: fields[8] as String,
     );
   }
@@ -48,7 +48,7 @@ class MessageAdapter extends TypeAdapter<Message> {
       ..writeByte(6)
       ..write(obj.stampTime)
       ..writeByte(7)
-      ..write(obj.typeMessage)
+      ..write(obj.messageType)
       ..writeByte(8)
       ..write(obj.messageStatus);
   }

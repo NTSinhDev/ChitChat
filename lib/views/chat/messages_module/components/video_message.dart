@@ -1,20 +1,21 @@
+import 'package:chat_app/view_model/providers/theme_provider.dart';
 import 'package:chat_app/views/chat/messages_module/components/cannot_load_img.dart';
 import 'package:chat_app/views/chat/messages_module/components/loading_msg.dart';
 import 'package:chat_app/core/utils/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class VideoMessage extends StatefulWidget {
-  final String url;
-  final bool isSender;
-  final bool theme;
+  final List<String> urlList;
+  final bool isMsgOfUser;
+
   const VideoMessage({
     super.key,
-    required this.url,
-    required this.isSender,
-    required this.theme,
+    required this.urlList,
+    required this.isMsgOfUser,
   });
 
   @override
@@ -24,13 +25,14 @@ class VideoMessage extends StatefulWidget {
 class _VideoMessageState extends State<VideoMessage> {
   late VideoPlayerController _playerController;
   late Future<void> _initializeVideoPlayerFuture;
+  late bool theme;
   bool _isShowAction = false;
 
   @override
   void initState() {
     super.initState();
     _playerController = VideoPlayerController.network(
-      'https://appsocketonline2.herokuapp.com${widget.url}',
+      '',
     );
     _initializeVideoPlayerFuture = _playerController.initialize();
     _playerController.setLooping(true);
@@ -44,98 +46,109 @@ class _VideoMessageState extends State<VideoMessage> {
 
   @override
   Widget build(BuildContext context) {
+    theme = context.watch<ThemeProvider>().isDarkMode;
     final maxWidth = MediaQuery.of(context).size.width;
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Container(
-            constraints: BoxConstraints(
-              maxWidth: maxWidth * 7 / 10,
-              maxHeight: 440.h,
-            ),
-            margin: EdgeInsets.only(top: 2.h),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12.r),
-              boxShadow: [
-                BoxShadow(
-                  color: widget.isSender ? Colors.black45 : Colors.black12,
-                  offset: const Offset(1, 1),
-                  blurRadius: 2,
+    return Column(
+      crossAxisAlignment: widget.isMsgOfUser
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
+      children: widget.urlList.map((url) {
+        return FutureBuilder(
+          future: _initializeVideoPlayerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Container(
+                constraints: BoxConstraints(
+                  maxWidth: maxWidth * 7 / 10,
+                  maxHeight: 440.h,
                 ),
-              ],
-            ),
-            child: CannotLoadMsg(
-              isSender: widget.isSender,
-              theme: widget.theme,
-              content: AppLocalizations.of(context)!.cannot_load_video,
-            ),
-          );
-        }
-        if (snapshot.connectionState == ConnectionState.done) {
-          return GestureDetector(
-            onTap: () async {
-              setState(() => _isShowAction = !_isShowAction);
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
-              child: Container(
-                width: maxWidth * 7 / 10,
                 margin: EdgeInsets.only(top: 2.h),
-                child: AspectRatio(
-                  aspectRatio: _playerController.value.aspectRatio,
-                  child: Stack(
-                    children: [
-                      VideoPlayer(_playerController),
-                      if (_isShowAction) ...[
-                        Container(
-                          color: Colors.black.withOpacity(0.6),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(),
-                              _pauseAndPlayButton(),
-                              _videoProgressBar(),
-                            ],
-                          ),
-                        )
-                      ],
-                      if (!_isShowAction) ...[
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: ValueListenableBuilder(
-                            valueListenable: _playerController,
-                            builder: (context, VideoPlayerValue value, child) {
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  right: 10.w,
-                                  bottom: 10.h,
-                                  top: 2.h,
-                                ),
-                                child: Text(
-                                  formatDuration(value.duration),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall!
-                                      .copyWith(
-                                        color: Colors.white,
-                                        fontSize: 12.h,
-                                      ),
-                                ),
-                              );
-                            },
-                          ),
-                        )
-                      ],
-                    ],
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color:
+                          widget.isMsgOfUser ? Colors.black45 : Colors.black12,
+                      offset: const Offset(1, 1),
+                      blurRadius: 2,
+                    ),
+                  ],
+                ),
+                child: CannotLoadMsg(
+                  isSender: widget.isMsgOfUser,
+                  theme: theme,
+                  content: AppLocalizations.of(context)!.cannot_load_video,
+                ),
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.done) {
+              return GestureDetector(
+                onTap: () async {
+                  setState(() => _isShowAction = !_isShowAction);
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.r),
+                  child: Container(
+                    width: maxWidth * 7 / 10,
+                    margin: EdgeInsets.only(top: 2.h),
+                    child: AspectRatio(
+                      aspectRatio: _playerController.value.aspectRatio,
+                      child: Stack(
+                        children: [
+                          VideoPlayer(_playerController),
+                          if (_isShowAction) ...[
+                            Container(
+                              color: Colors.black.withOpacity(0.6),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(),
+                                  _pauseAndPlayButton(),
+                                  _videoProgressBar(),
+                                ],
+                              ),
+                            )
+                          ],
+                          if (!_isShowAction) ...[
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: ValueListenableBuilder(
+                                valueListenable: _playerController,
+                                builder:
+                                    (context, VideoPlayerValue value, child) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                      right: 10.w,
+                                      bottom: 10.h,
+                                      top: 2.h,
+                                    ),
+                                    child: Text(
+                                      formatDuration(value.duration),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall!
+                                          .copyWith(
+                                            color: Colors.white,
+                                            fontSize: 12.h,
+                                          ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            )
+                          ],
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
-        }
-        return _videoLoading();
-      },
+              );
+            }
+            return _videoLoading();
+          },
+        );
+      }).toList(),
     );
   }
 
@@ -152,15 +165,15 @@ class _VideoMessageState extends State<VideoMessage> {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: widget.isSender ? Colors.black45 : Colors.black12,
+            color: widget.isMsgOfUser ? Colors.black45 : Colors.black12,
             offset: const Offset(1, 1),
             blurRadius: 2,
           ),
         ],
       ),
       child: LoadingMessage(
-        isSender: widget.isSender,
-        theme: widget.theme,
+        isSender: widget.isMsgOfUser,
+        theme: theme,
         content: AppLocalizations.of(context)!.loading_video,
         width: 240.w,
       ),
@@ -221,7 +234,11 @@ class _VideoMessageState extends State<VideoMessage> {
               valueListenable: _playerController,
               builder: (context, VideoPlayerValue value, child) {
                 return Padding(
-                  padding:  EdgeInsets.only(right: 10.w, bottom: 10.h, top: 2.h,),
+                  padding: EdgeInsets.only(
+                    right: 10.w,
+                    bottom: 10.h,
+                    top: 2.h,
+                  ),
                   child: Text(
                     formatDuration(value.duration),
                     style: Theme.of(context)

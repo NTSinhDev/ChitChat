@@ -1,9 +1,9 @@
 import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
 import 'package:chat_app/views/chat/messages_module/components/components_injector.dart';
-import 'package:chat_app/views/chat/messages_module/components/message_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:chat_app/models/models_injector.dart';
 
 class MessageView extends StatefulWidget {
   const MessageView({
@@ -15,6 +15,14 @@ class MessageView extends StatefulWidget {
 }
 
 class _MessageViewState extends State<MessageView> {
+  late final ChatBloc chat;
+
+  @override
+  void initState() {
+    super.initState();
+    chat = context.read<ChatBloc>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -30,7 +38,7 @@ class _MessageViewState extends State<MessageView> {
                 if (chatState.conversation == null) {
                   return EmptyMessage(friend: chatState.friend);
                 }
-                return MessageList();
+                return _messageListWidget(chat.msgListStream);
               }
 
               return const Center(
@@ -46,11 +54,50 @@ class _MessageViewState extends State<MessageView> {
     );
   }
 
-  // bool _checkIsSender(clusterMessage, id) {
-  //   return Message.fromJson(clusterMessage[0]).idSender == id ? true : false;
-  // }
+  Widget _messageListWidget(Stream<Iterable<Message>> stream) {
+    return StreamBuilder<Iterable<Message>>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final msgList = snapshot.data;
+          return ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: msgList!.length,
+            itemBuilder: (context, index) {
+              final message = msgList.elementAt(index);
+              // init clustermessage
 
-  // bool _checkIsLastCluster(index, check) {
-  //   return index == check ? true : false;
-  // }
+              return MessageItem(message: message);
+              // return Column(
+              //   children: [
+              //     if (indexShowTime == 1) ...[
+              //       CluterMessagesTime(
+              //         theme: appState.darkMode,
+              //         time: state.listTime![index],
+              //       ),
+              //     ],
+              //     // nhóm các mesage
+              //     ClusterMessages(
+              //       avatarFriend: state.friend.urlImage!,
+              //       theme: appState.darkMode,
+              //       isSender: isSender,
+              //       messages: clusterMessage,
+              //       isLastCluster: isLastClusterMessage,
+              //     ),
+              //   ],
+              // );
+            },
+          );
+        } else {
+          return const Center(
+            child: Text(
+              "Tạo một widget loading cho messageList để thay thế tôi",
+            ),
+          );
+        }
+      },
+    );
+  }
+
 }

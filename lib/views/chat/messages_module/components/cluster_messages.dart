@@ -8,17 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ClusterMessages extends StatefulWidget {
-  final String avatarFriend;
-  final bool theme;
   final bool isSender;
   final List<dynamic> messages;
   final bool isLastCluster;
   const ClusterMessages({
     super.key,
-    required this.theme,
     required this.isSender,
     required this.messages,
-    required this.avatarFriend,
     required this.isLastCluster,
   });
 
@@ -42,13 +38,8 @@ class _ClusterMessagesState extends State<ClusterMessages> {
   @override
   Widget build(BuildContext context) {
     int currentIndex = 0;
-    // final timeMessageItem = Message.fromJson(widget.messages.last).time;
-
     return Padding(
-      padding: EdgeInsets.only(
-        top: 10.h,
-        bottom: 10.h,
-      ),
+      padding: EdgeInsets.only(top: 10.h, bottom: 10.h),
       child: Row(
         mainAxisAlignment:
             widget.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -80,49 +71,71 @@ class _ClusterMessagesState extends State<ClusterMessages> {
                 }).toList(),
               ),
               Spaces.h4,
-              Row(
-                children: [
-                  Text(
-                    // formatTime(timeMessageItem)
-                    '',
-                    style: Theme.of(context)
-                        .textTheme
-                        .labelSmall!
-                        .copyWith(color: lightGreyDarkMode),
-                  ),
-                  if (_sended && widget.isSender) ...[
-                    Spaces.w4,
-                    const Icon(
-                      Icons.check,
-                      size: 16,
-                      color: darkGreyLightMode,
-                    ),
-                  ],
-                  if (_loading && widget.isSender) ...[
-                    Spaces.w4,
-                    SizedBox(
-                      height: 12.h,
-                      width: 12.w,
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 1.3,
-                        color: darkGreyLightMode,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-              if (_seen && widget.isSender) ...[
-                Spaces.h4,
-                StateAvatar(
-                  urlImage: URLImage(),
-                  isStatus: false,
-                  radius: 16.r,
-                ),
-              ],
+              // _clusterMsgInfo(),
+              // ..._seenMessageWidget(),
             ],
           ),
         ],
       ),
+    );
+  }
+
+  List<Widget> _seenMessageWidget() {
+    if (_seen && widget.isSender) {
+      return [
+        Spaces.h4,
+        StateAvatar(
+          urlImage: URLImage(),
+          isStatus: false,
+          radius: 16.r,
+        ),
+      ];
+    }
+    return [];
+  }
+
+  Widget _clusterMsgInfo() {
+    return Row(
+      children: [
+        // _clusterTime(context),
+        // ..._clusterMsgState(),
+        if (_loading && widget.isSender) ...[
+          Spaces.w4,
+          SizedBox(
+            height: 12.h,
+            width: 12.w,
+            child: const CircularProgressIndicator(
+              strokeWidth: 1.3,
+              color: darkGreyLightMode,
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+
+  List<Widget> _clusterMsgState() {
+    if (_sended && widget.isSender) {
+      return [
+        Spaces.w4,
+        const Icon(
+          Icons.check,
+          size: 16,
+          color: darkGreyLightMode,
+        ),
+      ];
+    }
+    return [];
+  }
+
+  Widget _clusterTime(BuildContext context) {
+    return Text(
+      // formatTime(timeMessageItem)
+      '',
+      style: Theme.of(context)
+          .textTheme
+          .labelSmall!
+          .copyWith(color: lightGreyDarkMode),
     );
   }
 

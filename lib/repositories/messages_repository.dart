@@ -53,7 +53,7 @@ class MessagesRepositoryImpl implements MessagesRepository {
       senderId: senderID,
       conversationId: conversationID,
       content: message,
-      typeMessage: MessageType.text.toString(),
+      messageType: MessageType.text.toString(),
       messageStatus: MessageStatus.sent.toString(),
     );
 
