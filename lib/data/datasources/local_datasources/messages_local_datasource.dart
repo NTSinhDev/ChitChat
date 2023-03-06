@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:chat_app/utils/constants.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:hive/hive.dart';
 

@@ -1,9 +1,6 @@
-import 'package:chat_app/res/colors.dart';
-import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/models/injector.dart';
-import 'package:chat_app/view_model/blocs/search/bloc_injector.dart';
-import 'package:chat_app/view_model/blocs/search/search_bloc.dart';
-import 'package:chat_app/views/chat/chat_screen.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,11 +63,8 @@ class ListUserWidget extends StatelessWidget {
                 final searchBloc = context.read<SearchBloc>();
                 final createID = searchBloc.currentUser.profile?.id ?? '';
                 final userIDs = [createID, item.profile?.id ?? ''];
-                final usersSubject =
-                    userListStream as ReplaySubject<List<UserProfile>?>;
                 searchBloc.add(JoinConversationEvent(
                   userIDs: userIDs,
-                  usersSubject: usersSubject,
                   friend: item,
                 ));
               },

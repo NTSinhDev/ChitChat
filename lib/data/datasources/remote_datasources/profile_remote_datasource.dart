@@ -112,7 +112,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           )
           .onError(
         (error, stackTrace) {
-          log('🚀log⚡ $error');
+          log('🚀log⚡ lỗi ko lấy được ảnh trên firebase $error');
           return "";
         },
       );
@@ -154,12 +154,16 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   Future<File?> getImageFileFromNetwork(String url, String path) async {
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      final file = File(path);
-      await file.writeAsBytes(response.bodyBytes);
-      return file;
-    } else {
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        final file = File(path);
+        await file.writeAsBytes(response.bodyBytes);
+        return file;
+      }
+      return null;
+    } catch (e) {
+      log('🚀log⚡ lỗi khi lấy ảnh từ netword || ${e.toString()}');
       return null;
     }
   }

@@ -1,15 +1,12 @@
 import 'dart:async';
 
 import 'package:chat_app/utils/constants.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:uuid/uuid.dart';
-import 'package:chat_app/res/enum/enums.dart';
-
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/data/repositories/injector.dart';
 
-import 'bloc_injector.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final UserProfile currentUser;

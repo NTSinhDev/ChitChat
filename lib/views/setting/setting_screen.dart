@@ -1,14 +1,9 @@
-import 'package:chat_app/res/enum/enums.dart';
-import 'package:chat_app/res/helpers/loading/loading_screen.dart';
-import 'package:chat_app/res/helpers/notify/alert_error.dart';
-import 'package:chat_app/res/helpers/notify/flash_message.dart';
-import 'package:chat_app/res/dimens.dart';
-import 'package:chat_app/models/user_profile.dart';
+import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/change_laguage_feature.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
-import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:chat_app/views/setting/components/user_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +22,6 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // app states
-    AppStateProvider appStateProvider = context.watch<AppStateProvider>();
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(userProfile),
       child: Column(
@@ -36,13 +30,13 @@ class SettingScreen extends StatelessWidget {
           Spaces.h24,
           _buildUserInformation(context),
           Spaces.h24,
-          _buildSettingOptions(context, appStateProvider),
+          _buildSettingOptions(context),
         ],
       ),
     );
   }
 
-  Widget _buildSettingOptions(BuildContext context, appStateProvider) {
+  Widget _buildSettingOptions(BuildContext context) {
     // Size
 
     return Expanded(

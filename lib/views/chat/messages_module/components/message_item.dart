@@ -1,11 +1,7 @@
-import 'package:chat_app/res/enum/enums.dart';
-import 'package:chat_app/res/colors.dart';
-import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/constants.dart';
-import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/models/injector.dart';
-import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/chat/messages_module/components/components_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,14 +1,9 @@
-import 'package:chat_app/res/theme.dart';
+import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/main.dart';
 import 'package:chat_app/data/repositories/authentication_repository.dart';
-import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
-import 'package:chat_app/view_model/blocs/search/search_bloc.dart';
-import 'package:chat_app/view_model/blocs/search/search_event.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
-import 'package:chat_app/views/login/login_screen.dart';
-import 'package:chat_app/views/search/search_screen.dart';
-import 'package:chat_app/views/signup/signup_screen.dart';
+import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/injector.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,8 +38,8 @@ class _ChitChatAppState extends State<ChitChatApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: injectProviders(sharedPreferences: widget.sharedPreferences),
-      child: Consumer3<AppStateProvider, ThemeProvider, LanguageProvider>(
-        builder: (context, appState, theme, language, child) {
+      child: Consumer2<ThemeProvider, LanguageProvider>(
+        builder: (context, theme, language, child) {
           return MaterialApp(
             title: 'ChitChat App',
             debugShowCheckedModeBanner: false,

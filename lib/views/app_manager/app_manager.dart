@@ -1,7 +1,6 @@
 import 'package:chat_app/res/enum/enums.dart';
 import 'package:chat_app/res/helpers/notify/flash_message.dart';
 import 'package:chat_app/models/user_profile.dart';
-import 'package:chat_app/views/search/search_screen.dart';
 import 'package:chat_app/views/setting/setting_screen.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';

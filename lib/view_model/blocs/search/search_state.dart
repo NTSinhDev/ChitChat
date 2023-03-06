@@ -1,6 +1,4 @@
-import 'package:chat_app/models/conversation.dart';
 import 'package:chat_app/models/injector.dart';
-import 'package:chat_app/models/user_profile.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class SearchState {

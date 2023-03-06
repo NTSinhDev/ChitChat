@@ -1,12 +1,8 @@
 import 'dart:developer';
 
-import 'package:chat_app/res/colors.dart';
-import 'package:chat_app/res/dimens.dart';
-import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
-import 'package:chat_app/views/chat/input_messages_module/components/emoji_widget.dart';
-import 'package:chat_app/views/chat/input_messages_module/components/icon_action_widget.dart';
-import 'package:chat_app/views/chat/input_messages_module/components/picker_widget.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/chat/input_messages_module/components/injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

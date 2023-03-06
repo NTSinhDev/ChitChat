@@ -1,8 +1,7 @@
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/data/repositories/injector.dart';
-import 'package:chat_app/view_model/blocs/authentication/authentication_event.dart';
-import 'package:chat_app/view_model/blocs/authentication/authentication_state.dart';
 import 'package:chat_app/services/authentication_services.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

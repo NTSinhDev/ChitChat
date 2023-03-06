@@ -1,10 +1,9 @@
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-import 'package:chat_app/res/enum/enums.dart';
 import 'package:provider/provider.dart';
 
 class FlashMessage {
@@ -16,18 +15,14 @@ class FlashMessage {
     required this.message,
     required this.type,
   }) {
-    _showMessage(context);
-  }
-
-  _showMessage(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      FlashMessageScreen(
+      _FlashMessageScreen(
         flashMessageModel: _createFlashMessageModel(context),
       ).build(context),
     );
   }
 
-  FlashMessageModel _createFlashMessageModel(BuildContext context) {
+  _FlashMessageModel _createFlashMessageModel(BuildContext context) {
     switch (type) {
       case FlashMessageType.error:
         final Widget fontOf = SizedBox(
@@ -40,7 +35,7 @@ class FlashMessage {
         const color = Colors.red;
         final title = AppLocalizations.of(context)!.error;
 
-        return FlashMessageModel(
+        return _FlashMessageModel(
           fontOfTitle: fontOf,
           title: title,
           color: color,
@@ -57,7 +52,7 @@ class FlashMessage {
         const color = Colors.orange;
         final title = AppLocalizations.of(context)!.warning;
 
-        return FlashMessageModel(
+        return _FlashMessageModel(
           fontOfTitle: fontOf,
           title: title,
           color: color,
@@ -71,7 +66,7 @@ class FlashMessage {
         );
         const color = Colors.blue;
         final title = AppLocalizations.of(context)!.info;
-        return FlashMessageModel(
+        return _FlashMessageModel(
           fontOfTitle: fontOf,
           title: title,
           color: color,
@@ -82,7 +77,7 @@ class FlashMessage {
             Icon(Icons.check_circle, color: Colors.green, size: 22);
         const color = Colors.green;
         final title = AppLocalizations.of(context)!.success;
-        return FlashMessageModel(
+        return _FlashMessageModel(
           fontOfTitle: fontOf,
           title: title,
           color: color,
@@ -92,11 +87,10 @@ class FlashMessage {
   }
 }
 
-class FlashMessageScreen extends StatelessWidget {
-  final FlashMessageModel flashMessageModel;
+class _FlashMessageScreen extends StatelessWidget {
+  final _FlashMessageModel flashMessageModel;
 
-  const FlashMessageScreen({
-    super.key,
+  const _FlashMessageScreen({
     required this.flashMessageModel,
   });
 
@@ -193,12 +187,12 @@ class FlashMessageScreen extends StatelessWidget {
   }
 }
 
-class FlashMessageModel {
+class _FlashMessageModel {
   final Widget fontOfTitle;
   final Color color;
   final String title;
   final String message;
-  FlashMessageModel({
+  _FlashMessageModel({
     required this.fontOfTitle,
     required this.color,
     required this.title,

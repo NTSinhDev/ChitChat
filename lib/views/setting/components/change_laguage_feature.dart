@@ -1,5 +1,5 @@
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
 import 'package:chat_app/views/setting/components/setting_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';

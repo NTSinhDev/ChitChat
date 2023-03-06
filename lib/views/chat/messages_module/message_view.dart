@@ -1,4 +1,4 @@
-import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/chat/messages_module/components/components_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -1,12 +1,6 @@
-import 'dart:developer';
-
-import 'package:chat_app/res/enum/enums.dart';
-import 'package:chat_app/res/helpers/notify/flash_message.dart';
-import 'package:chat_app/res/colors.dart';
-import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/models/injector.dart';
-import 'package:chat_app/view_model/blocs/search/bloc_injector.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/chat/chat_screen.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:easy_debounce/easy_debounce.dart';
@@ -31,12 +25,12 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  late final SearchBloc searchBloc;
   @override
   void initState() {
     super.initState();
-    Provider.of<SearchBloc>(context, listen: false).add(SearchingEvent(
-      searchName: '',
-    ));
+    searchBloc = context.read<SearchBloc>();
+    searchBloc.add(SearchingEvent(searchName: ''));
   }
 
   @override
@@ -44,6 +38,7 @@ class _SearchScreenState extends State<SearchScreen> {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     return WillPopScope(
       onWillPop: () async {
+        exitSearchScreen();
         return false;
       },
       child: Scaffold(
@@ -51,22 +46,15 @@ class _SearchScreenState extends State<SearchScreen> {
           toolbarHeight: 72.h,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () {},
+            onPressed: exitSearchScreen,
           ),
           title: InputFieldWidget(
             padding: 0,
             boxDecorationColor: theme ? blackDarkMode! : Colors.white,
             suffixIconColor: theme ? Colors.white : Colors.black,
-            onChanged: (name) => _onSearchUser(name, context),
-            onDeleted: () => Provider.of<SearchBloc>(
-              context,
-              listen: false,
-            ).add(
-              SearchingEvent(
-                searchName: '',
-              ),
-            ),
-            onSubmitted: (string) {},
+            onChanged: onSearchUser,
+            onDeleted: clearSeachBar,
+            onSubmitted: startSearching,
           ),
         ),
         body: Container(
@@ -85,33 +73,36 @@ class _SearchScreenState extends State<SearchScreen> {
                   }
                 }
                 if (state is JoinConversationState) {
-                  await Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (nContext) {
-                        return ChatScreen(
-                          conversation: state.conversation,
-                          currentUser: state.currentUser,
-                          friendInfo: state.friend,
-                        );
-                      },
-                      settings: RouteSettings(
-                        name: state.conversation == null
-                            ? null
-                            : "conversation:${state.conversation!.id}",
-                      ),
-                    ),
-                  );
+                  await Navigator.of(context)
+                      .push(
+                        MaterialPageRoute(
+                          builder: (nContext) {
+                            return ChatScreen(
+                              conversation: state.conversation,
+                              currentUser: state.currentUser,
+                              friendInfo: state.friend,
+                            );
+                          },
+                          settings: RouteSettings(
+                            name: state.conversation == null
+                                ? null
+                                : "conversation:${state.conversation!.id}",
+                          ),
+                        ),
+                      )
+                      .then((value) =>
+                          searchBloc.add(ComeBackSearchScreenEvent()));
                 }
               },
               builder: (context, state) {
                 if (state is SearchInitialState) {
-                  return _bodySearchScreenWidget(
+                  return bodySearchScreenWidget(
                     label: AppLocalizations.of(context)!.recommend,
                     listStream: state.friendsSubject,
                   );
                 }
                 if (state is SearchingState) {
-                  return _bodySearchScreenWidget(
+                  return bodySearchScreenWidget(
                     label: AppLocalizations.of(context)!.result,
                     listStream: state.usersSubject,
                     loading: state.loading,
@@ -126,7 +117,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _bodySearchScreenWidget({
+  Widget bodySearchScreenWidget({
     required String label,
     required ReplaySubject<List<UserProfile>?>? listStream,
     bool? loading,
@@ -147,12 +138,21 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  _onSearchUser(String name, BuildContext context) {
+  exitSearchScreen() {
+    // Todo: exit search screen here
+  }
+
+  onSearchUser(String name) {
     EasyDebounce.cancel('addSearchingEvent');
     EasyDebounce.debounce(
       'addSearchingEvent',
       const Duration(milliseconds: 200),
-      () => context.read<SearchBloc>().add(SearchingEvent(searchName: name)),
+      () => searchBloc.add(SearchingEvent(searchName: name)),
     );
   }
+
+  startSearching(String name) =>
+      searchBloc.add(SearchingEvent(searchName: name));
+
+  clearSeachBar() => searchBloc.add(SearchingEvent(searchName: ''));
 }

@@ -1,6 +1,6 @@
 import 'package:chat_app/res/colors.dart';
 import 'package:chat_app/res/dimens.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

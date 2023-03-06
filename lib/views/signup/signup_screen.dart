@@ -1,5 +1,5 @@
 import 'package:chat_app/res/dimens.dart';
-import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/signup/components/signin_btn.dart';
 import 'package:chat_app/res/styles.dart';
 import 'package:chat_app/widgets/input_text_field.dart';

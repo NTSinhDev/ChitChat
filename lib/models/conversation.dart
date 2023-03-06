@@ -80,7 +80,7 @@ class Conversation {
       id: id ?? this.id,
       stampTime: stampTime ?? this.stampTime,
       stampTimeLastText: stampTimeLastText,
-      lastMessage: lastText ?? this.lastMessage,
+      lastMessage: lastText ?? lastMessage,
       nameChat: nameChat ?? this.nameChat,
       isActive: isActive ?? this.isActive,
       typeMessage: typeMessage ?? this.typeMessage,

@@ -1,10 +1,10 @@
-import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/models/injector.dart';
-import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/chat/input_messages_module/input_messages_module.dart';
 import 'package:chat_app/views/chat/messages_module/message_view.dart';
-import 'package:chat_app/widgets/state_avatar_widget.dart';
+import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
