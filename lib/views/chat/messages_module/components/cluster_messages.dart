@@ -102,9 +102,9 @@ class _ClusterMessagesState extends State<ClusterMessages> {
           SizedBox(
             height: 12.h,
             width: 12.w,
-            child: const CircularProgressIndicator(
+            child: CircularProgressIndicator(
               strokeWidth: 1.3,
-              color: darkGreyLightMode,
+              color: ResColors.darkGrey(isDarkmode: false),
             ),
           ),
         ],
@@ -116,10 +116,10 @@ class _ClusterMessagesState extends State<ClusterMessages> {
     if (_sended && widget.isSender) {
       return [
         Spaces.w4,
-        const Icon(
+        Icon(
           Icons.check,
           size: 16,
-          color: darkGreyLightMode,
+          color: ResColors.darkGrey(isDarkmode: false),
         ),
       ];
     }
@@ -133,7 +133,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
       style: Theme.of(context)
           .textTheme
           .labelSmall!
-          .copyWith(color: lightGreyDarkMode),
+          .copyWith(color: ResColors.lightGrey(isDarkmode: true)),
     );
   }
 

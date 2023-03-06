@@ -35,7 +35,7 @@ class ListUserWidget extends StatelessWidget {
             return Center(
               child: Column(
                 children: [
-                  const CircularProgressIndicator(color: redAccent),
+                  const CircularProgressIndicator(color: ResColors.redAccent),
                   Spaces.h20,
                   const Text('Đang tải danh sách bạn bè'),
                 ],

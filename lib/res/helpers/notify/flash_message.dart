@@ -96,10 +96,7 @@ class _FlashMessageScreen extends StatelessWidget {
 
   @override
   SnackBar build(BuildContext context) {
-    final ThemeProvider themeProvider = Provider.of<ThemeProvider>(
-      context,
-      listen: false,
-    );
+    final theme = Provider.of<ThemeProvider>(context, listen: false);
 
     return SnackBar(
       elevation: 0,
@@ -108,32 +105,16 @@ class _FlashMessageScreen extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(100.w, 12.h, 12.w, 12.h),
       content: Container(
         height: 56.h,
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black38,
-              offset: Offset(4, 4),
-              blurRadius: 4,
-            ),
-          ],
-        ),
+        decoration: ResDecorate.boxShadowBlack38,
         child: Row(
           children: [
             Container(
               width: 10.w,
-              decoration: BoxDecoration(
-                color: flashMessageModel.color,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(14.h),
-                  bottomLeft: Radius.circular(14.h),
-                ),
-              ),
+              decoration: ResDecorate.boxColor(color: flashMessageModel.color),
             ),
             Expanded(
               child: Container(
-                color: themeProvider.isDarkMode
-                    ? Colors.grey.shade800
-                    : Colors.white,
+                color: theme.isDarkMode ? Colors.grey.shade800 : Colors.white,
                 child: Row(
                   children: [
                     Spaces.w14,
@@ -172,8 +153,7 @@ class _FlashMessageScreen extends StatelessWidget {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                       icon: Icon(
                         Icons.clear_rounded,
-                        color:
-                            themeProvider.isDarkMode ? lightColor : darkColor,
+                        color: ResColors.appColor(isDarkmode: theme.isDarkMode),
                       ),
                     ),
                   ],

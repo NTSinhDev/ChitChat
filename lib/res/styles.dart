@@ -2,31 +2,49 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'colors.dart';
 
-// Login page
-const boxBGAuth = BoxDecoration(
-  gradient: LinearGradient(
-    begin: Alignment.topRight,
-    end: Alignment.bottomLeft,
-    colors: [
-      redAccent,
-      deepPurple,
-      deepPurple,
-      deepPurple,
-      redAccent,
+class ResDecorate {
+  static BoxDecoration boxColor({required Color color}) => BoxDecoration(
+    color: color,
+    borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(14.h),
+      bottomLeft: Radius.circular(14.h),
+    ),
+  );
+  static const boxBGAuth = BoxDecoration(
+    gradient: LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      colors: [
+        ResColors.redAccent,
+        ResColors.deepPurple,
+        ResColors.deepPurple,
+        ResColors.deepPurple,
+        ResColors.redAccent,
+      ],
+    ),
+  );
+
+  static const boxShadowBlack38 = BoxDecoration(
+    boxShadow: [
+      BoxShadow(
+        color: Colors.black38,
+        offset: Offset(4, 4),
+        blurRadius: 4,
+      ),
     ],
-  ),
-);
+  );
 
-final paddingAuthLG = EdgeInsets.fromLTRB(
-  40.w,
-  62.h,
-  40.w,
-  0,
-);
+  static final paddingAuthLG = EdgeInsets.fromLTRB(
+    40.w,
+    62.h,
+    40.w,
+    0,
+  );
 
-final paddingAuthRG = EdgeInsets.fromLTRB(
-  40.w,
-  20.h,
-  40.w,
-  0,
-);
+  static final paddingAuthRG = EdgeInsets.fromLTRB(
+    40.w,
+    20.h,
+    40.w,
+    0,
+  );
+}

@@ -1,6 +1,5 @@
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/change_laguage_feature.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';

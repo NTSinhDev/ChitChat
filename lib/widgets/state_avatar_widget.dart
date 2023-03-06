@@ -69,8 +69,9 @@ class _StateAvatarState extends State<StateAvatar> {
       height: widget.radius,
       child: widget.urlImage.url == null
           ? CircleAvatar(
-              backgroundColor:
-                  themeApp.isDarkMode ? darkGreyLightMode : lightGreyDarkMode,
+              backgroundColor: themeApp.isDarkMode
+                  ? ResColors.darkGrey(isDarkmode: false)
+                  : ResColors.lightGrey(isDarkmode: true),
               child: Icon(
                 CupertinoIcons.person_fill,
                 color: Colors.black,

@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 
-const lightGreyDarkMode = Colors.grey;
-final darkGreyDarkMode = Colors.grey[800];
-final blackDarkMode = Colors.grey[900];
+class ResColors {
+  static final mdblack = Colors.grey[900];
+  static final lmlightGrey100 = Colors.grey.shade100;
 
-final lightGreyLightMode = Colors.grey.shade200;
-final lightGreyLightMode100 = Colors.grey.shade100;
-const darkGreyLightMode = Colors.grey;
+  static const darkPurple = Color.fromARGB(255, 91, 33, 192);
+  static const deepPurple = Colors.deepPurple;
+  static const deepPurpleAccent = Colors.deepPurpleAccent;
+  static const customPurple = Color.fromARGB(255, 114, 36, 249);
+  static const redAccent = Colors.redAccent;
 
-const darkPurple = Color.fromARGB(255, 91, 33, 192);
-const deepPurple = Colors.deepPurple;
-const deepPurpleAccent = Colors.deepPurpleAccent;
-const redAccent = Colors.redAccent;
-const customPurple = Color.fromARGB(255, 114, 36, 249);
+  static Color appColor({required bool isDarkmode}) {
+    return isDarkmode ? const Color(0xfafafafa) : const Color(0xFF303030);
+  }
 
-const darkBlue = Color(0xFF0260AE);
-const lightBlue = Colors.blue;
+  static Color blue({required bool isDarkmode}) {
+    return isDarkmode ? const Color(0xFF0260AE) : Colors.blue;
+  }
 
-const lightColor = Color(0xfafafafa);
-const darkColor = Color(0xFF303030);
+  static Color lightGrey({required bool isDarkmode}) {
+    return isDarkmode ? Colors.grey : Colors.grey.shade200;
+  }
 
+  static Color darkGrey({required bool isDarkmode}) {
+    return isDarkmode ? Colors.grey[800]! : Colors.grey;
+  }
+}

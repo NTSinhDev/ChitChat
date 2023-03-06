@@ -20,8 +20,10 @@ class LoadingMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // UI
-    final colorBG = theme ? darkGreyDarkMode : lightGreyLightMode;
-    final colorSenderBG = theme ? darkBlue : lightBlue;
+    final colorBG = theme
+        ? ResColors.darkGrey(isDarkmode: theme)
+        : ResColors.lightGrey(isDarkmode: theme);
+    final colorSenderBG = ResColors.blue(isDarkmode: theme);
     return Container(
       padding: EdgeInsets.all(12.h),
       width: width,

@@ -27,7 +27,7 @@ class _RememberMeCheckboxState extends State<RememberMeCheckbox> {
             data: ThemeData(unselectedWidgetColor: Colors.white70),
             child: Checkbox(
               value: widget.rememberMe,
-              checkColor: deepPurple,
+              checkColor: ResColors.deepPurple,
               activeColor: Colors.white70,
               onChanged: widget.onChange,
             ),

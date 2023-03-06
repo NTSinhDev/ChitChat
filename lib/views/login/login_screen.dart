@@ -41,15 +41,15 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: deepPurple,
+        backgroundColor: ResColors.deepPurple,
         body: InkWell(
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             child: Container(
-              padding: paddingAuthLG,
+              padding: ResDecorate.paddingAuthLG,
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              decoration: boxBGAuth,
+              decoration: ResDecorate.boxBGAuth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

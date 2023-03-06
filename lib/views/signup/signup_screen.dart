@@ -58,10 +58,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             child: Container(
-              padding: paddingAuthRG,
+              padding: ResDecorate.paddingAuthRG,
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              decoration: boxBGAuth,
+              decoration: ResDecorate.boxBGAuth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

@@ -84,7 +84,7 @@ showToast(String msg) {
     msg: msg,
     fontSize: 12,
     textColor: Colors.black,
-    backgroundColor: lightGreyLightMode,
+    backgroundColor: ResColors.lightGrey(isDarkmode: true),
   );
 }
 

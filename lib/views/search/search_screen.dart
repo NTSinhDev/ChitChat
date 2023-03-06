@@ -49,7 +49,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           title: InputFieldWidget(
             padding: 0,
-            boxDecorationColor: theme ? blackDarkMode! : Colors.white,
+            boxDecorationColor: theme ? ResColors.mdblack! : Colors.white,
             suffixIconColor: theme ? Colors.white : Colors.black,
             onChanged: onSearchUser,
             onDeleted: clearSeachBar,
@@ -130,7 +130,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ListUserWidget(userListStream: listStream),
         ] else ...[
           const Center(
-            child: CircularProgressIndicator(color: redAccent),
+            child: CircularProgressIndicator(color: ResColors.redAccent),
           )
         ]
       ],

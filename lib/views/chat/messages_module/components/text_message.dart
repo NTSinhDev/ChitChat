@@ -14,8 +14,11 @@ class TextMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     final maxWidth = MediaQuery.of(context).size.width;
-    final colorBG = theme ? darkGreyDarkMode : lightGreyLightMode;
-    final colorSenderBG = theme ? darkBlue : lightBlue;
+
+    final colorBG = theme
+        ? ResColors.darkGrey(isDarkmode: theme)
+        : ResColors.lightGrey(isDarkmode: theme);
+    final colorSenderBG = ResColors.blue(isDarkmode: theme);
     final radius15 = Radius.circular(12.r);
     return Container(
       constraints: BoxConstraints(maxWidth: maxWidth * 4 / 5),

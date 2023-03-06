@@ -12,7 +12,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'components/input_messages_widget.dart';
 
 class InputMessagesModule extends StatefulWidget {
   const InputMessagesModule({super.key});
@@ -50,7 +49,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
             vertical: 10.h,
           ),
           decoration: BoxDecoration(
-            color: theme ? blackDarkMode : Colors.white,
+            color: theme ? ResColors.mdblack : Colors.white,
             boxShadow: const [
               BoxShadow(
                 color: Colors.black,

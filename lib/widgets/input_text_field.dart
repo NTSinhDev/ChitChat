@@ -60,7 +60,7 @@ class _InputTextFieldState extends State<InputTextField> {
         Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
-            color: customPurple,
+            color: ResColors.customPurple,
             borderRadius: BorderRadius.circular(10.r),
             boxShadow: const [
               BoxShadow(

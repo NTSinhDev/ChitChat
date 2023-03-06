@@ -17,7 +17,7 @@ class SearchBar extends StatelessWidget {
       height: 44.h,
       margin: EdgeInsets.fromLTRB(14.w, 0, 14.w, 0),
       decoration: BoxDecoration(
-        color: theme ? darkGreyDarkMode : lightGreyLightMode,
+        color: theme ? ResColors.darkGrey(isDarkmode: theme) : ResColors.lightGrey(isDarkmode: theme),
         borderRadius: BorderRadius.circular(36.r),
       ),
       child: InkWell(
@@ -27,14 +27,14 @@ class SearchBar extends StatelessWidget {
             Spaces.w14,
             Icon(
               CupertinoIcons.search,
-              color: theme ? Colors.white : darkGreyDarkMode,
+              color: theme ? Colors.white : ResColors.darkGrey(isDarkmode: true),
               size: 20.r,
             ),
             Spaces.w14,
             Text(
               'Tìm kiếm',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: theme ? Colors.white : darkGreyDarkMode,
+                    color: theme ? Colors.white : ResColors.darkGrey(isDarkmode: true),
                   ),
             ),
           ],

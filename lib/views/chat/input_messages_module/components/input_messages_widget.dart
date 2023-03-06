@@ -28,7 +28,9 @@ class InputMessageWidget extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.r),
-          color: theme ? darkGreyDarkMode : lightGreyLightMode100,
+          color: theme
+              ? ResColors.darkGrey(isDarkmode: true)
+              : ResColors.lmlightGrey100,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -46,7 +48,9 @@ class InputMessageWidget extends StatelessWidget {
                 onChanged: onchange,
                 decoration: InputDecoration(
                   hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: theme ? Colors.white : darkGreyLightMode,
+                        color: theme
+                            ? Colors.white
+                            : ResColors.darkGrey(isDarkmode: false),
                       ),
                   border: InputBorder.none,
                   hintText: AppLocalizations.of(context)!.inbox,

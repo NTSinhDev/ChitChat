@@ -27,7 +27,7 @@ class AppTheme {
     ), //*
     titleSmall: GoogleFonts.openSans(
       fontSize: 15,
-      color: lightGreyDarkMode,
+      color: ResColors.lightGrey(isDarkmode: true),
       fontWeight: FontWeight.w600,
     ), //*
 
@@ -50,7 +50,7 @@ class AppTheme {
     labelLarge: GoogleFonts.openSans(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
-      color: lightGreyDarkMode,
+      color: ResColors.lightGrey(isDarkmode: true),
     ), //*
     labelSmall: GoogleFonts.openSans(
       fontSize: 10.0,
@@ -65,7 +65,7 @@ class AppTheme {
     headlineSmall: GoogleFonts.openSans(
       fontSize: 14.0,
       fontWeight: FontWeight.normal,
-      color: lightGreyDarkMode,
+      color: ResColors.lightGrey(isDarkmode: true),
     ), //*
     titleLarge: GoogleFonts.openSans(
       fontSize: 16.0,
@@ -98,7 +98,7 @@ class AppTheme {
     ), //*
     titleSmall: GoogleFonts.openSans(
       fontSize: 15,
-      color: lightGreyDarkMode,
+      color: ResColors.lightGrey(isDarkmode: true),
       fontWeight: FontWeight.w600,
     ), //*
 
@@ -121,7 +121,7 @@ class AppTheme {
     labelLarge: GoogleFonts.openSans(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,
-      color: lightGreyDarkMode,
+      color: ResColors.lightGrey(isDarkmode: true),
     ), //*
     labelSmall: GoogleFonts.openSans(
       fontSize: 10.0,
@@ -136,7 +136,7 @@ class AppTheme {
     headlineSmall: GoogleFonts.openSans(
       fontSize: 14.0,
       fontWeight: FontWeight.normal,
-      color: lightGreyDarkMode,
+      color: ResColors.lightGrey(isDarkmode: true),
     ), //*
     titleLarge: GoogleFonts.openSans(
       fontSize: 16.0,
@@ -161,10 +161,10 @@ class AppTheme {
         foregroundColor: Colors.white,
         backgroundColor: Colors.blue,
       ),
-      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
         selectedItemColor: Colors.blue,
-        selectedLabelStyle: TextStyle(fontSize: 14),
-        unselectedItemColor: lightGreyDarkMode,
+        selectedLabelStyle: const TextStyle(fontSize: 14),
+        unselectedItemColor: ResColors.lightGrey(isDarkmode: true),
       ),
       fontFamily: 'openSans',
       textTheme: lightTextTheme,

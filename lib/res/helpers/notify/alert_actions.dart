@@ -32,7 +32,7 @@ class AlertActions extends StatelessWidget {
           child: CustomBtnWidget(
             title: nameBtn2,
             onPressed: onTap2,
-            backgroundColor: darkGreyLightMode,
+            backgroundColor: ResColors.darkGrey(isDarkmode: false),
           ),
         ),
       ],

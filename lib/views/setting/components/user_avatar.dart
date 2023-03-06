@@ -42,8 +42,9 @@ class _UserAvatarState extends State<UserAvatar> {
                       width: 120.w,
                       height: 120.h,
                       child: CircleAvatar(
-                        backgroundColor:
-                            isDarkmode ? darkGreyLightMode : lightGreyDarkMode,
+                        backgroundColor: isDarkmode
+                            ? ResColors.darkGrey(isDarkmode: false)
+                            : ResColors.lightGrey(isDarkmode: true),
                         child: const Center(child: CircularProgressIndicator()),
                       ),
                     );
@@ -86,7 +87,7 @@ class _UserAvatarState extends State<UserAvatar> {
             width: 44.w,
             height: 44.h,
             decoration: BoxDecoration(
-              color: lightGreyLightMode,
+              color: ResColors.lightGrey(isDarkmode: false),
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black45,
@@ -145,10 +146,8 @@ class _UserAvatarState extends State<UserAvatar> {
     );
   }
 
-  Future _pickImage({
-    required ImageSource source,
-    required BuildContext context
-  }) async {
+  Future _pickImage(
+      {required ImageSource source, required BuildContext context}) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (!mounted) return;

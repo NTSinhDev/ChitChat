@@ -94,7 +94,7 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
               ),
               decoration: BoxDecoration(
                 color:
-                    widget.isDarkMode ? Colors.grey[800] : lightGreyLightMode,
+                    widget.isDarkMode ? Colors.grey[800] : ResColors.lightGrey(isDarkmode: widget.isDarkMode),
                 borderRadius: BorderRadius.circular(40.r),
               ),
               child: Center(

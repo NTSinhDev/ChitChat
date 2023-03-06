@@ -17,7 +17,9 @@ class CluterMessagesTime extends StatelessWidget {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.r),
-        color: theme ? darkGreyDarkMode : lightGreyLightMode,
+        color: theme
+            ? ResColors.darkGrey(isDarkmode: theme)
+            : ResColors.lightGrey(isDarkmode: theme),
       ),
       child: Text(
         time,
