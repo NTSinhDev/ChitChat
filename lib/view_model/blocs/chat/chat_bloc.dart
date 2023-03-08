@@ -7,13 +7,12 @@ import 'package:rxdart/rxdart.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/data/repositories/injector.dart';
 
-
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final UserProfile currentUser;
   Conversation? conversation;
   final UserInformation friend;
 
-  final _messageRepository = MessagesRepositoryImpl();
+  final _messageRepository = MessagesRepository();
   final _conversationRepository = ConversationsRepositoryImpl();
 
   // Message
@@ -41,16 +40,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   _getMessageList() async {
     if (conversation == null) return;
-    final messageListAtLocal = await _messageRepository.lcGetMessageList(
+    final messageListAtLocal = await _messageRepository.lc.getMessageList(
       conversationId: conversation!.id!,
     );
     _msgListSink.add(messageListAtLocal);
-    _messageRepository
-        .rmGetMessageList(conversationId: conversation!.id!)
+    _messageRepository.rm
+        .getMessageList(conversationId: conversation!.id!)
         .listen((msgList) async {
       _msgListSink.add(msgList);
       for (var element in msgList) {
-        await _messageRepository.lcCreateMessage(message: element);
+        await _messageRepository.lc.createMessage(message: element);
       }
     });
   }
@@ -71,7 +70,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       //TODO: kiem tra conversation tra ve: null ? emit error state : go on!
     }
 
-    final isCreated = await _messageRepository.rmCreateMessage(
+    final isCreated = await _messageRepository.rm.createMessage(
       senderID: currentUser.profile!.id!,
       conversationID: conversation!.id!,
       message: event.message,
