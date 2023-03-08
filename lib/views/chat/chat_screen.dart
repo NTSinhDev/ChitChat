@@ -1,17 +1,26 @@
-import 'package:chat_app/view_model/blocs/chat/bloc_injector.dart';
-import 'package:chat_app/views/chat/components/app_bar.dart';
-import 'package:chat_app/views/chat/components/chat_input_field.dart';
-import 'package:chat_app/views/chat/components/message_view.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/utils/functions.dart';
+import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/chat/input_messages_module/input_messages_module.dart';
+import 'package:chat_app/views/chat/messages_module/message_view.dart';
+import 'package:chat_app/widgets/widget_injector.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String idRoom;
-  final String friendID;
+  final UserProfile currentUser;
+  final UserInformation friendInfo;
+  final Conversation? conversation;
+
   const ChatScreen({
     super.key,
-    required this.idRoom,
-    required this.friendID,
+    required this.currentUser,
+    this.conversation,
+    required this.friendInfo,
   });
 
   @override
@@ -19,38 +28,80 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final _controllerChat = TextEditingController();
-
-  @override
-  void dispose() {
-    _controllerChat.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Provider.of<ChatBloc>(context, listen: false)
-            .add(ExitRoomEvent(roomID: widget.idRoom));
-        return false;
-      },
-      child: Scaffold(
-        appBar: buildAppBar(
-          context: context,
-          roomID: widget.idRoom,
-        ),
-        body: Column(
-          children: [
-            // const MessageView(),
-            ChatInputField(
-              controllerChat: _controllerChat,
-              idRoom: widget.idRoom,
-              idFriend: widget.friendID,
-            ),
-          ],
+    return BlocProvider(
+      create: (context) => ChatBloc(
+        currentUser: widget.currentUser,
+        conversation: widget.conversation,
+        friend: widget.friendInfo,
+      ),
+      child: WillPopScope(
+        onWillPop: () async {
+          return true;
+        },
+        child: Scaffold(
+          appBar: _chatScreenAppBarWidget(context),
+          body: Column(
+            children: const [
+              MessageView(),
+              InputMessagesModule(),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  AppBar _chatScreenAppBarWidget(BuildContext context) {
+    return AppBar(
+      toolbarHeight: 72.h,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          StateAvatar(
+            urlImage: widget.friendInfo.informations.urlImage,
+            userId: widget.friendInfo.informations.profile?.id ?? '',
+            radius: 40.r,
+          ),
+          Spaces.w12,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                formatName(
+                  name: widget.friendInfo.informations.profile!.fullName,
+                ),
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              if (widget.friendInfo.presence?.status ?? false) ...[
+                Text(
+                  AppLocalizations.of(context)!.onl,
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge!
+                      .copyWith(fontSize: 10.r),
+                ),
+              ]
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          onPressed: () {},
+          icon: Icon(
+            CupertinoIcons.info_circle_fill,
+            color: Colors.blue,
+            size: 30.r,
+          ),
+        ),
+        Spaces.w4,
+      ],
     );
   }
 }

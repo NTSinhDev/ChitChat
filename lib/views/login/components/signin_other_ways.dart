@@ -1,5 +1,5 @@
+import 'package:chat_app/res/dimens.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class SignInOtherWays extends StatelessWidget {
   const SignInOtherWays({super.key});
@@ -15,7 +15,7 @@ class SignInOtherWays extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(height: 10.h),
+        Spaces.h10,
         Text(
           AppLocalizations.of(context)!.login_with,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(

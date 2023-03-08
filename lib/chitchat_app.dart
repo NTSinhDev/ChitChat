@@ -1,8 +1,14 @@
-import 'package:chat_app/app_authentication.dart';
-import 'package:chat_app/core/res/theme.dart';
-import 'package:chat_app/repositories/authentication_repository.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/utils/functions.dart';
+import 'package:chat_app/main.dart';
+import 'package:chat_app/data/repositories/authentication_repository.dart';
+import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/home/home_screen.dart';
+import 'package:chat_app/views/injector.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,8 +39,8 @@ class _ChitChatAppState extends State<ChitChatApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: injectProviders(sharedPreferences: widget.sharedPreferences),
-      child: Consumer3<AppStateProvider, ThemeProvider, LanguageProvider>(
-        builder: (context, appState, theme, language, child) {
+      child: Consumer2<ThemeProvider, LanguageProvider>(
+        builder: (context, theme, language, child) {
           return MaterialApp(
             title: 'ChitChat App',
             debugShowCheckedModeBanner: false,
@@ -44,10 +50,25 @@ class _ChitChatAppState extends State<ChitChatApp> {
             locale: language.locale,
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
-            home: AppAuthentication(
-              sharedPreferences: widget.sharedPreferences,
-              userIDAtLocalStorage: _userID,
-              deviceToken: widget.deviceToken ?? '',
+            home: BlocProvider<AuthenticationBloc>(
+              create: (context) => AuthenticationBloc(
+                widget.sharedPreferences,
+              )..add(_userID != null
+                  ? CheckAuthenticationEvent(userID: _userID!)
+                  : InitLoginEvent()),
+              child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                builder: (context, state) {
+                  _initScreenUtilDependency(context);
+                  _notificationServices(context);
+                  if (state is RegisterState) {
+                    return const SignUpScreen();
+                  }
+                  if (state is LoggedState) {
+                    return HomeScreen(userProfile: state.userProfile);
+                  }
+                  return LoginScreen(deviceToken: widget.deviceToken!);
+                },
+              ),
             ),
           );
         },
@@ -55,9 +76,39 @@ class _ChitChatAppState extends State<ChitChatApp> {
     );
   }
 
+  _initScreenUtilDependency(BuildContext context) {
+    ScreenUtil.init(
+      context,
+      designSize: Size(MediaQuery.of(context).size.width,
+          MediaQuery.of(context).size.height),
+    );
+  }
+
+  _notificationServices(BuildContext context) {
+    notificationService.initNotification(context: context);
+    FirebaseMessaging.instance.getInitialMessage().then(
+      (message) {
+        if (message != null) {
+          Navigator.of(context).pushNamed('/app');
+
+          showToast('đã push name');
+        }
+      },
+    );
+
+    FirebaseMessaging.onMessage.listen(firebaseMsgOnMessage);
+
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      (message) {
+        Navigator.of(context).pushNamed('/app');
+      },
+    );
+  }
+
   _getUIDAtLocalStorage() {
-    final AuthenticationRepository repository =
-        AuthenticationRepositoryImpl(widget.sharedPreferences);
+    final AuthenticationRepository repository = AuthenticationRepositoryImpl(
+      widget.sharedPreferences,
+    );
     _userID = repository.getUIDAtLocalStorage();
   }
 }

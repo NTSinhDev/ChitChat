@@ -1,5 +1,5 @@
+import 'package:chat_app/res/strings.dart';
 import 'package:chat_app/view_model/blocs/authentication/authentication_event.dart';
-import 'package:chat_app/core/res/images_animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,13 +19,13 @@ class SocialBtnRow extends StatelessWidget {
           _buildSocialBtn(
             () {},
             const AssetImage(
-              IMG_FB,
+              ImgAnmStrings.iFacebook,
             ),
           ),
           _buildSocialBtn(
             () => context.read<AuthenticationBloc>().add(GoogleLoginEvent()),
             const AssetImage(
-              IMG_GG,
+              ImgAnmStrings.iGoogle,
             ),
           ),
         ],

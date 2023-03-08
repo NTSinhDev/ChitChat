@@ -1,5 +1,5 @@
-import 'package:chat_app/core/res/images_animations.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
 import 'package:chat_app/views/setting/components/setting_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
@@ -33,7 +33,7 @@ class ChangeLanguageFeature extends StatelessWidget {
           lang: langProvider,
           locale: 'vi_VN',
           code: 'vi',
-          img: ImgAnmConstants.iVietnam,
+          img: ImgAnmStrings.iVietnam,
           title: AppLocalizations.of(context)!.viet_nam,
         );
 
@@ -42,7 +42,7 @@ class ChangeLanguageFeature extends StatelessWidget {
           lang: langProvider,
           locale: 'en_US',
           code: 'en',
-          img: ImgAnmConstants.iEnglish,
+          img: ImgAnmStrings.iEnglish,
           title: AppLocalizations.of(context)!.english,
         );
 

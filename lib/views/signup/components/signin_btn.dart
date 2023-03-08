@@ -1,4 +1,5 @@
-import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
+import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,7 +26,7 @@ class SignInBtn extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 8.h),
+          Spaces.h8,
           InkWell(
             onTap: () {
               context.read<AuthenticationBloc>().add(InitLoginEvent());

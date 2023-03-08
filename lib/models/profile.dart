@@ -1,3 +1,4 @@
+import 'package:chat_app/utils/constants.dart';
 import 'package:hive/hive.dart';
 
 part 'profile.g.dart';
@@ -32,10 +33,10 @@ class Profile {
   factory Profile.fromMap(Map<String, dynamic> map, String id) {
     return Profile(
       id: id,
-      email: map['email'] as String,
-      fullName: map['fullname'] as String,
-      messagingToken: map['userMessagingToken'] != null
-          ? map['userMessagingToken'] as String
+      email: map[ProfileField.emailField] as String,
+      fullName: map[ProfileField.fullNameField] as String,
+      messagingToken: map[ProfileField.userMessagingTokenField] != null
+          ? map[ProfileField.userMessagingTokenField] as String
           : null,
     );
   }

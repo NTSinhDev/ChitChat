@@ -1,4 +1,4 @@
-import 'package:chat_app/core/utils/constants.dart';
+import 'package:chat_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

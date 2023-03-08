@@ -1,6 +1,7 @@
-import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
+import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/signup/components/signin_btn.dart';
-import 'package:chat_app/core/res/style.dart';
+import 'package:chat_app/res/styles.dart';
 import 'package:chat_app/widgets/input_text_field.dart';
 import 'package:chat_app/widgets/large_round_button.dart';
 import 'package:chat_app/widgets/warning_message_widget.dart';
@@ -10,8 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../core/helpers/loading/loading_screen.dart';
-import '../../core/helpers/notify/alert_error.dart';
+import '../../res/helpers/loading/loading_screen.dart';
+import '../../res/helpers/notify/alert_error.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -32,7 +33,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String _messageVerified = "";
   @override
   Widget build(BuildContext context) {
-    var sizedBox16 = SizedBox(height: 16.h);
     return BlocListener<AuthenticationBloc, AuthenticationState>(
       listener: (context, state) {
         if (state is RegisterState) {
@@ -58,15 +58,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             child: Container(
-              padding: paddingAuthRG,
+              padding: ResDecorate.paddingAuthRG,
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              decoration: boxBGAuth,
+              decoration: ResDecorate.boxBGAuth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   _buildSignUpTitle(context),
-                  sizedBox16,
+                  Spaces.h16,
                   InputTextField(
                     title: AppLocalizations.of(context)!.name,
                     hint: AppLocalizations.of(context)!.enter_your_name,
@@ -81,7 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     isDataValid: _isValidEmail,
                     message: AppLocalizations.of(context)!.required_name,
                   ),
-                  sizedBox16,
+                  Spaces.h16,
                   InputTextField(
                     title: AppLocalizations.of(context)!.email,
                     hint: AppLocalizations.of(context)!.enter_your_email,
@@ -96,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     isDataValid: _isValidEmail,
                     message: AppLocalizations.of(context)!.required_email,
                   ),
-                  sizedBox16,
+                  Spaces.h16,
                   InputTextField(
                     title: AppLocalizations.of(context)!.password,
                     hint: AppLocalizations.of(context)!.enter_your_password,
@@ -111,7 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     isDataValid: _isValidPassword,
                     message: _messagePassword,
                   ),
-                  sizedBox16,
+                  Spaces.h16,
                   InputTextField(
                     title: AppLocalizations.of(context)!.verify,
                     hint: AppLocalizations.of(context)!.re_enter_your_password,
@@ -126,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     isDataValid: _isValidVerified,
                     message: _messageVerified,
                   ),
-                  sizedBox16,
+                  Spaces.h16,
                   LargeRoundButton(
                     textButton: AppLocalizations.of(context)!.register,
                     onTap: () => _signupApp(context),

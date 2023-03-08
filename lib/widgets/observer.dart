@@ -3,20 +3,18 @@ import 'package:flutter/material.dart';
 class Observer<T> extends StatelessWidget {
   const Observer({
     super.key,
-    required this.onError,
+    this.onError,
     required this.onSuccess,
     required this.stream,
-    required this.onLoading,
+    this.onLoading,
   });
   final Stream<T> stream;
   final Function(BuildContext context, Object? error)? onError;
   final Function(BuildContext context, T? data) onSuccess;
   final Function? onLoading;
-  Widget _defaultOnLoading() => const Center(
-        child: CircularProgressIndicator(),
-      );
-  Widget _defaultOnError(context, error) => Center(
-        child: Text(error.toString()),
+  Widget _defaultOnLoading() => const CircularProgressIndicator();
+  Widget _defaultOnError(context, error) => Text(
+        error.toString(),
       );
   @override
   Widget build(BuildContext context) {
@@ -32,12 +30,11 @@ class Observer<T> extends StatelessWidget {
         }
         if (snapshot.hasData) {
           return onSuccess(context, snapshot.data);
+        }
+        if (onLoading != null) {
+          return onLoading!(context);
         } else {
-          if (onLoading != null) {
-            return onLoading!(context);
-          } else {
-            return _defaultOnLoading();
-          }
+          return _defaultOnLoading();
         }
       },
     );

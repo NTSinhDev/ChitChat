@@ -1,4 +1,4 @@
-import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/res/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,7 +23,7 @@ class LargeRoundButton extends StatelessWidget {
         ),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: customPurple,
+          color: ResColors.customPurple,
           borderRadius: BorderRadius.circular(40.r),
           boxShadow: const [
             BoxShadow(

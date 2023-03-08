@@ -1,12 +1,8 @@
-import 'package:chat_app/core/enum/enums.dart';
-import 'package:chat_app/core/helpers/loading/loading_screen.dart';
-import 'package:chat_app/core/helpers/notify/flash_message.dart';
-import 'package:chat_app/models/user_profile.dart';
-import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/change_laguage_feature.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
-import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
 import 'package:chat_app/views/setting/components/user_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,26 +21,22 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // app states
-    AppStateProvider appStateProvider = context.watch<AppStateProvider>();
-    final sizedBox24 = SizedBox(height: 24.h);
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(userProfile),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          sizedBox24,
+          Spaces.h24,
           _buildUserInformation(context),
-          sizedBox24,
-          _buildSettingOptions(context, appStateProvider),
+          Spaces.h24,
+          _buildSettingOptions(context),
         ],
       ),
     );
   }
 
-  Widget _buildSettingOptions(BuildContext context, appStateProvider) {
+  Widget _buildSettingOptions(BuildContext context) {
     // Size
-    final sizedBox24 = SizedBox(height: 24.h);
-    final sizedBox12 = SizedBox(height: 12.h);
 
     return Expanded(
       child: Container(
@@ -65,11 +57,11 @@ class SettingScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              sizedBox24,
+              Spaces.h24,
               const ChangeDarkmodeFeature(),
-              sizedBox12,
+              Spaces.h12,
               const ChangeLanguageFeature(),
-              sizedBox12,
+              Spaces.h12,
               FeatureSetting(
                 icon: CupertinoIcons.person_circle,
                 title: AppLocalizations.of(context)!.personal_info,
@@ -77,19 +69,19 @@ class SettingScreen extends StatelessWidget {
                 onTap: () {
                   FlashMessage(
                     context: context,
-                    message: "đây là nội dung thông báo",
-                    type: FlashMessageType.info,
+                    message: "Đây là nội dung thông báo",
+                    type: FlashMessageType.error,
                   );
                 },
               ),
-              sizedBox12,
+              Spaces.h12,
               FeatureSetting(
                 icon: Icons.error_outline,
                 title: AppLocalizations.of(context)!.list_ban,
                 color: Colors.orange[400]!,
                 onTap: () {},
               ),
-              sizedBox12,
+              Spaces.h12,
               FeatureSetting(
                 icon: Icons.logout,
                 title: AppLocalizations.of(context)!.logout,
@@ -97,7 +89,7 @@ class SettingScreen extends StatelessWidget {
                 onTap: () =>
                     context.read<AuthenticationBloc>().add(LogoutEvent()),
               ),
-              sizedBox24
+              Spaces.h24,
             ],
           ),
         ),
@@ -109,7 +101,7 @@ class SettingScreen extends StatelessWidget {
     return Column(
       children: [
         const UserAvatar(),
-        SizedBox(height: 12.h),
+        Spaces.h12,
         Text(
           userProfile.profile!.fullName,
           maxLines: 4,

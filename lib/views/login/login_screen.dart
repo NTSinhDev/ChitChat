@@ -1,19 +1,9 @@
-import 'package:chat_app/core/helpers/loading/loading_screen.dart';
-import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
-import 'package:chat_app/views/login/components/signin_other_ways.dart';
-import 'package:chat_app/views/login/components/signin_title.dart';
-import 'package:chat_app/views/login/components/forgot_password_btn.dart';
-import 'package:chat_app/views/login/components/signup_btn.dart';
-import 'package:chat_app/views/login/components/social_btn_row.dart';
-import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/core/res/style.dart';
-import 'package:chat_app/core/utils/functions.dart';
-import 'package:chat_app/widgets/input_text_field.dart';
-import 'package:chat_app/widgets/large_round_button.dart';
-import 'package:chat_app/widgets/warning_message_widget.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/login/components/injector.dart';
+import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -25,11 +15,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String _email = "";
-  String _password = "";
-  bool _isValidEmail = false;
-  bool _isValidPassword = false;
-  String _messagePassword = "";
+  String email = "";
+  String password = "";
+  bool isValidEmail = false;
+  bool isValidPassword = false;
+  String messagePassword = "";
 
   @override
   Widget build(BuildContext context) {
@@ -42,26 +32,29 @@ class _LoginScreenState extends State<LoginScreen> {
             LoadingScreen().hide();
           }
           if (state.message != null) {
-            showToast(state.message ??
-                AppLocalizations.of(context)!.cannot_connect_to_server);
+            FlashMessage(
+              context: context,
+              message: state.message!,
+              type: FlashMessageType.error,
+            );
           }
         }
       },
       child: Scaffold(
-        backgroundColor: deepPurple,
+        backgroundColor: ResColors.deepPurple,
         body: InkWell(
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             child: Container(
-              padding: paddingAuthLG,
+              padding: ResDecorate.paddingAuthLG,
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              decoration: boxBGAuth,
+              decoration: ResDecorate.boxBGAuth,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const SignInTitle(),
-                  SizedBox(height: 40.h),
+                  Spaces.h40,
                   InputTextField(
                     title: AppLocalizations.of(context)!.email,
                     hint: AppLocalizations.of(context)!.enter_your_email,
@@ -70,13 +63,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscure: false,
                     type: TextInputType.emailAddress,
                     // onSubmitted: (value) {},
-                    onChanged: (email) => _formatEmail(email),
+                    onChanged: (email) => formatEmail(email),
                   ),
                   WarningMessage(
-                    isDataValid: _isValidEmail,
+                    isDataValid: isValidEmail,
                     message: AppLocalizations.of(context)!.required_email,
                   ),
-                  SizedBox(height: 20.h),
+                  Spaces.h20,
                   InputTextField(
                     title: AppLocalizations.of(context)!.password,
                     hint: AppLocalizations.of(context)!.enter_your_password,
@@ -85,21 +78,21 @@ class _LoginScreenState extends State<LoginScreen> {
                     obscure: true,
                     type: TextInputType.multiline,
                     // onSubmitted: (value) {},
-                    onChanged: (password) => _formatPassword(password),
+                    onChanged: (password) => formatPassword(password),
                   ),
                   WarningMessage(
-                    isDataValid: _isValidPassword,
-                    message: _messagePassword,
+                    isDataValid: isValidPassword,
+                    message: messagePassword,
                   ),
                   const ForgotPasswordBtn(),
                   LargeRoundButton(
                     textButton: AppLocalizations.of(context)!.login_btn,
-                    onTap: _loginApp,
+                    onTap: loginApp,
                   ),
                   const SignInOtherWays(),
                   const SocialBtnRow(),
                   const SignupBtn(),
-                  SizedBox(height: 12.h),
+                  Spaces.h12,
                 ],
               ),
             ),
@@ -109,45 +102,45 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _loginApp() {
-    if (_isValidPassword || _isValidEmail) return;
+  loginApp() {
+    if (isValidPassword || isValidEmail) return;
     context.read<AuthenticationBloc>().add(
           NormalLoginEvent(
-            email: _email,
-            password: _password,
+            email: email,
+            password: password,
             deviceToken: widget.deviceToken,
           ),
         );
   }
 
-  _formatPassword(String password) {
+  formatPassword(String password) {
     if (password.isEmpty) {
       setState(() {
-        _isValidPassword = true;
-        _messagePassword = AppLocalizations.of(context)!.required_password;
+        isValidPassword = true;
+        messagePassword = AppLocalizations.of(context)!.required_password;
       });
     } else if (password.length < 6) {
       setState(() {
-        _isValidPassword = true;
-        _messagePassword = AppLocalizations.of(context)!.more_than_5_charac;
+        isValidPassword = true;
+        messagePassword = AppLocalizations.of(context)!.more_than_5_charac;
       });
     } else {
       setState(() {
-        _isValidPassword = false;
-        _password = password;
+        isValidPassword = false;
+        password = password;
       });
     }
   }
 
-  _formatEmail(String email) {
+  formatEmail(String email) {
     if (email.isEmpty) {
       setState(() {
-        _isValidEmail = true;
+        isValidEmail = true;
       });
     } else {
       setState(() {
-        _isValidEmail = false;
-        _email = email;
+        isValidEmail = false;
+        email = email;
       });
     }
   }

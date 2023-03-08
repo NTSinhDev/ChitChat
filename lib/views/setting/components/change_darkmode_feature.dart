@@ -1,5 +1,4 @@
-import 'package:chat_app/view_model/blocs/authentication/authentication_bloc.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

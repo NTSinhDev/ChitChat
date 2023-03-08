@@ -1,12 +1,8 @@
 import 'dart:developer';
-import 'package:chat_app/core/enum/enums.dart';
-import 'package:chat_app/core/helpers/notify/flash_message.dart';
-import 'package:chat_app/core/res/colors.dart';
-import 'package:chat_app/view_model/blocs/authentication/bloc_injector.dart';
-import 'package:chat_app/view_model/blocs/setting/setting_bloc.dart';
-import 'package:chat_app/view_model/providers/injector.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/setting_bottom_sheet.dart';
-import 'package:chat_app/widgets/state_avatar_widget.dart';
+import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -46,22 +42,23 @@ class _UserAvatarState extends State<UserAvatar> {
                       width: 120.w,
                       height: 120.h,
                       child: CircleAvatar(
-                        backgroundColor:
-                            isDarkmode ? darkGreyLightMode : lightGreyDarkMode,
+                        backgroundColor: isDarkmode
+                            ? ResColors.darkGrey(isDarkmode: false)
+                            : ResColors.lightGrey(isDarkmode: true),
                         child: const Center(child: CircularProgressIndicator()),
                       ),
                     );
                   } else {
                     return StateAvatar(
                       urlImage: state.userProfile.urlImage,
-                      isStatus: false,
+                      userId: '',
                       radius: 120.r,
                     );
                   }
                 }
                 return StateAvatar(
                   urlImage: userProfile.urlImage,
-                  isStatus: false,
+                  userId: '',
                   radius: 120.r,
                 );
               },
@@ -90,7 +87,7 @@ class _UserAvatarState extends State<UserAvatar> {
             width: 44.w,
             height: 44.h,
             decoration: BoxDecoration(
-              color: lightGreyLightMode,
+              color: ResColors.lightGrey(isDarkmode: false),
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black45,
@@ -149,10 +146,8 @@ class _UserAvatarState extends State<UserAvatar> {
     );
   }
 
-  Future _pickImage({
-    required ImageSource source,
-    required BuildContext context
-  }) async {
+  Future _pickImage(
+      {required ImageSource source, required BuildContext context}) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (!mounted) return;

@@ -1,6 +1,7 @@
+import 'package:chat_app/res/dimens.dart';
 import 'package:flutter/material.dart';
 
-import 'package:chat_app/core/res/colors.dart';
+import 'package:chat_app/res/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class InputTextField extends StatefulWidget {
@@ -55,11 +56,11 @@ class _InputTextFieldState extends State<InputTextField> {
                 fontWeight: FontWeight.bold,
               ),
         ),
-        SizedBox(height: 10.h),
+        Spaces.h10,
         Container(
           alignment: Alignment.centerLeft,
           decoration: BoxDecoration(
-            color: customPurple,
+            color: ResColors.customPurple,
             borderRadius: BorderRadius.circular(10.r),
             boxShadow: const [
               BoxShadow(
