@@ -49,3 +49,9 @@ class ConversationMessagesField {
   static const String nameRecord = "nameRecord";
   static const String content = "content";
 }
+
+class PresenceTree {
+  static const String node = "presence";
+  static const String statusField = 'status';
+  static const String timestampField = 'timestamp';
+}

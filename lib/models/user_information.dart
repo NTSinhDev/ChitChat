@@ -2,9 +2,9 @@ import 'package:chat_app/models/injector.dart';
 
 class UserInformation {
   final UserProfile informations;
-  final UserPresence? state;
+  final UserPresence? presence;
   UserInformation({
     required this.informations,
-    this.state,
+    this.presence,
   });
 }

@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Center(
                     child: StateAvatar(
                       urlImage: widget.userProfile.urlImage,
-                      isStatus: false,
+                      userId: '',
                       radius: 40.r,
                     ),
                   ),

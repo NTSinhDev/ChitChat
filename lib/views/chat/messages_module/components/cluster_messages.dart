@@ -84,7 +84,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
         Spaces.h4,
         StateAvatar(
           urlImage: URLImage(),
-          isStatus: false,
+          userId: '',
           radius: 16.r,
         ),
       ];

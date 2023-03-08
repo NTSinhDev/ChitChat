@@ -48,8 +48,7 @@ class _ChatRoomWidgetState extends State<ChatRoomWidget> {
       visualDensity: const VisualDensity(vertical: 0.7),
       leading: StateAvatar(
         urlImage: URLImage(),
-        isStatus: false,
-        // isStatus: widget.presence.presence!,
+        userId: '',
         radius: 60.r,
       ),
       title: Container(

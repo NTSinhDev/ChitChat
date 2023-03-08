@@ -12,7 +12,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
   late final UserInformationRepository _userInforRepository;
 
   SettingBloc(this.userProfile) : super(SettingInitial(false)) {
-    _userInforRepository = UserInformationRepositoryImpl();
+    _userInforRepository = UserInformationRepository();
 
     on<UpdateAvatarEvent>((event, emit) async {
       emit(UpdatedAvatarState(true, userProfile: userProfile));
@@ -25,7 +25,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         ));
       }
 
-      final urlImage = await _userInforRepository.rmUpdateAvatar(
+      final urlImage = await _userInforRepository.rm.updateAvatar(
         path: event.path,
         userID: userProfile.profile!.id!,
       );
@@ -43,7 +43,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         urlImage: urlImage,
       );
 
-      await _userInforRepository.lcSaveImageFile(userProfile: userProfile);
+      await _userInforRepository.lc.saveImageFile(userProfile: userProfile);
 
       emit(UpdatedAvatarState(false, userProfile: userProfile));
     });

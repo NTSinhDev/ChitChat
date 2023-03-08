@@ -51,14 +51,14 @@ class _UserAvatarState extends State<UserAvatar> {
                   } else {
                     return StateAvatar(
                       urlImage: state.userProfile.urlImage,
-                      isStatus: false,
+                      userId: '',
                       radius: 120.r,
                     );
                   }
                 }
                 return StateAvatar(
                   urlImage: userProfile.urlImage,
-                  isStatus: false,
+                  userId: '',
                   radius: 120.r,
                 );
               },

@@ -28,7 +28,7 @@ class EmptyMessage extends StatelessWidget {
           children: [
             StateAvatar(
               urlImage: friend.informations.urlImage,
-              isStatus: false,
+              userId: friend.informations.profile?.id ?? '',
               radius: 200.r,
             ),
             SizedBox(height: 20.h),

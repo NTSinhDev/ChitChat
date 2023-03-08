@@ -1,96 +1,27 @@
 import 'dart:developer';
 
+import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
+import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/enum/enums.dart';
 import 'package:chat_app/utils/constants.dart';
 import 'package:chat_app/data/datasources/local_datasources/injector.dart';
-import 'package:chat_app/data/datasources/remote_datasources/profile_remote_datasource.dart';
-import 'package:chat_app/models/profile.dart';
-import 'package:chat_app/models/url_image.dart';
-import 'package:chat_app/models/user_profile.dart';
 
-abstract class UserInformationRepository {
-  Future<List<UserProfile>> rmSearchUserByName({required String searchName});
-  Future<URLImage?> rmUpdateAvatar({
-    required String path,
-    required String userID,
-  });
-  Future<void> lcSaveImageFile({required UserProfile? userProfile});
-  Future<void> lcSaveProfile({required Profile? profile});
-  Future<UserProfile?> lcGetProfile({required String userID});
+//* local
+abstract class UserInformationLocalRepository {
+  Future<void> saveImageFile({required UserProfile? userProfile});
+  Future<void> saveProfile({required Profile? profile});
+  Future<UserProfile?> getProfile({required String userID});
 }
 
-class UserInformationRepositoryImpl implements UserInformationRepository {
-  late final ProfileRemoteDataSource _personalInforRemoteDS;
+class _LocalRepositoryImpl implements UserInformationLocalRepository {
   late final StorageLocalDataSource _storageLocalDS;
-
   ProfileLocalDataSource? _profileLocalDS;
   bool isInitProfileLocalDS = false;
-
-  UserInformationRepositoryImpl() {
-    _personalInforRemoteDS = ProfileRemoteDataSourceImpl();
+  _LocalRepositoryImpl() {
     _storageLocalDS = StorageLocalDataSourceImpl();
   }
-
   @override
-  Future<List<UserProfile>> rmSearchUserByName({
-    required String searchName,
-  }) async {
-    try {
-      List<Profile> profiles = [];
-      // get profiles
-      switch (searchName) {
-        case '':
-          profiles = await _personalInforRemoteDS.getAllProfile();
-          break;
-        default:
-          profiles = await _personalInforRemoteDS.getAllProfileByName(
-            name: searchName,
-          );
-      }
-      if (profiles.isEmpty) {
-        return [];
-      }
-      // get Avatars
-      final users = await getUserProfilesFromProfiles(profiles: profiles);
-      return users;
-    } catch (e) {
-      return [];
-    }
-  }
-
-  Future<List<UserProfile>> getUserProfilesFromProfiles({
-    required List<Profile> profiles,
-  }) async {
-    List<UserProfile> userProfiles = [];
-
-    for (var i = 0; i < profiles.length; i++) {
-      final url = await _personalInforRemoteDS.getFile(
-        filePath: StorageKey.pPROFILE,
-        fileName: profiles[i].id ?? '',
-      );
-      final URLImage urlImage = URLImage(url: url, type: TypeImage.remote);
-      userProfiles.add(UserProfile(urlImage: urlImage, profile: profiles[i]));
-    }
-    return userProfiles;
-  }
-
-  @override
-  Future<URLImage?> rmUpdateAvatar({
-    required String path,
-    required String userID,
-  }) async {
-    final image = await _personalInforRemoteDS.uploadFile(
-      image: path,
-      type: FileUploadType.path,
-      filePath: StorageKey.pPROFILE,
-      fileName: userID,
-    );
-    if (image == null) return null;
-    return URLImage(url: image, type: TypeImage.remote);
-  }
-
-  @override
-  Future<void> lcSaveImageFile({required UserProfile? userProfile}) async {
+  Future<void> saveImageFile({required UserProfile? userProfile}) async {
     if (userProfile == null ||
         userProfile.profile == null ||
         userProfile.profile?.id == null ||
@@ -105,7 +36,7 @@ class UserInformationRepositoryImpl implements UserInformationRepository {
   }
 
   @override
-  Future<void> lcSaveProfile({required Profile? profile}) async {
+  Future<void> saveProfile({required Profile? profile}) async {
     if (profile == null) return;
 
     await _checkInitProfileLocalDS();
@@ -117,7 +48,7 @@ class UserInformationRepositoryImpl implements UserInformationRepository {
   }
 
   @override
-  Future<UserProfile?> lcGetProfile({required String userID}) async {
+  Future<UserProfile?> getProfile({required String userID}) async {
     await _checkInitProfileLocalDS();
 
     try {
@@ -153,4 +84,95 @@ class UserInformationRepositoryImpl implements UserInformationRepository {
       isInitProfileLocalDS = false;
     }
   }
+}
+
+//* remote
+abstract class UserInformationRemoteRepository {
+  Future<List<UserProfile>> searchUserByName({required String searchName});
+  Future<URLImage?> updateAvatar({
+    required String path,
+    required String userID,
+  });
+  Future updatePresence({required String id});
+}
+
+class _RemoteRepositoryImpl implements UserInformationRemoteRepository {
+  late final ProfileRemoteDataSource _personalInforRemote;
+  late final PresenceRemoteDatasource _presenceRemote;
+
+  _RemoteRepositoryImpl()
+      : _personalInforRemote = ProfileRemoteDataSourceImpl(),
+        _presenceRemote = PresenceRemoteDatasourceImpl();
+
+  @override
+  Future updatePresence({required String id}) async {
+    if (id.isEmpty) return;
+    return _presenceRemote.updatePresence(userID: id);
+  }
+
+
+  @override
+  Future<List<UserProfile>> searchUserByName({
+    required String searchName,
+  }) async {
+    try {
+      List<Profile> profiles = [];
+      // get profiles
+      switch (searchName) {
+        case '':
+          profiles = await _personalInforRemote.getAllProfile();
+          break;
+        default:
+          profiles = await _personalInforRemote.getAllProfileByName(
+            name: searchName,
+          );
+      }
+      if (profiles.isEmpty) {
+        return [];
+      }
+      // get Avatars
+      final users = await _getUserProfilesFromProfiles(profiles: profiles);
+      return users;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<UserProfile>> _getUserProfilesFromProfiles({
+    required List<Profile> profiles,
+  }) async {
+    List<UserProfile> userProfiles = [];
+
+    for (var i = 0; i < profiles.length; i++) {
+      final url = await _personalInforRemote.getFile(
+        filePath: StorageKey.pPROFILE,
+        fileName: profiles[i].id ?? '',
+      );
+      final URLImage urlImage = URLImage(url: url, type: TypeImage.remote);
+      userProfiles.add(UserProfile(urlImage: urlImage, profile: profiles[i]));
+    }
+    return userProfiles;
+  }
+
+  @override
+  Future<URLImage?> updateAvatar({
+    required String path,
+    required String userID,
+  }) async {
+    final image = await _personalInforRemote.uploadFile(
+      image: path,
+      type: FileUploadType.path,
+      filePath: StorageKey.pPROFILE,
+      fileName: userID,
+    );
+    if (image == null) return null;
+    return URLImage(url: image, type: TypeImage.remote);
+  }
+}
+
+class UserInformationRepository {
+  final _LocalRepositoryImpl _lc = _LocalRepositoryImpl();
+  UserInformationLocalRepository get lc => _lc;
+  final _RemoteRepositoryImpl _rm = _RemoteRepositoryImpl();
+  UserInformationRemoteRepository get rm => _rm;
 }

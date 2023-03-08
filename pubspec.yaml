@@ -22,6 +22,7 @@ dependencies:
   firebase_analytics: ^10.0.4
   firebase_auth: ^4.2.5
   firebase_core: ^2.1.1
+  firebase_database: ^10.0.14
   firebase_messaging: ^14.0.4
   firebase_storage: ^11.0.10
   flutter:

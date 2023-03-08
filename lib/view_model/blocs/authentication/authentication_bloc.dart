@@ -17,7 +17,7 @@ class AuthenticationBloc
 
   AuthenticationBloc(this.sharedPref) : super(LoginState(loading: false)) {
     _authenticationRepository = AuthenticationRepositoryImpl(sharedPref);
-    _userInforRepository = UserInformationRepositoryImpl();
+    _userInforRepository = UserInformationRepository();
     on<NormalLoginEvent>(_normalLogin);
     on<RegisterEvent>(_registerEvent);
     on<CheckAuthenticationEvent>(_checkAuthEvent);
@@ -46,12 +46,12 @@ class AuthenticationBloc
   ) async {
     emit(LoginState(loading: true));
 
-    userProfile = await _userInforRepository.lcGetProfile(
+    userProfile = await _userInforRepository.lc.getProfile(
       userID: event.userID,
     );
 
     if (userProfile == null) return emit(LoginState(loading: false));
-
+    await _userInforRepository.rm.updatePresence(id: userProfile!.profile!.id!);
     emit(LoginState(loading: false));
     emit(LoggedState(
       loading: false,
@@ -78,8 +78,8 @@ class AuthenticationBloc
 
   Future<void> _storageData() async {
     await _authenticationRepository.saveUIdToLocal(userProfile: userProfile);
-    await _userInforRepository.lcSaveProfile(profile: userProfile!.profile);
-    await _userInforRepository.lcSaveImageFile(userProfile: userProfile);
+    await _userInforRepository.lc.saveProfile(profile: userProfile!.profile);
+    await _userInforRepository.lc.saveImageFile(userProfile: userProfile);
   }
 
   _logoutEvent(LogoutEvent event, Emitter<AuthenticationState> emit) async {

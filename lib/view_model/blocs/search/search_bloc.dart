@@ -8,7 +8,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   List<UserProfile> friendList = [];
   UserProfile currentUser;
 
-  final _userInformationRepo = UserInformationRepositoryImpl();
+  final _userInformationRepo = UserInformationRepository();
   final _conversationRepo = ConversationsRepositoryImpl();
   final _usersSubject = ReplaySubject<List<UserProfile>>();
   final _friendsSubject = ReplaySubject<List<UserProfile>>();
@@ -65,7 +65,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   _searchingByName(SearchingEvent event, Emitter<SearchState> emit) async {
     emit(SearchingState(loading: true, currentUser: currentUser));
-    final listUser = await _userInformationRepo.rmSearchUserByName(
+    final listUser = await _userInformationRepo.rm.searchUserByName(
       searchName: event.searchName,
     );
     _usersSubject.add(listUser);
@@ -79,7 +79,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         currentUser: currentUser,
       ),
     );
-    friendList = await _userInformationRepo.rmSearchUserByName(
+    friendList = await _userInformationRepo.rm.searchUserByName(
       searchName: event.searchName,
     );
     _friendsSubject.add(friendList);

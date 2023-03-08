@@ -127,7 +127,7 @@ class _SearchScreenState extends State<SearchScreen> {
         TitleWidget(title: label, isUpper: true),
         if (loading == null && listStream != null) ...[
           Spaces.h20,
-          ListUserWidget(userListStream: listStream),
+          UserSearchList(userListStream: listStream),
         ] else ...[
           const Center(
             child: CircularProgressIndicator(color: ResColors.redAccent),
@@ -146,7 +146,7 @@ class _SearchScreenState extends State<SearchScreen> {
     EasyDebounce.cancel('addSearchingEvent');
     EasyDebounce.debounce(
       'addSearchingEvent',
-      const Duration(milliseconds: 200),
+      const Duration(milliseconds: 150),
       () => searchBloc.add(SearchingEvent(searchName: name)),
     );
   }

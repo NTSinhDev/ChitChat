@@ -65,7 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           StateAvatar(
             urlImage: widget.friendInfo.informations.urlImage,
-            isStatus: widget.friendInfo.state?.presence ?? false,
+            userId: widget.friendInfo.informations.profile?.id ?? '',
             radius: 40.r,
           ),
           Spaces.w12,
@@ -78,7 +78,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
-              if (widget.friendInfo.state?.presence ?? false) ...[
+              if (widget.friendInfo.presence?.status ?? false) ...[
                 Text(
                   AppLocalizations.of(context)!.onl,
                   style: Theme.of(context)
