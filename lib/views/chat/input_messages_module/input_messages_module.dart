@@ -1,8 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/views/chat/input_messages_module/components/injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter/foundation.dart' as foundation;
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
+
+part 'components/picker_widget.dart';
+part 'components/input_messages_widget.dart';
+part 'components/emoji_widget.dart';
+part 'components/icon_action_widget.dart';
 
 class InputMessagesModule extends StatefulWidget {
   const InputMessagesModule({super.key});
@@ -128,8 +137,19 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
   _openImagePicker(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      builder: (context) => PickerWidget(
-        onPick: (selectedList) => setState(() => mediaList = selectedList),
+      builder: (nContext) => PickerWidget(
+        onPick: (selectedList) {
+          setState(() => mediaList = selectedList);
+          Provider.of<ChatBloc>(context, listen: false).add(
+            SendFilesEvent(
+              files: mediaList.map((media) => media.file!.path).toList(),
+              type: MessageType.media,
+            ),
+          );
+        },
+        sendFiles: () {
+          log('🚀log⚡');
+        },
       ),
     );
   }
@@ -138,21 +158,17 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.camera);
       if (image == null) return;
-      _sendFiles([image.path], 'image');
+
+      if (!mounted) return;
+      Provider.of<ChatBloc>(context, listen: false).add(
+        SendFilesEvent(
+          files: [image.path],
+          type: MessageType.media,
+        ),
+      );
     } on PlatformException catch (e) {
       log('Pick image failed: $e');
     }
-  }
-
-  _sendFiles(List<String> listPath, String type) {
-    // Provider.of<ChatBloc>(context, listen: false).add(
-    //   SendFilesEvent(
-    //     fileType: type,
-    //     listPath: listPath,
-    //     roomID: widget.idRoom,
-    //     friendID: widget.idFriend,
-    //   ),
-    // );
   }
 
   _sendMessage(String message) {
@@ -175,7 +191,12 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
 
   Future _stop() async {
     final path = await recorder.stopRecorder();
-    _sendFiles([path!], 'audio');
+    Provider.of<ChatBloc>(context, listen: false).add(
+      SendFilesEvent(
+        files: path != null ? [path] : [],
+        type: MessageType.audio,
+      ),
+    );
     setState(() {
       isRecording = false;
     });

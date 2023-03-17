@@ -1,8 +1,7 @@
 import 'dart:developer';
 
-import 'package:chat_app/utils/constants.dart';
-import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class MessagesRemoteDataSource {

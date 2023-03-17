@@ -1,5 +1,6 @@
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/chat/chat_screen.dart';
 import 'package:chat_app/widgets/widget_injector.dart';

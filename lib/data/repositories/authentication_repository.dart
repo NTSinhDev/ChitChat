@@ -1,4 +1,6 @@
-import 'package:chat_app/res/enum/enums.dart';
+import 'package:chat_app/data/datasources/local_datasources/injector.dart';
+import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
+import 'package:chat_app/utils/enum/enums.dart';
 import 'package:chat_app/utils/constants.dart';
 import 'package:chat_app/models/profile.dart';
 import 'package:chat_app/models/url_image.dart';
@@ -23,12 +25,14 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   late final AuthLocalDataSource _authLocalDataSource;
   late final ProfileRemoteDataSource _profileRemoteDataSource;
+  late final StorageRemoteDatasource _storageRemoteDataSource;
 
   AuthenticationRepositoryImpl(SharedPreferences sharedPreferences) {
     _authLocalDataSource = AuthLocalDataSourceImpl(
       sharedPreferences: sharedPreferences,
     );
     _profileRemoteDataSource = ProfileRemoteDataSourceImpl();
+    _storageRemoteDataSource = StorageRemoteDatasourceImpl();
   }
 
   @override
@@ -40,14 +44,14 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       if (authUser == null) return null;
 
       // get information of this account
-      final String? urlImage = await _profileRemoteDataSource.getFile(
+      final String? urlImage = await _storageRemoteDataSource.getFile(
             filePath: StorageKey.pPROFILE,
             fileName: authUser.uid,
           ) ??
-          await _profileRemoteDataSource.uploadFile(
-            image: authUser.photoURL!,
+          await _storageRemoteDataSource.uploadFile(
+            path: authUser.photoURL!,
             type: FileUploadType.url,
-            filePath: StorageKey.pPROFILE,
+            folderName: StorageKey.pPROFILE,
             fileName: authUser.uid,
           );
 

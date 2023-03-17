@@ -1,10 +1,5 @@
-import 'dart:io';
+part of '../input_messages_module.dart';
 
-import 'package:flutter/foundation.dart' as foundation;
-import 'package:flutter/material.dart';
-import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EmojiWidget extends StatelessWidget {
   final TextEditingController controller;

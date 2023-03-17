@@ -12,9 +12,11 @@ abstract class UserInformationRemoteRepository {
 class _RemoteRepositoryImpl implements UserInformationRemoteRepository {
   late final ProfileRemoteDataSource _personalInforRemote;
   late final PresenceRemoteDatasource _presenceRemote;
+  late final StorageRemoteDatasource _storageRemote;
 
   _RemoteRepositoryImpl()
       : _personalInforRemote = ProfileRemoteDataSourceImpl(),
+        _storageRemote = StorageRemoteDatasourceImpl(),
         _presenceRemote = PresenceRemoteDatasourceImpl();
 
   @override
@@ -22,7 +24,6 @@ class _RemoteRepositoryImpl implements UserInformationRemoteRepository {
     if (id.isEmpty) return;
     return _presenceRemote.updatePresence(userID: id);
   }
-
 
   @override
   Future<List<UserProfile>> searchUserByName({
@@ -57,7 +58,7 @@ class _RemoteRepositoryImpl implements UserInformationRemoteRepository {
     List<UserProfile> userProfiles = [];
 
     for (var i = 0; i < profiles.length; i++) {
-      final url = await _personalInforRemote.getFile(
+      final url = await _storageRemote.getFile(
         filePath: StorageKey.pPROFILE,
         fileName: profiles[i].id ?? '',
       );
@@ -72,10 +73,10 @@ class _RemoteRepositoryImpl implements UserInformationRemoteRepository {
     required String path,
     required String userID,
   }) async {
-    final image = await _personalInforRemote.uploadFile(
-      image: path,
+    final image = await _storageRemote.uploadFile(
+      path: path,
       type: FileUploadType.path,
-      filePath: StorageKey.pPROFILE,
+      folderName: StorageKey.pPROFILE,
       fileName: userID,
     );
     if (image == null) return null;

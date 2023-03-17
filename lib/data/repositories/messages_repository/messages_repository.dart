@@ -1,7 +1,10 @@
-import 'package:chat_app/res/enum/enums.dart';
+import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
+import 'package:chat_app/utils/enum/enums.dart';
 import 'package:chat_app/data/datasources/local_datasources/messages_local_datasource.dart';
 import 'package:chat_app/data/datasources/remote_datasources/messages_remote_datasource.dart';
 import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/utils/constants.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:uuid/uuid.dart';
 
 part 'local_repository.dart';
