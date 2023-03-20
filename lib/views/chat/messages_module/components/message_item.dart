@@ -22,16 +22,15 @@ class MessageItem extends StatefulWidget {
 class _MessageItemState extends State<MessageItem> {
   late bool isMessageInfo;
   late bool isMsgOfUser;
-  late final ChatBloc chatBloc;
   @override
   void initState() {
-    isMessageInfo = false;
+    isMessageInfo = true;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    chatBloc = context.read<ChatBloc>();
+    final chatBloc = context.read<ChatBloc>();
     isMsgOfUser = widget.message.senderId == chatBloc.currentUser.profile!.id
         ? true
         : false;
@@ -69,12 +68,13 @@ class _MessageItemState extends State<MessageItem> {
       return AudioMessage(
         url: widget.message.listNameImage.first,
         colorMsg: isMsgOfUser ? colorSenderBG : colorBG,
-        borderMsg: BorderRadius.only(
-          bottomLeft: isMsgOfUser ? radius15 : const Radius.circular(0),
-          bottomRight: isMsgOfUser ? const Radius.circular(0) : radius15,
-          topLeft: radius15,
-          topRight: radius15,
-        ),
+        borderMsg: BorderRadius.circular(30),
+        //  BorderRadius.only(
+        //   bottomLeft: isMsgOfUser ? radius15 : const Radius.circular(0),
+        //   bottomRight: isMsgOfUser ? const Radius.circular(0) : radius15,
+        //   topLeft: radius15,
+        //   topRight: radius15,
+        // ),
         colorShadow: isMsgOfUser ? Colors.black45 : Colors.black12,
         mainAlign:
             isMsgOfUser ? MainAxisAlignment.end : MainAxisAlignment.start,
@@ -122,7 +122,7 @@ class _MessageItemState extends State<MessageItem> {
             ),
             SizedBox(width: 14.w),
             Text(
-              // formatTime(widget.message.time),
+              // formatTime(widget.message.stampTime.to),
               widget.message.stampTime.toIso8601String(),
               style: Theme.of(context).textTheme.labelSmall,
             ),

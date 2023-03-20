@@ -16,7 +16,7 @@ class ChangeLanguageFeature extends StatelessWidget {
     return FeatureSetting(
       icon: CupertinoIcons.textformat,
       title: AppLocalizations.of(context)!.language,
-      color: Colors.green[400]!,
+      // color: Colors.green[400]!,
       onTap: () => _changeLanguage(context),
     );
   }

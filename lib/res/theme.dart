@@ -40,7 +40,7 @@ class AppTheme {
       fontSize: 14.0,
       fontWeight: FontWeight.normal,
       color: Colors.black,
-    ), 
+    ),
     bodySmall: GoogleFonts.openSans(
       fontSize: 12.0,
       fontWeight: FontWeight.normal,

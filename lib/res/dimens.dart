@@ -14,6 +14,7 @@ class Spaces {
   static final h8 = SizedBox(height: 8.h);
   static final h10 = SizedBox(height: 10.h);
   static final h12 = SizedBox(height: 12.h);
+  static final h15 = SizedBox(height: 15.h);
   static final h16 = SizedBox(height: 16.h);
   static final h20 = SizedBox(height: 20.h);
   static final h24 = SizedBox(height: 24.h);

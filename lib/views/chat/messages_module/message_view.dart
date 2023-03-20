@@ -15,16 +15,9 @@ class MessageView extends StatefulWidget {
 }
 
 class _MessageViewState extends State<MessageView> {
-  late final ChatBloc chat;
-
-  @override
-  void initState() {
-    super.initState();
-    chat = context.read<ChatBloc>();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final chat = context.read<ChatBloc>();
     return Expanded(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -99,5 +92,4 @@ class _MessageViewState extends State<MessageView> {
       },
     );
   }
-
 }

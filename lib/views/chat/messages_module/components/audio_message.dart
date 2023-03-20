@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/utils/injector.dart';
@@ -34,40 +36,15 @@ class _AudioMessageState extends State<AudioMessage> {
 
   @override
   Widget build(BuildContext context) {
-    final ChatBloc chatBloc = context.read<ChatBloc>();
+    final maxWidth = MediaQuery.of(context).size.width;
     return StreamBuilder<String?>(
-        stream: chatBloc.getFile(fileName: widget.url),
+        stream: context.read<ChatBloc>().getFile(fileName: widget.url),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            audioURL = snapshot.data!;
-            audioPlayer.setSourceUrl(audioURL);
-            audioPlayer.onPlayerStateChanged.listen((state) {
-              setState(() {
-                isPlaying = state == PlayerState.playing;
-              });
-            });
-            audioPlayer.onDurationChanged.listen((newDuration) {
-              setState(() {
-                duration = newDuration;
-              });
-            });
-            audioPlayer.onPositionChanged.listen((newPosition) {
-              setState(() {
-                position = newPosition;
-              });
-            });
-          }
+          if (snapshot.hasData) initData(data: snapshot.data!);
           return GestureDetector(
-            onTap: () async {
-              if (snapshot.hasData) {
-                if (isPlaying) {
-                  await audioPlayer.pause();
-                } else {
-                  await audioPlayer.play(UrlSource(audioURL));
-                }
-              }
-            },
+            onTap: () => onPlayPause(isActive: snapshot.hasData),
             child: Container(
+              width: maxWidth * 7 / 10,
               margin: EdgeInsets.only(top: 5.h),
               padding: EdgeInsets.all(12.h),
               decoration: BoxDecoration(
@@ -85,13 +62,7 @@ class _AudioMessageState extends State<AudioMessage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
-                    onTap: () async {
-                      if (isPlaying) {
-                        await audioPlayer.pause();
-                      } else {
-                        await audioPlayer.play(UrlSource(audioURL));
-                      }
-                    },
+                    onTap: () => onPlayPause(isActive: snapshot.hasData),
                     child: Icon(
                       isPlaying ? Icons.stop : Icons.play_arrow,
                       color: Colors.white,
@@ -123,9 +94,43 @@ class _AudioMessageState extends State<AudioMessage> {
         });
   }
 
+  initData({required data}) {
+    log('🚀log⚡ $data');
+    audioURL = data;
+    audioPlayer.setSourceUrl(audioURL);
+    audioPlayer.onPlayerStateChanged.listen((state) {
+      if (mounted) {
+        setState(() {
+          isPlaying = state == PlayerState.playing;
+        });
+      }
+    });
+
+    audioPlayer.onDurationChanged.listen((newDuration) {
+      setState(() {
+        duration = newDuration;
+      });
+    });
+    audioPlayer.onPositionChanged.listen((newPosition) {
+      setState(() {
+        position = newPosition;
+      });
+    });
+  }
+
+  onPlayPause({required bool isActive}) async {
+    if (isActive) {
+      if (isPlaying) {
+        await audioPlayer.pause();
+      } else {
+        await audioPlayer.play(UrlSource(audioURL));
+      }
+    }
+  }
+
   @override
   void dispose() {
-    audioPlayer.dispose();
     super.dispose();
+    audioPlayer.dispose();
   }
 }

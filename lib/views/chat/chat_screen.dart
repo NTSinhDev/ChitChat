@@ -1,3 +1,4 @@
+import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/models/injector.dart';
@@ -5,6 +6,7 @@ import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/chat/input_messages_module/input_messages_module.dart';
 import 'package:chat_app/views/chat/messages_module/message_view.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,15 +80,22 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
-              if (widget.friendInfo.presence?.status ?? false) ...[
-                Text(
-                  AppLocalizations.of(context)!.onl,
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelLarge!
-                      .copyWith(fontSize: 10.r),
-                ),
-              ]
+              StreamBuilder<DatabaseEvent>(
+                  stream: PresenceRemoteDatasourceImpl().getPresence(
+                    userID: widget.friendInfo.informations.profile!.id!,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(
+                        AppLocalizations.of(context)!.onl,
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge!
+                            .copyWith(fontSize: 10.r),
+                      );
+                    }
+                    return Container();
+                  }),
             ],
           ),
         ],
