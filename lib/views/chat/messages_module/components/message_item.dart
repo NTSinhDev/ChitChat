@@ -1,8 +1,9 @@
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/utils/constants.dart';
 import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/views/chat/messages_module/components/components_injector.dart';
+import 'package:chat_app/views/chat/messages_module/components/injector.dart';
+import 'package:chat_app/views/chat/messages_module/components/media_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,19 +24,19 @@ class _MessageItemState extends State<MessageItem> {
   late bool isMsgOfUser;
   @override
   void initState() {
-    isMessageInfo = false;
+    isMessageInfo = true;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final chatBloc = context.watch<ChatBloc>();
+    final chatBloc = context.read<ChatBloc>();
     isMsgOfUser = widget.message.senderId == chatBloc.currentUser.profile!.id
         ? true
         : false;
     final theme = context.watch<ThemeProvider>().isDarkMode;
     // UI
-        final colorBG = theme
+    final colorBG = theme
         ? ResColors.darkGrey(isDarkmode: theme)
         : ResColors.lightGrey(isDarkmode: theme);
     final colorSenderBG = ResColors.blue(isDarkmode: theme);
@@ -59,33 +60,24 @@ class _MessageItemState extends State<MessageItem> {
   }
 
   Widget _message(colorSenderBG, colorBG, radius15) {
-    if (widget.message.messageType == MessageType.image.toString()) {
-      return ImageMessage(
-        isMsgOfUser: isMsgOfUser,
-        paths: widget.message.listNameImage,
-      );
+    if (widget.message.messageType == MessageType.media.toString()) {
+      return MediaMessage(message: widget.message, isMsgOfUser: isMsgOfUser);
     }
 
     if (widget.message.messageType == MessageType.audio.toString()) {
       return AudioMessage(
-        url: widget.message.nameRecord!,
+        url: widget.message.listNameImage.first,
         colorMsg: isMsgOfUser ? colorSenderBG : colorBG,
-        borderMsg: BorderRadius.only(
-          bottomLeft: isMsgOfUser ? radius15 : const Radius.circular(0),
-          bottomRight: isMsgOfUser ? const Radius.circular(0) : radius15,
-          topLeft: radius15,
-          topRight: radius15,
-        ),
+        borderMsg: BorderRadius.circular(30),
+        //  BorderRadius.only(
+        //   bottomLeft: isMsgOfUser ? radius15 : const Radius.circular(0),
+        //   bottomRight: isMsgOfUser ? const Radius.circular(0) : radius15,
+        //   topLeft: radius15,
+        //   topRight: radius15,
+        // ),
         colorShadow: isMsgOfUser ? Colors.black45 : Colors.black12,
         mainAlign:
             isMsgOfUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-      );
-    }
-
-    if (widget.message.messageType == MessageType.video.toString()) {
-      return VideoMessage(
-        urlList: widget.message.listNameImage,
-        isMsgOfUser: isMsgOfUser,
       );
     }
     return TextMessage(isMsgOfUser: isMsgOfUser, text: widget.message.content!);
@@ -130,7 +122,7 @@ class _MessageItemState extends State<MessageItem> {
             ),
             SizedBox(width: 14.w),
             Text(
-              // formatTime(widget.message.time),
+              // formatTime(widget.message.stampTime.to),
               widget.message.stampTime.toIso8601String(),
               style: Theme.of(context).textTheme.labelSmall,
             ),

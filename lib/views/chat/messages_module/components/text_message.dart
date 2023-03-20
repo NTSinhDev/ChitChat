@@ -26,12 +26,13 @@ class TextMessage extends StatelessWidget {
       padding: EdgeInsets.all(12.h),
       decoration: BoxDecoration(
         color: isMsgOfUser ? colorSenderBG : colorBG,
-        borderRadius: BorderRadius.only(
-          bottomLeft: isMsgOfUser ? radius15 : const Radius.circular(0),
-          bottomRight: isMsgOfUser ? const Radius.circular(0) : radius15,
-          topLeft: radius15,
-          topRight: radius15,
-        ),
+        borderRadius: BorderRadius.circular(30),
+        // BorderRadius.only(
+        //   bottomLeft: isMsgOfUser ? radius15 : const Radius.circular(0),
+        //   bottomRight: isMsgOfUser ? const Radius.circular(0) : radius15,
+        //   topLeft: radius15,
+        //   topRight: radius15,
+        // ),
         boxShadow: [
           BoxShadow(
             color: isMsgOfUser ? Colors.black45 : Colors.black12,

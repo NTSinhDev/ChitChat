@@ -1,10 +1,4 @@
-import 'package:chat_app/res/colors.dart';
-import 'package:chat_app/res/dimens.dart';
-import 'package:chat_app/view_model/injector.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of '../input_messages_module.dart';
 
 class InputMessageWidget extends StatelessWidget {
   final Function(String)? onchange;

@@ -3,31 +3,12 @@ import 'dart:developer';
 
 import 'package:chat_app/main.dart';
 import 'package:chat_app/res/colors.dart';
-import 'package:chat_app/models/injector.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-enum ParsedTo { profile, conversation, message }
 
-class ParsedSnapshotData {
-  final ParsedTo parsedTo;
-  ParsedSnapshotData({required this.parsedTo});
-
-  dynamic parsed({required Object? data, required String id}) {
-    final encodeData = json.encode(data);
-    final convertToMap = json.decode(encodeData) as Map<String, dynamic>;
-    switch (parsedTo) {
-      case ParsedTo.profile:
-        return Profile.fromMap(convertToMap, id);
-      case ParsedTo.message:
-        return Message.fromMap(convertToMap, id);
-      default:
-        return Conversation.fromMap(convertToMap, id);
-    }
-  }
-}
 
 // /// This function to sort list user by online state
 // List<dynamic> sortListUserToOnlState(List<dynamic> listUser) {

@@ -1,5 +1,5 @@
 import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/views/chat/messages_module/components/components_injector.dart';
+import 'package:chat_app/views/chat/messages_module/components/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,16 +15,9 @@ class MessageView extends StatefulWidget {
 }
 
 class _MessageViewState extends State<MessageView> {
-  late final ChatBloc chat;
-
-  @override
-  void initState() {
-    super.initState();
-    chat = context.read<ChatBloc>();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final chat = context.read<ChatBloc>();
     return Expanded(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
@@ -99,5 +92,4 @@ class _MessageViewState extends State<MessageView> {
       },
     );
   }
-
 }

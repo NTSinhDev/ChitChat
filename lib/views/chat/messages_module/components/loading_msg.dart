@@ -1,24 +1,25 @@
 import 'package:chat_app/res/colors.dart';
 import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/utils/constants.dart';
+import 'package:chat_app/view_model/providers/theme_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoadingMessage extends StatelessWidget {
   final bool isSender;
-  final bool theme;
   final String content;
   final double width;
   const LoadingMessage({
     super.key,
     required this.isSender,
-    required this.theme,
     required this.content,
     required this.width,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.watch<ThemeProvider>().isDarkMode;
     // UI
     final colorBG = theme
         ? ResColors.darkGrey(isDarkmode: theme)

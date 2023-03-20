@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+part of '../input_messages_module.dart';
 
 class IconActionWidget extends StatelessWidget {
   final IconData icon;

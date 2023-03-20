@@ -1,14 +1,14 @@
 import 'package:chat_app/models/user_profile.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/ask_chitchat/ask_chitchat_screen.dart';
 import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:chat_app/views/home/components/state_bottom_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserProfile userProfile;
@@ -24,32 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> titlesPage = [
-      AppLocalizations.of(context)!.chats,
-      AppLocalizations.of(context)!.personal,
-    ];
-    List<Widget> pages = [
-      Center(
-        child: TextButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider<SearchBloc>(
-                create: (context) => SearchBloc(
-                  currentUser: widget.userProfile,
-                ),
-                child: SearchScreen(
-                  currentUser: widget.userProfile,
-                ),
-              ),
-            ),
-          ),
-          child: const Text("Go To Search Screen"),
-        ),
-      ),
-      SettingScreen(userProfile: widget.userProfile)
-    ];
-
+    final theme = context.watch<ThemeProvider>().isDarkMode;
     return WillPopScope(
       onWillPop: exitApp,
       child: Scaffold(
@@ -59,9 +34,14 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               InkWell(
                 onTap: () {
-                  setState(() {
-                    currentPage = 1;
-                  });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingScreen(
+                        userProfile: widget.userProfile,
+                      ),
+                    ),
+                  );
                 },
                 child: Container(
                   margin: EdgeInsets.only(right: 16.w),
@@ -75,35 +55,62 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                titlesPage[currentPage],
+                AppLocalizations.of(context)!.chats,
                 style: Theme.of(context).textTheme.displayLarge,
               ),
             ],
           ),
         ),
-        body: SafeArea(child: pages[currentPage]),
-        bottomNavigationBar: SizedBox(
-          height: 76.h,
-          child: BottomNavigationBar(
-            currentIndex: currentPage,
-            onTap: (currentIndex) {
-              setState(() {
-                currentPage = currentIndex;
-              });
+        body: SafeArea(
+          child: Center(
+            child: TextButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BlocProvider<SearchBloc>(
+                    create: (context) => SearchBloc(
+                      currentUser: widget.userProfile,
+                    ),
+                    child: SearchScreen(
+                      currentUser: widget.userProfile,
+                    ),
+                  ),
+                ),
+              ),
+              child: const Text("Go To Search Screen"),
+            ),
+          ),
+        ),
+        floatingActionButton: SizedBox(
+          width: 140.w,
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AskChitChatcreen(
+                    userProfile: widget.userProfile,
+                  ),
+                ),
+              );
             },
-            selectedItemColor:
-                Theme.of(context).textSelectionTheme.selectionColor,
-            items: [
-              BottomNavigationBarItem(
-                icon: const StateBottomNavigationBar(
-                    icon: CupertinoIcons.chat_bubble_fill),
-                label: AppLocalizations.of(context)!.chats,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(48.r),
+                bottomRight: const Radius.circular(0),
+                topLeft: Radius.circular(48.r),
+                topRight: Radius.circular(48.r),
               ),
-              BottomNavigationBarItem(
-                icon: const StateBottomNavigationBar(icon: Icons.settings),
-                label: AppLocalizations.of(context)!.personal,
-              ),
-            ],
+            ),
+            backgroundColor:
+                theme ? ResColors.darkPurple : ResColors.deepPurpleAccent,
+            child: Text(
+              AppLocalizations.of(context)!.ask_ChitChat,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Colors.white, fontSize: 13.0),
+            ),
           ),
         ),
       ),

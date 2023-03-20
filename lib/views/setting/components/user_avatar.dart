@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/setting_bottom_sheet.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
@@ -34,13 +35,13 @@ class _UserAvatarState extends State<UserAvatar> {
           Container(
             padding: EdgeInsets.all(12.h),
             child: BlocConsumer<SettingBloc, SettingState>(
-              listener: _updateAvatarListen,
+              listener: updateAvatarListen,
               builder: (context, state) {
                 if (state is UpdatedAvatarState) {
                   if (state.loading) {
                     return SizedBox(
-                      width: 120.w,
-                      height: 120.h,
+                      width: 160.w,
+                      height: 160.h,
                       child: CircleAvatar(
                         backgroundColor: isDarkmode
                             ? ResColors.darkGrey(isDarkmode: false)
@@ -48,32 +49,26 @@ class _UserAvatarState extends State<UserAvatar> {
                         child: const Center(child: CircularProgressIndicator()),
                       ),
                     );
-                  } else {
-                    return StateAvatar(
-                      urlImage: state.userProfile.urlImage,
-                      userId: '',
-                      radius: 120.r,
-                    );
                   }
                 }
                 return StateAvatar(
                   urlImage: userProfile.urlImage,
                   userId: '',
-                  radius: 120.r,
+                  radius: 160.r,
                 );
               },
             ),
           ),
-          _updateAvatarWidget(context),
+          updateAvatarWidget(context),
         ],
       ),
     );
   }
 
-  Widget _updateAvatarWidget(BuildContext context) {
+  Widget updateAvatarWidget(BuildContext context) {
     return Positioned(
-      bottom: 4.h,
-      right: 4.w,
+      bottom: 12.h,
+      right: 12.w,
       child: Container(
         width: 52.w,
         height: 52.h,
@@ -81,7 +76,7 @@ class _UserAvatarState extends State<UserAvatar> {
           borderRadius: BorderRadius.circular(30.r),
         ),
         child: InkWell(
-          onTap: () => _changeAvatar(context),
+          onTap: () => changeAvatar(context),
           child: Container(
             margin: EdgeInsets.all(6.h),
             width: 44.w,
@@ -110,7 +105,7 @@ class _UserAvatarState extends State<UserAvatar> {
     );
   }
 
-  _changeAvatar(BuildContext context) {
+  changeAvatar(BuildContext context) {
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Colors.transparent,
@@ -119,7 +114,7 @@ class _UserAvatarState extends State<UserAvatar> {
           btmSheetTitle: AppLocalizations.of(bcontext)!.change_avatar,
           btmSheetItems: [
             SettingBottomSheetItem(
-              ontap: () => _pickImage(
+              ontap: () => pickImage(
                 source: ImageSource.camera,
                 context: context,
               ),
@@ -130,7 +125,7 @@ class _UserAvatarState extends State<UserAvatar> {
               title: AppLocalizations.of(bcontext)!.take_a_photo,
             ),
             SettingBottomSheetItem(
-              ontap: () => _pickImage(
+              ontap: () => pickImage(
                 source: ImageSource.gallery,
                 context: context,
               ),
@@ -146,7 +141,7 @@ class _UserAvatarState extends State<UserAvatar> {
     );
   }
 
-  Future _pickImage(
+  Future pickImage(
       {required ImageSource source, required BuildContext context}) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
@@ -168,7 +163,7 @@ class _UserAvatarState extends State<UserAvatar> {
     }
   }
 
-  _updateAvatarListen(BuildContext context, SettingState state) {
+  updateAvatarListen(BuildContext context, SettingState state) {
     if (state is UpdatedAvatarState) {
       if (state.error != null && state.error!) {
         FlashMessage(

@@ -9,4 +9,5 @@ class ImgAnmStrings {
   static const iEnglish = '$logo/english_icon.png';
   static const iGoogle = '$logo/google.jpg';
   static const iFacebook = '$logo/facebook.jpg';
+  static const iChitchat = '$logo/logo_chitchat.png';
 }

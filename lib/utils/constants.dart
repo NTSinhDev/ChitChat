@@ -10,8 +10,9 @@ class StorageKey {
   /// b là viết tắc của Box
   static const bPROFILE = 'Profile';
 
-  /// p là viết tắc của Path
-  static const pPROFILE = 'Profile';
+  /// p là viết tắc của Path. Used to store images in storage
+  static const pPROFILE = 'Profile'; 
+  static const pCONVERSATION = 'Conversation';
 }
 
 class ProfileField {
