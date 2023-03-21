@@ -25,7 +25,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         ));
       }
 
-      final urlImage = await _userInforRepository.rm.updateAvatar(
+      final urlImage = await _userInforRepository.remote.updateAvatar(
         path: event.path,
         userID: userProfile.profile!.id!,
       );
@@ -43,7 +43,7 @@ class SettingBloc extends Bloc<SettingEvent, SettingState> {
         urlImage: urlImage,
       );
 
-      await _userInforRepository.lc.saveImageFile(userProfile: userProfile);
+      await _userInforRepository.local.saveImageFile(userProfile: userProfile);
 
       emit(UpdatedAvatarState(false, userProfile: userProfile));
     });

@@ -69,5 +69,6 @@
     "success": "Thành công",
     "info": "Thông báo",
     "warning": "Cảnh báo",
-    "could_not_update_avatar": "Không thể cập nhật ảnh đại diện!"
+    "could_not_update_avatar": "Không thể cập nhật ảnh đại diện!",
+    "you": "Bạn"
 }

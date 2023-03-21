@@ -69,5 +69,6 @@
     "success": "Success",
     "info": "Info",
     "warning": "Warning",
-    "could_not_update_avatar": "Oops! Something went wrong when updated avatar!"
+    "could_not_update_avatar": "Oops! Something went wrong when updated avatar!",
+    "you": "You"
 }

@@ -25,11 +25,6 @@ class VirtualAssistantMessage extends StatelessWidget {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     final maxWidth = MediaQuery.of(context).size.width;
 
-    final colorBG = theme
-        ? ResColors.darkGrey(isDarkmode: theme)
-        : ResColors.lightGrey(isDarkmode: theme);
-    final colorSenderBG = ResColors.blue(isDarkmode: theme);
-
     return Container(
       constraints: BoxConstraints(maxWidth: maxWidth * 3 / 5),
       margin: EdgeInsets.only(top: 12.h),
@@ -51,7 +46,13 @@ class VirtualAssistantMessage extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: maxWidth * 3 / 5),
             padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
             decoration: BoxDecoration(
-              color: chatIndex == 0 ? colorSenderBG : colorBG,
+              color: chatIndex == 0
+                  ? theme
+                      ? ResColors.darkPurple
+                      : ResColors.deepPurpleAccent
+                  : theme
+                      ? ResColors.darkGrey(isDarkmode: theme)
+                      : ResColors.lightGrey(isDarkmode: theme),
               borderRadius: BorderRadius.only(
                 bottomLeft: chatIndex == 0
                     ? Radius.circular(32.r)
@@ -64,9 +65,17 @@ class VirtualAssistantMessage extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: chatIndex == 0 ? Colors.black45 : Colors.black12,
-                  offset: const Offset(1, 1),
-                  blurRadius: 2,
+                  color: chatIndex == 0
+                      ? theme
+                          ? Colors.black38
+                          : Colors.black45
+                      : theme
+                          ? Colors.black26
+                          : Colors.black12,
+                  offset: chatIndex == 0
+                      ? const Offset(-1, -1)
+                      : const Offset(1, -1),
+                  blurRadius: 3,
                 ),
               ],
             ),

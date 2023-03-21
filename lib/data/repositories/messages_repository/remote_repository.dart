@@ -1,6 +1,6 @@
 part of 'messages_repository.dart';
 
-abstract class MessagesRemoteRepository {
+abstract class RemoteMessagesRepository {
   Future<bool> sendMessage({
     required String senderID,
     required String conversationID,
@@ -16,7 +16,7 @@ abstract class MessagesRemoteRepository {
   });
 }
 
-class _RemoteRepositoryImpl implements MessagesRemoteRepository {
+class _RemoteRepositoryImpl implements RemoteMessagesRepository {
   final _messageRemoteDS = MessagesRemoteDataSourceImpl();
   final _storageRemoteDS = StorageRemoteDatasourceImpl();
 

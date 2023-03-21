@@ -10,8 +10,8 @@ part 'local_repository.dart';
 part 'remote_repository.dart';
 
 class UserInformationRepository {
-  final UserInformationLocalRepository _lc = _LocalRepositoryImpl();
-  UserInformationLocalRepository get lc => _lc;
-  final UserInformationRemoteRepository _rm = _RemoteRepositoryImpl();
-  UserInformationRemoteRepository get rm => _rm;
+  final LocalUserInformationRepository _lc = _LocalRepositoryImpl();
+  LocalUserInformationRepository get local => _lc;
+  final RemoteUserInformationRepository _rm = _RemoteRepositoryImpl();
+  RemoteUserInformationRepository get remote => _rm;
 }

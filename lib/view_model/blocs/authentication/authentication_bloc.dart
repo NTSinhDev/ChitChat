@@ -46,12 +46,13 @@ class AuthenticationBloc
   ) async {
     emit(LoginState(loading: true));
 
-    userProfile = await _userInforRepository.lc.getProfile(
+    userProfile = await _userInforRepository.local.getProfile(
       userID: event.userID,
     );
 
     if (userProfile == null) return emit(LoginState(loading: false));
-    await _userInforRepository.rm.updatePresence(id: userProfile!.profile!.id!);
+    await _userInforRepository.remote
+        .updatePresence(id: userProfile!.profile!.id!);
     emit(LoginState(loading: false));
     emit(LoggedState(
       loading: false,
@@ -78,8 +79,8 @@ class AuthenticationBloc
 
   Future<void> _storageData() async {
     await _authenticationRepository.saveUIdToLocal(userProfile: userProfile);
-    await _userInforRepository.lc.saveProfile(profile: userProfile!.profile);
-    await _userInforRepository.lc.saveImageFile(userProfile: userProfile);
+    await _userInforRepository.local.saveProfile(profile: userProfile!.profile);
+    await _userInforRepository.local.saveImageFile(userProfile: userProfile);
   }
 
   _logoutEvent(LogoutEvent event, Emitter<AuthenticationState> emit) async {

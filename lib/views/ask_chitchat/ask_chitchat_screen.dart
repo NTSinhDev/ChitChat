@@ -107,13 +107,15 @@ class _AskChitChatcreenState extends State<AskChitChatcreen> {
                         boxShadow: const [
                           BoxShadow(
                             color: Colors.black12,
-                            offset: Offset(1, 1),
+                            offset: Offset(-1, 1),
                             blurRadius: 2,
                           ),
                         ],
                       ),
-                      child:
-                          SpinKitThreeBounce(color: Colors.black, size: 14.r),
+                      child: SpinKitThreeBounce(
+                        color: theme ? Colors.white : Colors.black,
+                        size: 14.r,
+                      ),
                     ),
                   ],
                 ),

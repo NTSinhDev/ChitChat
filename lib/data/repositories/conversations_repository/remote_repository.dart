@@ -1,8 +1,6 @@
-import 'package:chat_app/utils/enum/enums.dart';
-import 'package:chat_app/data/datasources/remote_datasources/conversations_remote_datasource.dart';
-import 'package:chat_app/models/injector.dart';
+part of 'conversations_repository.dart';
 
-abstract class ConversationsRepository {
+abstract class RemoteConversationsRepository {
   Future<Conversation?> getConversationData({
     required List<String> userIDs,
   });
@@ -14,12 +12,19 @@ abstract class ConversationsRepository {
     required String id,
     required Map<String, dynamic> data,
   });
+  Stream<Iterable<Conversation>?> conversationsDataStream({
+    required String userId,
+  });
 }
 
-class ConversationsRepositoryImpl extends ConversationsRepository {
+class _RemoteRepositoryImpl implements RemoteConversationsRepository {
   final _conversationsRemoteDS = ConversationsRemoteDataSourceImpl();
 
-  
+  @override
+  Stream<Iterable<Conversation>?> conversationsDataStream({
+    required String userId,
+  }) =>
+      _conversationsRemoteDS.listenConversationsData(userId: userId);
 
   @override
   Future<bool> updateConversation({
@@ -42,9 +47,8 @@ class ConversationsRepositoryImpl extends ConversationsRepository {
     );
 
     // Get convarsation data and create if necessary
-    if (conversationID.isEmpty) {
-      return null;
-    }
+    if (conversationID.isEmpty) return null;
+
     return await _conversationsRemoteDS.getConversation(
       conversationId: conversationID,
     );

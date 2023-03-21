@@ -16,6 +16,7 @@ export 'blocs/search/search_bloc.dart';
 export 'blocs/search/search_event.dart';
 export 'blocs/search/search_state.dart';
 export 'blocs/setting/setting_bloc.dart';
+export 'blocs/conversation/conversation_bloc.dart';
 
 List<SingleChildWidget> injectProviders({
   required SharedPreferences sharedPreferences,

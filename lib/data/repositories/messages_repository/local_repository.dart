@@ -1,13 +1,13 @@
 part of 'messages_repository.dart';
 
-abstract class MessagesLocalRepository {
+abstract class LocalMessagesRepository {
   Future<List<Message>> getMessageList({
     required String conversationId,
   });
   Future<void> createMessage({required Message message});
 }
 
-class _LocalRepositoryImpl implements MessagesLocalRepository {
+class _LocalRepositoryImpl implements LocalMessagesRepository {
   final _mesageLocalDS = MessagesLocalDataSourceImpl();
   @override
   Future<void> createMessage({required Message message}) async {

@@ -1,14 +1,14 @@
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/utils/injector.dart';
-import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/views/ask_chitchat/ask_chitchat_screen.dart';
 import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'components/ask_ai_button.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserProfile userProfile;
@@ -24,7 +24,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.watch<ThemeProvider>().isDarkMode;
     return WillPopScope(
       onWillPop: exitApp,
       child: Scaffold(
@@ -33,16 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
           title: Row(
             children: [
               InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SettingScreen(
-                        userProfile: widget.userProfile,
-                      ),
-                    ),
-                  );
-                },
+                onTap: () => navigateToSettingScreen(context),
                 child: Container(
                   margin: EdgeInsets.only(right: 16.w),
                   child: Center(
@@ -61,61 +51,24 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        body: SafeArea(
-          child: Center(
-            child: TextButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BlocProvider<SearchBloc>(
-                    create: (context) => SearchBloc(
-                      currentUser: widget.userProfile,
-                    ),
-                    child: SearchScreen(
-                      currentUser: widget.userProfile,
-                    ),
-                  ),
-                ),
-              ),
-              child: const Text("Go To Search Screen"),
-            ),
-          ),
+        body: BlocProvider<ConversationBloc>(
+          create: (_) => ConversationBloc(currentUser: widget.userProfile)
+            ..add(ListenConversationsEvent()),
+          child: const SafeArea(child: ConversationScreen()),
         ),
-        floatingActionButton: SizedBox(
-          width: 140.w,
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AskChitChatcreen(
-                    userProfile: widget.userProfile,
-                  ),
-                ),
-              );
-            },
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(48.r),
-                bottomRight: const Radius.circular(0),
-                topLeft: Radius.circular(48.r),
-                topRight: Radius.circular(48.r),
-              ),
-            ),
-            backgroundColor:
-                theme ? ResColors.darkPurple : ResColors.deepPurpleAccent,
-            child: Text(
-              AppLocalizations.of(context)!.ask_ChitChat,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(color: Colors.white, fontSize: 13.0),
-            ),
-          ),
-        ),
+        floatingActionButton: AskAIButton(userProfile: widget.userProfile),
       ),
     );
   }
+
+  navigateToSettingScreen(BuildContext context) => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SettingScreen(
+            userProfile: widget.userProfile,
+          ),
+        ),
+      );
 
   Future<bool> exitApp() async {
     final difference = DateTime.now().difference(timeBackPressed);

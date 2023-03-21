@@ -10,14 +10,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rxdart/rxdart.dart';
+import 'components/user_search_list.dart';
 
 class SearchScreen extends StatefulWidget {
   final List<UserInformation>? listFriend;
-  final UserProfile currentUser;
   const SearchScreen({
     super.key,
     this.listFriend,
-    required this.currentUser,
   });
 
   @override

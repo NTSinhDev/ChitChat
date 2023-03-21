@@ -9,7 +9,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   UserProfile currentUser;
 
   final _userInformationRepo = UserInformationRepository();
-  final _conversationRepo = ConversationsRepositoryImpl();
+  final _conversationRepo = ConversationsRepository();
   final _usersSubject = ReplaySubject<List<UserProfile>>();
   final _friendsSubject = ReplaySubject<List<UserProfile>>();
 
@@ -42,7 +42,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         ));
       }
 
-      final conversation = await _conversationRepo.getConversationData(
+      final conversation = await _conversationRepo.remote.getConversationData(
         userIDs: event.userIDs,
       );
 
@@ -65,7 +65,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   _searchingByName(SearchingEvent event, Emitter<SearchState> emit) async {
     emit(SearchingState(loading: true, currentUser: currentUser));
-    final listUser = await _userInformationRepo.rm.searchUserByName(
+    final listUser = await _userInformationRepo.remote.searchUserByName(
       searchName: event.searchName,
     );
     _usersSubject.add(listUser);
@@ -79,7 +79,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         currentUser: currentUser,
       ),
     );
-    friendList = await _userInformationRepo.rm.searchUserByName(
+    friendList = await _userInformationRepo.remote.searchUserByName(
       searchName: event.searchName,
     );
     _friendsSubject.add(friendList);

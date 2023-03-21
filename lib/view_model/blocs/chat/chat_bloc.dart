@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:chat_app/utils/enum/enums.dart';
 import 'package:chat_app/utils/constants.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,7 +13,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final UserInformation friend;
 
   final _messageRepository = MessagesRepository();
-  final _conversationRepository = ConversationsRepositoryImpl();
+  final _conversationRepository = ConversationsRepository();
 
   // Message
   final _stateMsgSubject = BehaviorSubject<String>();
@@ -39,7 +38,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendFilesEvent>(_sendFiles);
   }
   Stream<String?> getFile({required String fileName}) {
-    return _messageRepository.rm.getFile(
+    return _messageRepository.remote.getFile(
       conversationID: conversation!.id!,
       senderID: currentUser.profile!.id!,
       fileName: fileName,
@@ -51,7 +50,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       message: "đã gửi ${event.files.length} ${event.type.toString()}",
     );
     if (hasConversation["isCreate"] == false) return;
-    final isCreated = await _messageRepository.rm.sendMessage(
+    final isCreated = await _messageRepository.remote.sendMessage(
       senderID: currentUser.profile!.id!,
       conversationID: conversation!.id!,
       images: event.files,
@@ -59,7 +58,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
     if (!isCreated) return;
     if (hasConversation["isUpdate"] == false) {
-      final result = await _conversationRepository.updateConversation(
+      final result = await _conversationRepository.remote.updateConversation(
         id: conversation!.id!,
         data: {
           ConversationsField.lastText:
@@ -83,14 +82,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       message: event.message,
     );
     if (hasConversation["isCreate"] == false) return;
-    final isCreated = await _messageRepository.rm.sendMessage(
+    final isCreated = await _messageRepository.remote.sendMessage(
       senderID: currentUser.profile!.id!,
       conversationID: conversation!.id!,
       messageContent: event.message,
     );
     if (!isCreated) return;
     if (hasConversation["isUpdate"] == false) {
-      final result = await _conversationRepository.updateConversation(
+      final result = await _conversationRepository.remote.updateConversation(
         id: conversation!.id!,
         data: {
           ConversationsField.lastText: event.message,
@@ -116,7 +115,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       currentUser.profile!.id!,
       friend.informations.profile!.id!,
     ];
-    conversation = await _conversationRepository.createNewConversation(
+    conversation = await _conversationRepository.remote.createNewConversation(
       userIDs: userIDs,
       lastMsg: message,
     );
@@ -130,7 +129,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     //   conversationId: conversation!.id!,
     // );
     // _msgListSink.add(messageListAtLocal);
-    _messageRepository.rm
+    _messageRepository.remote
         .getMessageList(conversationId: conversation!.id!)
         .listen((msgList) async {
       _msgListSink.add(msgList);

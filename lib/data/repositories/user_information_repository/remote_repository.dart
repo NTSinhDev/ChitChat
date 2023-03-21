@@ -1,15 +1,16 @@
 part of 'user_information_repository.dart';
 
-abstract class UserInformationRemoteRepository {
+abstract class RemoteUserInformationRepository {
   Future<List<UserProfile>> searchUserByName({required String searchName});
   Future<URLImage?> updateAvatar({
     required String path,
     required String userID,
   });
   Future updatePresence({required String id});
+  Future<UserProfile?> getInformationById({required String id});
 }
 
-class _RemoteRepositoryImpl implements UserInformationRemoteRepository {
+class _RemoteRepositoryImpl implements RemoteUserInformationRepository {
   late final ProfileRemoteDataSource _personalInforRemote;
   late final PresenceRemoteDatasource _presenceRemote;
   late final StorageRemoteDatasource _storageRemote;
@@ -81,5 +82,13 @@ class _RemoteRepositoryImpl implements UserInformationRemoteRepository {
     );
     if (image == null) return null;
     return URLImage(url: image, type: TypeImage.remote);
+  }
+
+  @override
+  Future<UserProfile?> getInformationById({required String id}) async {
+    final profile = await _personalInforRemote.getProfileById(userID: id);
+    if (profile == null) return null;
+    final userProfile = await _getUserProfilesFromProfiles(profiles: [profile]);
+    return userProfile.first;
   }
 }

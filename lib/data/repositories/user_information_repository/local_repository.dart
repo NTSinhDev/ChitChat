@@ -1,12 +1,12 @@
 part of 'user_information_repository.dart';
 
-abstract class UserInformationLocalRepository {
+abstract class LocalUserInformationRepository {
   Future<void> saveImageFile({required UserProfile? userProfile});
   Future<void> saveProfile({required Profile? profile});
   Future<UserProfile?> getProfile({required String userID});
 }
 
-class _LocalRepositoryImpl implements UserInformationLocalRepository {
+class _LocalRepositoryImpl implements LocalUserInformationRepository {
   late final StorageLocalDataSource _storageLocalDS;
   ProfileLocalDataSource? _profileLocalDS;
   bool isInitProfileLocalDS = false;
