@@ -1,3 +1,4 @@
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/providers/theme_provider.dart';
 import 'package:chat_app/views/chat/messages_module/components/cannot_load_img.dart';
 import 'package:chat_app/views/chat/messages_module/components/loading_msg.dart';
@@ -6,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
 
 class VideoMessage extends StatefulWidget {
   final String path;
@@ -69,7 +70,7 @@ class _VideoMessageState extends State<VideoMessage> {
             child: CannotLoadMsg(
               isSender: widget.isMsgOfUser,
               theme: theme,
-              content: AppLocalizations.of(context)!.cannot_load_video,
+              content: context.languagesExtension.cannot_load_video,
             ),
           );
         }
@@ -161,7 +162,7 @@ class _VideoMessageState extends State<VideoMessage> {
       ),
       child: LoadingMessage(
         isSender: widget.isMsgOfUser,
-        content: AppLocalizations.of(context)!.loading_video,
+        content: context.languagesExtension.loading_video,
         width: 240.w,
       ),
     );

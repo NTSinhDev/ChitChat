@@ -1,6 +1,7 @@
 import 'package:chat_app/res/dimens.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
+
 class SignInOtherWays extends StatelessWidget {
   const SignInOtherWays({super.key});
 
@@ -9,7 +10,7 @@ class SignInOtherWays extends StatelessWidget {
     return Column(
       children: [
         Text(
-          AppLocalizations.of(context)!.or,
+          context.languagesExtension.or,
           style: const TextStyle(
             color: Colors.white70,
             fontWeight: FontWeight.w400,
@@ -17,7 +18,7 @@ class SignInOtherWays extends StatelessWidget {
         ),
         Spaces.h10,
         Text(
-          AppLocalizations.of(context)!.login_with,
+          context.languagesExtension.login_with,
           style: Theme.of(context).textTheme.titleMedium!.copyWith(
                 color: Colors.white70,
                 fontWeight: FontWeight.bold,

@@ -1,14 +1,12 @@
-import 'dart:developer';
-
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
-import 'package:chat_app/widgets/search_bar_widget.dart';
+import 'package:chat_app/views/conversations/components/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'components/conversations.dart';
+import 'components/conversations_listview.dart';
 
 class ConversationScreen extends StatelessWidget {
   const ConversationScreen({super.key});
@@ -34,7 +32,7 @@ class ConversationScreen extends StatelessWidget {
               if (snapshot.hasData &&
                   snapshot.data != null &&
                   snapshot.data!.isNotEmpty) {
-                return Conversations(conversations: snapshot.data!);
+                return ConversationsListView(conversations: snapshot.data!);
               }
               return Padding(
                 padding: EdgeInsets.only(top: 280.h),

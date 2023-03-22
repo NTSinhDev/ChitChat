@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/data/datasources/local_datasources/injector.dart';
 import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
 import 'package:chat_app/utils/enum/enums.dart';
@@ -6,10 +8,6 @@ import 'package:chat_app/models/profile.dart';
 import 'package:chat_app/models/url_image.dart';
 import 'package:chat_app/models/user_profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:developer';
-
-import 'package:chat_app/data/datasources/local_datasources/auth_local_datasource.dart';
-import 'package:chat_app/data/datasources/remote_datasources/profile_remote_datasource.dart';
 import 'package:chat_app/services/authentication_services.dart';
 
 abstract class AuthenticationRepository {
@@ -26,7 +24,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   late final AuthLocalDataSource _authLocalDataSource;
   late final ProfileRemoteDataSource _profileRemoteDataSource;
   late final StorageRemoteDatasource _storageRemoteDataSource;
-
   AuthenticationRepositoryImpl(SharedPreferences sharedPreferences) {
     _authLocalDataSource = AuthLocalDataSourceImpl(
       sharedPreferences: sharedPreferences,
@@ -68,7 +65,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       );
       return userProfile;
     } catch (e) {
-      log('🚀Error: $e');
+      log('🚀 loginWithGoogleAccount Error: $e');
       return null;
     }
   }
@@ -77,7 +74,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   Future<bool> logout() async {
     final isLogout = await _authenticationServices.logout();
     if (isLogout) {
-      _authLocalDataSource.removeUID();
+      await _authLocalDataSource.removeUID();
       return true;
     } else {
       return false;

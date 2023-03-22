@@ -2,6 +2,7 @@ import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/main.dart';
 import 'package:chat_app/data/repositories/authentication_repository.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/home/home_screen.dart';
 import 'package:chat_app/views/injector.dart';
@@ -11,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
 
 class ChitChatApp extends StatefulWidget {
   final SharedPreferences sharedPreferences;
@@ -41,22 +42,22 @@ class _ChitChatAppState extends State<ChitChatApp> {
       providers: injectProviders(sharedPreferences: widget.sharedPreferences),
       child: Consumer2<ThemeProvider, LanguageProvider>(
         builder: (context, theme, language, child) {
-          return MaterialApp(
-            title: 'ChitChat App',
-            debugShowCheckedModeBanner: false,
-            themeMode: theme.themeMode,
-            theme: AppTheme.light(),
-            darkTheme: AppTheme.dark(),
-            locale: language.locale,
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
-            home: BlocProvider<AuthenticationBloc>(
-              create: (context) => AuthenticationBloc(
-                widget.sharedPreferences,
-              )..add(_userID != null
-                  ? CheckAuthenticationEvent(userID: _userID!)
-                  : InitLoginEvent()),
-              child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+          return BlocProvider<AuthenticationBloc>(
+            create: (context) => AuthenticationBloc(
+              widget.sharedPreferences,
+            )..add(_userID != null
+                ? CheckAuthenticationEvent(userID: _userID!)
+                : InitLoginEvent()),
+            child: MaterialApp(
+              title: 'ChitChat App',
+              debugShowCheckedModeBanner: false,
+              themeMode: theme.themeMode,
+              theme: AppTheme.light(),
+              darkTheme: AppTheme.dark(),
+              locale: language.locale,
+              localizationsDelegates: context.localizationsDelegates,
+              supportedLocales: context.supportedLocales,
+              home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {
                   _initScreenUtilDependency(context);
                   _notificationServices(context);

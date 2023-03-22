@@ -46,9 +46,8 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         userIDs: event.userIDs,
       );
 
-      final friendInformation = UserInformation(informations: event.friend);
       emit(JoinConversationState(
-        friend: friendInformation,
+        friend: event.friend,
         conversation: conversation,
         currentUser: currentUser,
       ));

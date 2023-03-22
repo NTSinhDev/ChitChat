@@ -47,7 +47,7 @@ class InputMessageWidget extends StatelessWidget {
                             : ResColors.darkGrey(isDarkmode: false),
                       ),
                   border: InputBorder.none,
-                  hintText: AppLocalizations.of(context)!.inbox,
+                  hintText: context.languagesExtension.inbox,
                 ),
               ),
             ),

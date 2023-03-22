@@ -6,7 +6,7 @@ import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
 
 import 'components/ask_ai_button.dart';
 
@@ -45,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                AppLocalizations.of(context)!.chats,
+                context.languagesExtension.chats,
                 style: Theme.of(context).textTheme.displayLarge,
               ),
             ],
@@ -77,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (isExitWarning) {
       FlashMessage(
         context: context,
-        message: AppLocalizations.of(context)!.exit_app,
+        message: context.languagesExtension.exit_app,
         type: FlashMessageType.info,
       );
       return false;

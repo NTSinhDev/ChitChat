@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
 
 import '../../utils/helpers/loading/loading_screen.dart';
 import '../../utils/helpers/notify/alert_error.dart';
@@ -68,8 +68,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   _buildSignUpTitle(context),
                   Spaces.h16,
                   InputTextField(
-                    title: AppLocalizations.of(context)!.name,
-                    hint: AppLocalizations.of(context)!.enter_your_name,
+                    title: context.languagesExtension.name,
+                    hint: context.languagesExtension.enter_your_name,
                     icon: CupertinoIcons.person,
                     keyInput: 'name',
                     obscure: false,
@@ -79,12 +79,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   WarningMessage(
                     isDataValid: _isValidEmail,
-                    message: AppLocalizations.of(context)!.required_name,
+                    message: context.languagesExtension.required_name,
                   ),
                   Spaces.h16,
                   InputTextField(
-                    title: AppLocalizations.of(context)!.email,
-                    hint: AppLocalizations.of(context)!.enter_your_email,
+                    title: context.languagesExtension.email,
+                    hint: context.languagesExtension.enter_your_email,
                     icon: Icons.email,
                     keyInput: 'email',
                     obscure: false,
@@ -94,12 +94,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   WarningMessage(
                     isDataValid: _isValidEmail,
-                    message: AppLocalizations.of(context)!.required_email,
+                    message: context.languagesExtension.required_email,
                   ),
                   Spaces.h16,
                   InputTextField(
-                    title: AppLocalizations.of(context)!.password,
-                    hint: AppLocalizations.of(context)!.enter_your_password,
+                    title: context.languagesExtension.password,
+                    hint: context.languagesExtension.enter_your_password,
                     icon: Icons.lock,
                     keyInput: 'password',
                     obscure: true,
@@ -113,8 +113,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   Spaces.h16,
                   InputTextField(
-                    title: AppLocalizations.of(context)!.verify,
-                    hint: AppLocalizations.of(context)!.re_enter_your_password,
+                    title: context.languagesExtension.verify,
+                    hint: context.languagesExtension.re_enter_your_password,
                     icon: Icons.verified_user_outlined,
                     keyInput: 'password',
                     obscure: true,
@@ -128,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   Spaces.h16,
                   LargeRoundButton(
-                    textButton: AppLocalizations.of(context)!.register,
+                    textButton: context.languagesExtension.register,
                     onTap: () => _signupApp(context),
                   ),
                   const SignInBtn(),
@@ -156,7 +156,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Text _buildSignUpTitle(BuildContext context) {
     return Text(
-      AppLocalizations.of(context)!.register,
+      context.languagesExtension.register,
       style: Theme.of(context).textTheme.displayLarge!.copyWith(
             color: Colors.white70,
             fontSize: 30.h,
@@ -195,12 +195,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (password.isEmpty) {
       setState(() {
         _isValidPassword = true;
-        _messagePassword = AppLocalizations.of(context)!.required_password;
+        _messagePassword = context.languagesExtension.required_password;
       });
     } else if (password.length < 6) {
       setState(() {
         _isValidPassword = true;
-        _messagePassword = AppLocalizations.of(context)!.more_than_5_charac;
+        _messagePassword = context.languagesExtension.more_than_5_charac;
       });
     } else {
       setState(() {
@@ -214,12 +214,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (_password.isEmpty) {
       setState(() {
         _isValidVerified = true;
-        _messageVerified = AppLocalizations.of(context)!.warn_password_first;
+        _messageVerified = context.languagesExtension.warn_password_first;
       });
     } else if (_password != password) {
       setState(() {
         _isValidVerified = true;
-        _messageVerified = AppLocalizations.of(context)!.warn_password_match;
+        _messageVerified = context.languagesExtension.warn_password_match;
       });
     } else {
       setState(() {

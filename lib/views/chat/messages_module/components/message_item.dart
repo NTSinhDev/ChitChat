@@ -43,15 +43,14 @@ class _MessageItemState extends State<MessageItem> {
     final radius15 = Radius.circular(12.r);
     final crossAxisAlign =
         isMsgOfUser ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+
     return Column(
       crossAxisAlignment: crossAxisAlign,
       children: [
         GestureDetector(
-          // onTap: () => setState(() => _isMessageInfo = !_isMessageInfo),
-          onLongPress: () => ScaffoldMessenger.of(context).showSnackBar(
-            _bottomActionMsg(context),
-          ),
-          child: _message(colorSenderBG, colorBG, radius15),
+          onTap: () => setState(() => isMessageInfo = !isMessageInfo),
+          onLongPress: () => showBottomAction(context),
+          child: buildMessageByType(colorSenderBG, colorBG, radius15),
         ),
         ..._infoMsgWidget(),
         ..._sendMsgFailedWidget(),
@@ -59,7 +58,7 @@ class _MessageItemState extends State<MessageItem> {
     );
   }
 
-  Widget _message(colorSenderBG, colorBG, radius15) {
+  Widget buildMessageByType(colorSenderBG, colorBG, radius15) {
     if (widget.message.messageType == MessageType.media.toString()) {
       return MediaMessage(message: widget.message, isMsgOfUser: isMsgOfUser);
     }
@@ -69,18 +68,15 @@ class _MessageItemState extends State<MessageItem> {
         url: widget.message.listNameImage.first,
         colorMsg: isMsgOfUser ? colorSenderBG : colorBG,
         borderMsg: BorderRadius.circular(30),
-        //  BorderRadius.only(
-        //   bottomLeft: isMsgOfUser ? radius15 : const Radius.circular(0),
-        //   bottomRight: isMsgOfUser ? const Radius.circular(0) : radius15,
-        //   topLeft: radius15,
-        //   topRight: radius15,
-        // ),
         colorShadow: isMsgOfUser ? Colors.black45 : Colors.black12,
         mainAlign:
             isMsgOfUser ? MainAxisAlignment.end : MainAxisAlignment.start,
       );
     }
-    return TextMessage(isMsgOfUser: isMsgOfUser, text: widget.message.content!);
+    return TextMessage(
+      isMsgOfUser: isMsgOfUser,
+      text: widget.message.content!,
+    );
   }
 
   List<Widget> _sendMsgFailedWidget() {
@@ -134,38 +130,40 @@ class _MessageItemState extends State<MessageItem> {
     return [];
   }
 
-  SnackBar _bottomActionMsg(BuildContext context) {
-    return SnackBar(
-      backgroundColor: Colors.white,
-      content: SizedBox(
-        height: 82.h,
-        child: Center(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _actionMessage(
-              icon: Icons.highlight_remove_rounded,
-              action: () {
-                ScaffoldMessenger.of(context).clearSnackBars();
-              },
-              title: "Xóa",
-            ),
-            _actionMessage(
-              icon: Icons.next_plan,
-              title: "Chuyển tiếp",
-            ),
-            _actionMessage(
-              icon: Icons.reply_outlined,
-              title: "Trả lời",
-            ),
-            _actionMessage(
-              icon: Icons.menu,
-              title: "Xem thêm",
-            ),
-          ],
-        )),
+  showBottomAction(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.white,
+        content: SizedBox(
+          height: 52.h,
+          child: Center(
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _actionMessage(
+                icon: Icons.highlight_remove_rounded,
+                action: () {
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                },
+                title: "Xóa",
+              ),
+              _actionMessage(
+                icon: Icons.next_plan,
+                title: "Chuyển tiếp",
+              ),
+              _actionMessage(
+                icon: Icons.reply_outlined,
+                title: "Trả lời",
+              ),
+              _actionMessage(
+                icon: Icons.menu,
+                title: "Xem thêm",
+              ),
+            ],
+          )),
+        ),
+        duration: const Duration(seconds: maxValueInteger),
       ),
-      duration: const Duration(seconds: maxValueInteger),
     );
   }
 

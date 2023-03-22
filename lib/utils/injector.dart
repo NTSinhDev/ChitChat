@@ -2,6 +2,7 @@ export 'enum/enums.dart';
 export 'constants.dart';
 export 'functions.dart';
 export 'processing_helper.dart';
+export 'app_localizations_extension.dart';
 export 'helpers/error/no_internet.dart';
 export 'helpers/loading/loading_screen.dart';
 export 'helpers/loading/loading_screen_controller.dart';

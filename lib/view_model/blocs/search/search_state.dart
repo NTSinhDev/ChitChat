@@ -32,7 +32,7 @@ class SearchingState extends SearchState {
 
 class JoinConversationState extends SearchState {
   final Conversation? conversation;
-  final UserInformation friend;
+  final UserProfile friend;
   JoinConversationState({
     required this.conversation,
     required super.currentUser,

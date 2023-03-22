@@ -22,7 +22,12 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
           userId: '',
         )) {
     _updateConversationsData();
-    on<ListenConversationsEvent>((event, emit) {
+    on<ListenConversationsEvent>((event, emit) async {
+      // local data
+      await _conversationRepo.local.openConversationsBox();
+      final dataSavedAtLocal = await _conversationRepo.local.getConversations();
+      _conversationsSubject.sink.add(dataSavedAtLocal);
+
       _conversationRepo.remote
           .conversationsDataStream(userId: currentUser.profile!.id!)
           .listen((convers) async {

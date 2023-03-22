@@ -40,25 +40,23 @@ class StateAvatar extends StatelessWidget {
     return Visibility(
       visible: presence != null && presence.status,
       child: Positioned(
-        // bottom: radius == 40.r ? -2.h : 2.h,
         bottom: 0,
-        // right: radius == 40.r ? -1.w : 2.w,
         right: 0,
         child: Container(
           padding: EdgeInsets.symmetric(
-            horizontal: 2.w,
-            vertical: 2.h,
+            horizontal: radius / (20 + radius ~/ 40),
+            vertical: radius / (20 + radius ~/ 40),
           ),
           decoration: BoxDecoration(
             color: ResColors.appColor(isDarkmode: !theme),
             borderRadius: BorderRadius.circular(40.r),
           ),
           child: Container(
-            width: 10.h,
-            height: 10.h,
+            width: radius / (4 + radius ~/ 40),
+            height: radius / (4 + radius ~/ 40),
             decoration: BoxDecoration(
               color: Colors.green,
-              borderRadius: BorderRadius.circular(40.r),
+              borderRadius: BorderRadius.circular(radius),
             ),
           ),
         ),

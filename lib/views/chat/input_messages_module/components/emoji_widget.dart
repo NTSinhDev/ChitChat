@@ -38,7 +38,7 @@ class EmojiWidget extends StatelessWidget {
             recentsLimit: 28,
             replaceEmojiOnLimitExceed: false,
             noRecents: Text(
-              AppLocalizations.of(context)!.no_recents,
+              context.languagesExtension.no_recents,
               style: TextStyle(fontSize: 20.h, color: Colors.black26),
               textAlign: TextAlign.center,
             ),

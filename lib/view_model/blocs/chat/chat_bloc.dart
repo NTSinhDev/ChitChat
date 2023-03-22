@@ -10,7 +10,7 @@ import 'package:chat_app/data/repositories/injector.dart';
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final UserProfile currentUser;
   Conversation? conversation;
-  final UserInformation friend;
+  final UserProfile friend;
 
   final _messageRepository = MessagesRepository();
   final _conversationRepository = ConversationsRepository();
@@ -113,7 +113,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     if (conversation != null) return {"isCreate": true, "isUpdate": false};
     final userIDs = [
       currentUser.profile!.id!,
-      friend.informations.profile!.id!,
+      friend.profile!.id!,
     ];
     conversation = await _conversationRepository.remote.createNewConversation(
       userIDs: userIDs,

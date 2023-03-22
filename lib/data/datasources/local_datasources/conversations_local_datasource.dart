@@ -4,45 +4,40 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 abstract class ConversationsLocalDataSource {
   Future<void> createConversation({required Conversation conversation});
-  Iterable<Conversation>? getConversations();
+  Iterable<Conversation> getConversations();
   Conversation? getConversation({required String key});
 }
 
-class MessagesLocalDataSourceImpl implements ConversationsLocalDataSource {
+class ConversationsLocalDataSourceImpl implements ConversationsLocalDataSource {
   late Box<Conversation> _conversationBox;
 
-  Future<void> init({required String conversationId}) async {
-    if (!Hive.isAdapterRegistered(MessageAdapter().typeId)) {
-      Hive.registerAdapter(MessageAdapter());
+  Future<void> init() async {
+    if (!Hive.isAdapterRegistered(ConversationAdapter().typeId)) {
+      Hive.registerAdapter(ConversationAdapter());
     }
     _conversationBox = await Hive.openBox(ConversationsField.collectionName);
   }
 
   @override
   Future<void> createConversation({required Conversation conversation}) async {
-    if (_conversationBox.isOpen) {
-      if (!_conversationBox.containsKey(conversation.id)) {
-        await _conversationBox.put(
-          conversation.id,
-          conversation,
-        );
-      }
+    if (!_conversationBox.isOpen) return;
+    if (!_conversationBox.containsKey(conversation.id)) {
+      await _conversationBox.put(
+        conversation.id,
+        conversation,
+      );
     }
   }
 
   @override
-  Iterable<Conversation>? getConversations() {
-    if (_conversationBox.isOpen) {
-      return _conversationBox.values;
-    }
-    return null;
+  Iterable<Conversation> getConversations() {
+    if (!_conversationBox.isOpen) return [];
+    return _conversationBox.values;
   }
 
   @override
   Conversation? getConversation({required String key}) {
-    if (!_conversationBox.isOpen) {
-      return null;
-    }
+    if (!_conversationBox.isOpen) return null;
     return _conversationBox.get(key);
   }
 }

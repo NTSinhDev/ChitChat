@@ -6,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
 
 class SearchBar extends StatelessWidget {
   const SearchBar({super.key});
@@ -49,7 +49,7 @@ class SearchBar extends StatelessWidget {
             Icon(CupertinoIcons.search, color: contentColor, size: 20.r),
             Spaces.w14,
             Text(
-              AppLocalizations.of(context)!.search,
+              context.languagesExtension.search,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!

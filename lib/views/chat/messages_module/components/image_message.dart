@@ -51,7 +51,7 @@ class ImageMessage extends StatelessWidget {
   //   return CannotLoadMsg(
   //     isSender: isMsgOfUser,
   //     theme: theme,
-  //     content: AppLocalizations.of(context)!.cannot_load_img,
+  //     content:context.languagesExtension.cannot_load_img,
   //   );
   // }
 
@@ -60,7 +60,7 @@ class ImageMessage extends StatelessWidget {
   //   return LoadingMessage(
   //     width: 214.w,
   //     isSender: isMsgOfUser,
-  //     content: AppLocalizations.of(context)!.loading_img,
+  //     content: context.languagesExtension.loading_img,
   //   );
   // }
 }

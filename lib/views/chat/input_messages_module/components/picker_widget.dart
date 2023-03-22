@@ -24,7 +24,7 @@ class _PickerWidgetState extends State<PickerWidget> {
       decoration: PickerDecoration(
         actionBarPosition: ActionBarPosition.top,
         blurStrength: 2,
-        completeText: AppLocalizations.of(context)!.send,
+        completeText: context.languagesExtension.send,
       ),
     );
   }

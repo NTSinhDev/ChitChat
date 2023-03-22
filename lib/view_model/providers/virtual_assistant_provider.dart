@@ -13,6 +13,11 @@ class VirtualAssistantProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  addErrorMessage({required String msg}){
+    chatList.add(AskChitChatModel(msg: msg, chatIndex: 1));
+    notifyListeners();
+  }
+
   Future<void> sendMessageAndGetAnswers({
     required String msg,
     required String chosenModelId,
