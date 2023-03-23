@@ -60,7 +60,7 @@ class _RemoteRepositoryImpl implements RemoteConversationsRepository {
     String? lastMsg,
   }) async {
     final conversation = Conversation(
-      id: userIDs[0] == userIDs[1] ? userIDs[0] + userIDs[1] : userIDs[1],
+      id: userIDs[0] == userIDs[1] ? userIDs[1] : userIDs[0] + userIDs[1],
       typeMessage: MessageType.text.toString(),
       isActive: true,
       lastMessage: lastMsg ?? '',

@@ -37,6 +37,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendMessageEvent>(_sendMessage);
     on<SendFilesEvent>(_sendFiles);
   }
+  
   Stream<String?> getFile({required String fileName}) {
     return _messageRepository.remote.getFile(
       conversationID: conversation!.id!,

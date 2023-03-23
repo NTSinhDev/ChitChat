@@ -50,8 +50,10 @@ class ConversationScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  child: const Text(
-                    "Let find some chat",
+                  child: const Center(
+                    child: Text(
+                      "Let find some chat",
+                    ),
                   ),
                 ),
               );

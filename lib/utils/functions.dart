@@ -8,8 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-
-
 // /// This function to sort list user by online state
 // List<dynamic> sortListUserToOnlState(List<dynamic> listUser) {
 //   listUser.sort((previous, next) {

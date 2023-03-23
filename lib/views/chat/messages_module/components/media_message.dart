@@ -26,7 +26,7 @@ class MediaMessage extends StatelessWidget {
         constraints: BoxConstraints(
           maxWidth: maxWidth * 7 / 10,
         ),
-        margin: EdgeInsets.only(top: 2.h),
+        margin: EdgeInsets.only(top: 8.h),
         child: Column(
           children: _buildMediaRows(context),
         ),

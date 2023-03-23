@@ -85,12 +85,12 @@ class AuthenticationBloc
 
   _logoutEvent(LogoutEvent event, Emitter<AuthenticationState> emit) async {
     final isLogout = await _authenticationRepository.logout();
-    if (!isLogout) {
-      return emit(LoggedState(
-        loading: false,
-        userProfile: userProfile!,
-      ));
-    }
+    // if (!isLogout) {
+    //   return emit(LoggedState(
+    //     loading: false,
+    //     userProfile: userProfile!,
+    //   ));
+    // }
 
     emit(LoginState(loading: false));
   }

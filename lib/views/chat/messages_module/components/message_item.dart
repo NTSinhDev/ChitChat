@@ -10,10 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageItem extends StatefulWidget {
   final Message message;
-  const MessageItem({
-    super.key,
-    required this.message,
-  });
+  const MessageItem({super.key, required this.message});
 
   @override
   State<MessageItem> createState() => _MessageItemState();
@@ -52,7 +49,7 @@ class _MessageItemState extends State<MessageItem> {
           onLongPress: () => showBottomAction(context),
           child: buildMessageByType(colorSenderBG, colorBG, radius15),
         ),
-        ..._infoMsgWidget(),
+        // ..._infoMsgWidget(),
         ..._sendMsgFailedWidget(),
       ],
     );
@@ -66,11 +63,7 @@ class _MessageItemState extends State<MessageItem> {
     if (widget.message.messageType == MessageType.audio.toString()) {
       return AudioMessage(
         url: widget.message.listNameImage.first,
-        colorMsg: isMsgOfUser ? colorSenderBG : colorBG,
-        borderMsg: BorderRadius.circular(30),
-        colorShadow: isMsgOfUser ? Colors.black45 : Colors.black12,
-        mainAlign:
-            isMsgOfUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        isMsgOfUser: isMsgOfUser,
       );
     }
     return TextMessage(

@@ -101,8 +101,10 @@ class SettingScreen extends StatelessWidget {
                 icon: Icons.logout,
                 title: context.languagesExtension.logout,
                 // color: Colors.pink[400]!,
-                onTap: () =>
-                    context.read<AuthenticationBloc>().add(LogoutEvent()),
+                onTap: () {
+                  context.read<AuthenticationBloc>().add(LogoutEvent());
+                  Navigator.of(context).pop(context);
+                },
               ),
               Spaces.h24,
             ],
