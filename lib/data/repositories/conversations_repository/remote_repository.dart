@@ -66,7 +66,7 @@ class _RemoteRepositoryImpl implements RemoteConversationsRepository {
       lastMessage: lastMsg ?? '',
       stampTime: DateTime.now(),
       stampTimeLastText: DateTime.now(),
-      listUser: userIDs,
+      listUser: userIDs[0] == userIDs[1] ?[userIDs[0]]:userIDs,
     );
     return await _conversationsRemoteDS.createNewConversation(
       conversation: conversation,

@@ -63,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
               listener: (context, state) async {
                 if (state is SearchInitialState) {
                   if (state.error != null) {
-                    FlashMessage(
+                    FlashMessageWidget(
                       context: context,
                       message: state.error!,
                       type: FlashMessageType.error,

@@ -1,6 +1,5 @@
 part of '../input_messages_module.dart';
 
-
 class EmojiWidget extends StatelessWidget {
   final TextEditingController controller;
   final bool emojiShowing;
@@ -12,6 +11,7 @@ class EmojiWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.watch<ThemeProvider>().isDarkMode;
     return Offstage(
       offstage: !emojiShowing,
       child: SizedBox(
@@ -27,10 +27,10 @@ class EmojiWidget extends StatelessWidget {
             gridPadding: EdgeInsets.zero,
             initCategory: Category.RECENT,
             bgColor: const Color(0xFFF2F2F2),
-            indicatorColor: Colors.blue,
+            indicatorColor: ResColors.purpleMessage(theme: theme),
             iconColor: Colors.grey,
-            iconColorSelected: Colors.blue,
-            backspaceColor: Colors.blue,
+            iconColorSelected: ResColors.purpleMessage(theme: theme),
+            backspaceColor: ResColors.purpleMessage(theme: theme),
             skinToneDialogBgColor: Colors.white,
             skinToneIndicatorColor: Colors.grey,
             enableSkinTones: true,

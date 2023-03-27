@@ -5,16 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/models/injector.dart';
 
-class MessageView extends StatefulWidget {
+class MessageView extends StatelessWidget {
   const MessageView({
     super.key,
   });
 
-  @override
-  State<MessageView> createState() => _MessageViewState();
-}
-
-class _MessageViewState extends State<MessageView> {
   @override
   Widget build(BuildContext context) {
     final chat = context.read<ChatBloc>();

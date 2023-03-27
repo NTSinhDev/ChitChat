@@ -5,7 +5,6 @@ import 'package:chat_app/views/login/components/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:chat_app/utils/injector.dart';
 
 class LoginScreen extends StatefulWidget {
   final String deviceToken;
@@ -28,12 +27,12 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is LoginState) {
           if (state.loading) {
-            LoadingScreen().show(context: context);
+            LoadingScreenWidget().show(context: context);
           } else {
-            LoadingScreen().hide();
+            LoadingScreenWidget().hide();
           }
           if (state.message != null) {
-            FlashMessage(
+            FlashMessageWidget(
               context: context,
               message: state.message!,
               type: FlashMessageType.error,

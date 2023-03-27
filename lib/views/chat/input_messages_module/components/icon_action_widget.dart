@@ -13,6 +13,7 @@ class IconActionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.watch<ThemeProvider>().isDarkMode;
     return Visibility(
       visible: visible,
       child: Container(
@@ -22,7 +23,7 @@ class IconActionWidget extends StatelessWidget {
           child: Icon(
             icon,
             size: 28.r,
-            color: Colors.blue,
+            color: ResColors.purpleMessage(theme: theme),
           ),
         ),
       ),

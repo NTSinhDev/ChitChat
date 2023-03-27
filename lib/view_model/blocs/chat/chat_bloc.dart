@@ -16,9 +16,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final _conversationRepository = ConversationsRepository();
 
   // Message
-  final _stateMsgSubject = BehaviorSubject<String>();
-  StreamSink<String> get _stateMsgSink => _stateMsgSubject.sink;
-  Stream<String> get stateMsgStream => _stateMsgSubject.stream;
+  // final _stateMsgSubject = BehaviorSubject<String>();
+  // StreamSink<String> get _stateMsgSink => _stateMsgSubject.sink;
+  // Stream<String> get stateMsgStream => _stateMsgSubject.stream;
 
   // Conversation
   final ReplaySubject<Iterable<Message>> _msgListSubject = ReplaySubject();
@@ -37,7 +37,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<SendMessageEvent>(_sendMessage);
     on<SendFilesEvent>(_sendFiles);
   }
-  
+
   Stream<String?> getFile({required String fileName}) {
     return _messageRepository.remote.getFile(
       conversationID: conversation!.id!,
@@ -48,7 +48,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   _sendFiles(SendFilesEvent event, Emitter<ChatState> emit) async {
     final hasConversation = await _createNewConversationIfNull(
-      message: "đã gửi ${event.files.length} ${event.type.toString()}",
+      message: "đã gửi ${event.files.length} file",
     );
     if (hasConversation["isCreate"] == false) return;
     final isCreated = await _messageRepository.remote.sendMessage(
@@ -62,15 +62,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final result = await _conversationRepository.remote.updateConversation(
         id: conversation!.id!,
         data: {
-          ConversationsField.lastText:
-              "đã gửi ${event.files.length} ${event.type.toString()}",
+          ConversationsField.lastText: "đã gửi ${event.files.length} file",
+          ConversationsField.listUser: [
+            currentUser.profile!.id!,
+            conversation!.listUser.firstWhere(
+              (element) => element != currentUser.profile!.id!,
+            ),
+          ],
           ConversationsField.stampTimeLastText:
               DateTime.now().millisecondsSinceEpoch,
         },
       );
       if (!result) return;
     }
-    _stateMsgSink.add('');
+    _getMessageList();
+    // _stateMsgSink.add('');
     emit(InitChatState(
       currentUser: currentUser,
       friend: friend,
@@ -94,13 +100,20 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         id: conversation!.id!,
         data: {
           ConversationsField.lastText: event.message,
+          ConversationsField.listUser: [
+            currentUser.profile!.id!,
+            conversation!.listUser.firstWhere(
+              (element) => element != currentUser.profile!.id!,
+            ),
+          ],
           ConversationsField.stampTimeLastText:
               DateTime.now().millisecondsSinceEpoch,
         },
       );
       if (!result) return;
     }
-    _stateMsgSink.add('');
+    _getMessageList();
+    // _stateMsgSink.add('');
     emit(InitChatState(
       currentUser: currentUser,
       friend: friend,
@@ -126,17 +139,17 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   _getMessageList() async {
     if (conversation == null) return;
-    // final messageListAtLocal = await _messageRepository.lc.getMessageList(
-    //   conversationId: conversation!.id!,
-    // );
-    // _msgListSink.add(messageListAtLocal);
+    final messageListAtLocal = await _messageRepository.local.getMessageList(
+      conversationId: conversation!.id!,
+    );
+    _msgListSink.add(messageListAtLocal);
     _messageRepository.remote
         .getMessageList(conversationId: conversation!.id!)
         .listen((msgList) async {
       _msgListSink.add(msgList);
-      // for (var element in msgList) {
-      //   await _messageRepository.lc.createMessage(message: element);
-      // }
+      for (var element in msgList) {
+        await _messageRepository.local.createMessage(message: element);
+      }
     });
   }
 }

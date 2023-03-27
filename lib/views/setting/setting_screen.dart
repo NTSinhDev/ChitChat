@@ -5,11 +5,11 @@ import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/change_laguage_feature.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
 import 'package:chat_app/views/setting/components/user_avatar.dart';
+import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:chat_app/utils/injector.dart';
 import 'components/change_darkmode_feature.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -82,7 +82,7 @@ class SettingScreen extends StatelessWidget {
                 title: context.languagesExtension.personal_info,
                 // color: Colors.deepPurple[400]!,
                 onTap: () {
-                  FlashMessage(
+                  FlashMessageWidget(
                     context: context,
                     message: "Đây là nội dung thông báo",
                     type: FlashMessageType.error,

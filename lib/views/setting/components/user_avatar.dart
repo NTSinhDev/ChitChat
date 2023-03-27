@@ -148,7 +148,7 @@ class _UserAvatarState extends State<UserAvatar> {
       if (!mounted) return;
 
       if (image == null) {
-        return FlashMessage(
+        return FlashMessageWidget(
           context: context,
           message: context.languagesExtension.could_not_update_avatar,
           type: FlashMessageType.error,
@@ -166,7 +166,7 @@ class _UserAvatarState extends State<UserAvatar> {
   updateAvatarListen(BuildContext context, SettingState state) {
     if (state is UpdatedAvatarState) {
       if (state.error != null && state.error!) {
-        FlashMessage(
+        FlashMessageWidget(
           context: context,
           message: context.languagesExtension.could_not_update_avatar,
           type: FlashMessageType.error,

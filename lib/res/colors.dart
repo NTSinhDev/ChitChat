@@ -28,5 +28,4 @@ class ResColors {
 
   static purpleMessage({required bool theme}) =>
       theme ? ResColors.darkPurple : ResColors.deepPurpleAccent;
-      
 }

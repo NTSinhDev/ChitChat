@@ -2,17 +2,12 @@ import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/signup/components/signin_btn.dart';
 import 'package:chat_app/res/styles.dart';
-import 'package:chat_app/widgets/input_text_field.dart';
-import 'package:chat_app/widgets/large_round_button.dart';
-import 'package:chat_app/widgets/warning_message_widget.dart';
+import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/utils/injector.dart';
-
-import '../../utils/helpers/loading/loading_screen.dart';
-import '../../utils/helpers/notify/alert_error.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -37,19 +32,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
       listener: (context, state) {
         if (state is RegisterState) {
           if (state.message != null) {
-            showDialog(
+            FlashMessageWidget(
               context: context,
-              builder: (context) => AlertError(
-                title: "error",
-                content: state.message ?? 'Cannot connect to server',
-                nameBtn: 'Oke',
-              ),
+              message: state.message!,
+              type: FlashMessageType.error,
             );
           }
           if (state.loading) {
-            LoadingScreen().show(context: context);
+            LoadingScreenWidget().show(context: context);
           } else {
-            LoadingScreen().hide();
+            LoadingScreenWidget().hide();
           }
         }
       },

@@ -15,11 +15,13 @@ class StateAvatar extends StatelessWidget {
   final URLImage urlImage;
   final String userId;
   final double radius;
+  final Color? color;
   const StateAvatar({
     Key? key,
     required this.urlImage,
     required this.userId,
     required this.radius,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -48,7 +50,7 @@ class StateAvatar extends StatelessWidget {
             vertical: radius / (20 + radius ~/ 40),
           ),
           decoration: BoxDecoration(
-            color: ResColors.appColor(isDarkmode: !theme),
+            color: color ?? ResColors.appColor(isDarkmode: !theme),
             borderRadius: BorderRadius.circular(40.r),
           ),
           child: Container(

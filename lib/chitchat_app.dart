@@ -92,7 +92,7 @@ class _ChitChatAppState extends State<ChitChatApp> {
         if (message != null) {
           Navigator.of(context).pushNamed('/app');
 
-          showToast('đã push name');
+          // showToast('đã push name');
         }
       },
     );

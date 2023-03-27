@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'package:chat_app/models/injector.dart';
-import 'package:chat_app/utils/injector.dart';
-
+part of 'helpers.dart';
 class ParsedSnapshotData {
   final ParsedTo parsedTo;
   ParsedSnapshotData({required this.parsedTo});
@@ -18,14 +15,4 @@ class ParsedSnapshotData {
         return Conversation.fromMap(convertToMap, id);
     }
   }
-}
-
-class SplitHelper {
-  static String getFileName({required String path}) {
-    final splitArray = path.split('/');
-    return splitArray.last;
-  }
-
-  static String getFileExtension({required String fileName}) =>
-      fileName.split('.').last;
 }

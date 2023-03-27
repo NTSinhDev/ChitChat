@@ -3,12 +3,25 @@ import 'dart:async';
 import 'package:chat_app/res/colors.dart';
 import 'package:flutter/material.dart';
 
-import 'loading_screen_controller.dart';
+typedef CloseLoadingScreen = bool Function();
+typedef UpdateLoadingScreen = bool Function(String text);
 
-class LoadingScreen {
-  factory LoadingScreen() => _shared;
-  static final LoadingScreen _shared = LoadingScreen._sharedInstance();
-  LoadingScreen._sharedInstance();
+@immutable
+class LoadingScreenController {
+  final CloseLoadingScreen close;
+  final UpdateLoadingScreen update;
+
+  const LoadingScreenController({
+    required this.close,
+    required this.update,
+  });
+}
+
+class LoadingScreenWidget {
+  factory LoadingScreenWidget() => _shared;
+  static final LoadingScreenWidget _shared =
+      LoadingScreenWidget._sharedInstance();
+  LoadingScreenWidget._sharedInstance();
 
   LoadingScreenController? controller;
 

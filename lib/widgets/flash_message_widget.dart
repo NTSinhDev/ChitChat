@@ -1,18 +1,16 @@
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/utils/enum/enums.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter/material.dart';
-import 'package:chat_app/utils/injector.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class FlashMessage {
+class FlashMessageWidget {
   final String message;
   final FlashMessageType type;
 
-  FlashMessage({
+  FlashMessageWidget({
     required BuildContext context,
     required this.message,
     required this.type,

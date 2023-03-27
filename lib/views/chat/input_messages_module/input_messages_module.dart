@@ -98,7 +98,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
                   child: Icon(
                     Icons.send_rounded,
                     size: 28.h,
-                    color: Colors.blue,
+                    color: ResColors.purpleMessage(theme: theme),
                   ),
                 ),
               ],

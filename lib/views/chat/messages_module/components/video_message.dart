@@ -115,7 +115,7 @@ class _VideoMessageState extends State<VideoMessage> {
                                   top: 2.h,
                                 ),
                                 child: Text(
-                                  formatDuration(value.duration),
+                                  SplitHelper.formatDuration(value.duration),
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -209,7 +209,7 @@ class _VideoMessageState extends State<VideoMessage> {
                     top: 2.h,
                   ),
                   child: Text(
-                    formatDuration(value.position),
+                    SplitHelper.formatDuration(value.position),
                     style: Theme.of(context)
                         .textTheme
                         .labelSmall!
@@ -228,7 +228,7 @@ class _VideoMessageState extends State<VideoMessage> {
                     top: 2.h,
                   ),
                   child: Text(
-                    formatDuration(value.duration),
+                    SplitHelper.formatDuration(value.duration),
                     style: Theme.of(context)
                         .textTheme
                         .labelSmall!

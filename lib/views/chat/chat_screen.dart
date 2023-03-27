@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+part 'chat_screen_app_bar.dart';
+
 class ChatScreen extends StatefulWidget {
   final UserProfile currentUser;
   final UserProfile friendInfo;
@@ -42,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
           return true;
         },
         child: Scaffold(
-          appBar: _chatScreenAppBarWidget(context),
+          appBar: buildAppBar(context, widget.friendInfo),
           body: Column(
             children: const [
               MessageView(),
@@ -51,77 +53,6 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  AppBar _chatScreenAppBarWidget(BuildContext context) {
-    return AppBar(
-      toolbarHeight: 72.h,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          StateAvatar(
-            urlImage: widget.friendInfo.urlImage,
-            userId: widget.friendInfo.profile?.id ?? '',
-            radius: 40.r,
-          ),
-          Spaces.w12,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                formatName(
-                  name: widget.friendInfo.profile!.fullName,
-                ),
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              StreamBuilder<DatabaseEvent>(
-                  stream: PresenceRemoteDatasourceImpl().getPresence(
-                    userID: widget.friendInfo.profile?.id ?? '',
-                  ),
-                  builder: (context, snapshotDBEvnet) {
-                    final bool condition1 = snapshotDBEvnet.hasData;
-                    final bool condition2 = snapshotDBEvnet.data != null;
-                    final bool condition3 =
-                        snapshotDBEvnet.data?.snapshot.value != null;
-                    UserPresence? presence;
-                    if (condition1 && condition2 && condition3) {
-                      final data = snapshotDBEvnet.data!.snapshot;
-                      final mapStringDynamic =
-                          Map<String, dynamic>.from(data.value as Map);
-                      presence =
-                          UserPresence.fromMap(mapStringDynamic, data.key!);
-                    }
-                    if (presence != null && presence.status) {
-                      return Text(
-                        context.languagesExtension.onl,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelLarge!
-                            .copyWith(fontSize: 10.r),
-                      );
-                    }
-                    return Container();
-                  }),
-            ],
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
-            CupertinoIcons.info_circle_fill,
-            color: Colors.blue,
-            size: 30.r,
-          ),
-        ),
-        Spaces.w4,
-      ],
     );
   }
 }

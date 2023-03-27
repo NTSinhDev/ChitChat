@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -64,8 +62,11 @@ class MessageWidget extends StatelessWidget {
     );
   }
 
-  Widget cloneForAudio(
-      {required BuildContext context, required double ratio, double? padding}) {
+  Widget cloneForAudio({
+    required BuildContext context,
+    required double ratio,
+    double? padding,
+  }) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     final maxWidth = MediaQuery.of(context).size.width;
 

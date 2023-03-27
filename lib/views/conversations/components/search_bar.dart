@@ -19,16 +19,13 @@ class SearchBar extends StatelessWidget {
     final Color bgColor = theme
         ? ResColors.darkGrey(isDarkmode: theme)
         : ResColors.lightGrey(isDarkmode: theme);
-    final Color contentColor =
-        theme ? Colors.white : ResColors.darkGrey(isDarkmode: true);
+    final Color contentColor = theme ? Colors.white : Colors.grey[800]!;
 
     return Container(
-      height: 44.h,
+      height: 48.h,
       margin: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(36.r),
-        color: bgColor,
-      ),
+          borderRadius: BorderRadius.circular(100.r), color: bgColor),
       child: InkWell(
         onTap: () {
           Navigator.push(
@@ -45,9 +42,9 @@ class SearchBar extends StatelessWidget {
         },
         child: Row(
           children: [
-            Spaces.w14,
-            Icon(CupertinoIcons.search, color: contentColor, size: 20.r),
-            Spaces.w14,
+            Spaces.w20,
+            Icon(CupertinoIcons.search, color: contentColor, size: 24.r),
+            Spaces.w12,
             Text(
               context.languagesExtension.search,
               style: Theme.of(context)

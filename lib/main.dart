@@ -1,5 +1,6 @@
 import 'package:chat_app/chitchat_app.dart';
 import 'package:chat_app/services/notification_service.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ late String? deviceToken;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await Hive.initFlutter();
 
   // Change default system UI
@@ -20,11 +22,8 @@ Future<void> main() async {
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
 
-  // Firebase
-  await Firebase.initializeApp();
-
   // Notification
-  // FirebaseMessaging.onBackgroundMessage(firebaseOnBackgroundMessageHandle);
+  FirebaseMessaging.onBackgroundMessage(firebaseOnBackgroundMessageHandle);
   deviceToken = await FirebaseMessaging.instance.getToken();
   notificationService = NotificationService();
 

@@ -1,5 +1,5 @@
 import 'package:chat_app/models/injector.dart';
-import 'package:chat_app/utils/image_helper.dart';
+import 'package:chat_app/utils/image.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/blocs/chat/chat_bloc.dart';
 import 'package:chat_app/views/chat/messages_module/components/injector.dart';

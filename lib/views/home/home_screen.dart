@@ -1,4 +1,5 @@
 import 'package:chat_app/models/user_profile.dart';
+import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
@@ -6,7 +7,6 @@ import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:chat_app/utils/injector.dart';
 
 import 'components/ask_ai_button.dart';
 
@@ -24,11 +24,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = context.watch<ThemeProvider>().isDarkMode;
     return WillPopScope(
       onWillPop: exitApp,
       child: Scaffold(
         appBar: AppBar(
-          toolbarHeight: 72.h,
+          toolbarHeight: 68.h,
+          backgroundColor: ResColors.purpleMessage(theme: theme),
           title: Row(
             children: [
               InkWell(
@@ -39,14 +41,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: StateAvatar(
                       urlImage: widget.userProfile.urlImage,
                       userId: '',
-                      radius: 40.r,
+                      radius: 44.r,
                     ),
                   ),
                 ),
               ),
               Text(
                 context.languagesExtension.chats,
-                style: Theme.of(context).textTheme.displayLarge,
+                style: Theme.of(context)
+                    .textTheme
+                    .displayLarge!
+                    .copyWith(color: Colors.white),
               ),
             ],
           ),
@@ -75,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final isExitWarning = difference >= const Duration(seconds: 2);
     timeBackPressed = DateTime.now();
     if (isExitWarning) {
-      FlashMessage(
+      FlashMessageWidget(
         context: context,
         message: context.languagesExtension.exit_app,
         type: FlashMessageType.info,

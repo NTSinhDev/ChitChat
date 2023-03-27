@@ -32,7 +32,6 @@ class MessagesLocalDataSourceImpl implements MessagesLocalDataSource {
   @override
   Iterable<Message> getMessages() {
     if (_messageBox.isOpen) {
-      log("check length message local:${_messageBox.values.length}");
       return _messageBox.values;
     }
     return [];

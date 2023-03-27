@@ -15,16 +15,13 @@ class ConversationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final conversationBloc = context.read<ConversationBloc>();
     return SingleChildScrollView(
-      padding: EdgeInsets.only(top: 14.h),
+      padding: EdgeInsets.only(top: 20.h),
       physics: const BouncingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // if (!appState.hasConnect) ...[
-          //   const NoInternetText(),
-          // ],
           const SearchBar(),
-          Spaces.h12,
+          Spaces.h20,
           // ListOnlineUser(listFriend: sortListUserToOnlState(listFriend!)),
           StreamBuilder<Iterable<Conversation>>(
             stream: conversationBloc.conversationsStream,

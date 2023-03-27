@@ -27,7 +27,7 @@ class EmptyMessageView extends StatelessWidget {
           children: [
             StateAvatar(
               urlImage: friend.urlImage,
-              userId: friend.profile?.id ?? '',
+              userId: '',
               radius: 200.r,
             ),
             SizedBox(height: 20.h),
@@ -36,7 +36,10 @@ class EmptyMessageView extends StatelessWidget {
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
               maxLines: maxValueInteger,
-              style: Theme.of(context).textTheme.displaySmall,
+              style: Theme.of(context)
+                  .textTheme
+                  .displaySmall!
+                  .copyWith(fontSize: 20.r, fontWeight: FontWeight.w300),
             ),
           ],
         ),
