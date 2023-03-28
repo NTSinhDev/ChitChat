@@ -1,4 +1,4 @@
-import 'package:chat_app/utils/enum/enums.dart';
+import 'package:chat_app/utils/enums.dart';
 
 abstract class ChatEvent {
   const ChatEvent();

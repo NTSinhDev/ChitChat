@@ -1,4 +1,4 @@
-import 'package:chat_app/utils/enum/enums.dart';
+import 'package:chat_app/utils/enums.dart';
 import 'package:chat_app/widgets/flash_message_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

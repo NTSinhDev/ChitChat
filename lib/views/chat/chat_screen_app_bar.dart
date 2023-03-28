@@ -26,7 +26,7 @@ AppBar buildAppBar(BuildContext context, UserProfile friendInfo) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              SplitHelper.formatName(
+              SplitUtilities.formatName(
                 name: friendInfo.profile!.fullName,
               ),
               style: Theme.of(context)
@@ -87,7 +87,7 @@ class _ActiveStatus extends StatelessWidget {
     return Text(
       presence.status
           ? context.languagesExtension.onl
-          : "${TimeFormat.differenceTime(context: context, earlier: presence.timestamp)} ${context.languagesExtension.ago}",
+          : "${TimeUtilities.differenceTime(context: context, earlier: presence.timestamp)} ${context.languagesExtension.ago}",
       style: Theme.of(context)
           .textTheme
           .labelLarge!

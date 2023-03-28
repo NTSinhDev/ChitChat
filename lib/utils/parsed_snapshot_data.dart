@@ -1,4 +1,8 @@
-part of 'helpers.dart';
+import 'dart:convert';
+
+import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/utils/injector.dart';
+
 class ParsedSnapshotData {
   final ParsedTo parsedTo;
   ParsedSnapshotData({required this.parsedTo});

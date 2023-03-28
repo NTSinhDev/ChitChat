@@ -61,7 +61,7 @@ class _AudioMessageState extends State<AudioMessage> {
                     ),
                   ),
                   Text(
-                    "${SplitHelper. formatDuration(position)}\t-\t${SplitHelper.formatDuration(duration)}",
+                    "${SplitUtilities.formatDuration(position)}\t-\t${SplitUtilities.formatDuration(duration)}",
                     style: Theme.of(context)
                         .textTheme
                         .labelSmall!

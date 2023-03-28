@@ -21,6 +21,7 @@ class ConversationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final conversationBloc = context.watch<ConversationBloc>();
+    final locale = context.watch<LanguageProvider>().locale;
 
     return FutureBuilder<UserProfile?>(
       future: friendProfile,
@@ -65,8 +66,14 @@ class ConversationItem extends StatelessWidget {
                       .copyWith(fontSize: 14.r),
                 ),
                 Text(
-                  TimeFormat.formatTimeRoom(conversation.stampTimeLastText),
-                  style: Theme.of(context).textTheme.bodySmall,
+                  TimeUtilities.formatTime(
+                    conversation.stampTimeLastText,
+                    locale,
+                  ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(fontSize: 12, color: Colors.grey[700]),
                 ),
               ],
             ),

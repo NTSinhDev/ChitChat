@@ -1,6 +1,4 @@
-part of 'helpers.dart';
-
-class SplitHelper {
+class SplitUtilities {
   static String getFileName({required String path}) {
     final splitArray = path.split('/');
     return splitArray.last;

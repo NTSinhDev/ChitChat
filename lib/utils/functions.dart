@@ -17,29 +17,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 // }
 
 
-firebaseMsgOnMessage(RemoteMessage message) async {
-  await notificationService.showNotification(
-    id: 1,
-    title: message.notification?.title ?? "",
-    body: message.notification?.body ?? "",
-    urlImage: "",
-    payload: jsonEncode(message.data),
-  );
 
-  if (message.notification != null) {
-    log('Message also contained a notification: ${message.notification}');
-  }
-}
 
 /// This function to handle Notification when app on background
-Future<void> firebaseOnBackgroundMessageHandle(RemoteMessage mesage) async {
-  try {
-    log("firebase message title: ${mesage.notification!.title}");
-    log("firebase message body: ${mesage.notification!.body}");
-  } catch (e) {
-    // showToast(e.toString());
-  }
-}
+
 
 
 /// Return hh:mm

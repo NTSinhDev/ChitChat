@@ -1,4 +1,4 @@
-import 'package:chat_app/utils/enum/enums.dart';
+import 'package:chat_app/utils/enums.dart';
 import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
 import 'package:chat_app/data/datasources/local_datasources/injector.dart';
 import 'package:chat_app/models/injector.dart';

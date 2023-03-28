@@ -72,14 +72,15 @@ class MediaMessage extends StatelessWidget {
     bool? oneFile,
   }) {
     final mediaName = message.listNameImage.elementAt(index);
-    final fileExtension = SplitHelper.getFileExtension(fileName: mediaName);
+    final fileExtension = SplitUtilities.getFileExtension(fileName: mediaName);
     return StreamBuilder<String?>(
       stream: chatBloc.getFile(fileName: mediaName),
       builder: (context, fileSnapshot) {
         if (fileSnapshot.hasData) {
           if (fileExtension == 'jpg' || fileExtension == 'png') {
             return StreamBuilder<ui.Image>(
-              stream: GetRealSize.getSize(fileSnapshot.data ?? '').asStream(),
+              stream: ImageUtilities.getRealSize(fileSnapshot.data ?? '')
+                  .asStream(),
               builder: (context, sizeSnapshot) {
                 if (sizeSnapshot.hasData) {
                   return ImageMessage(

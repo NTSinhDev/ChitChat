@@ -54,7 +54,7 @@ class _RemoteRepositoryImpl implements RemoteMessagesRepository {
   }) async {
     List<String> fileNames = [];
     for (var i = 0; i < images.length; i++) {
-      final fileName = SplitHelper.getFileName(path: images[i]);
+      final fileName = SplitUtilities.getFileName(path: images[i]);
       await _storageRemoteDS.uploadFile(
         path: images[i],
         type: FileUploadType.path,

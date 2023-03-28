@@ -2,6 +2,7 @@ import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/res/colors.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
+import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +29,11 @@ class SearchBar extends StatelessWidget {
           borderRadius: BorderRadius.circular(100.r), color: bgColor),
       child: InkWell(
         onTap: () {
+          FlashMessageWidget(
+            context: context,
+            message: 'Lấy listUser => search',
+            type: FlashMessageType.warning,
+          );
           Navigator.push(
             context,
             MaterialPageRoute(

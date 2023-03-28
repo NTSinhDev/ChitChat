@@ -1,5 +1,7 @@
 const int maxValueInteger = 10000000;
 const dateMsg = 'kk:mm dd/MM/yyyy';
+const chatGPTAPIKey = "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";
+const openAIBaseURL = "https://api.openai.com/v1";
 
 class StorageKey {
   /// s là viết tắc SharedPreference
@@ -11,7 +13,7 @@ class StorageKey {
   static const bPROFILE = 'Profile';
 
   /// p là viết tắc của Path. Used to store images in storage
-  static const pPROFILE = 'Profile'; 
+  static const pPROFILE = 'Profile';
   static const pCONVERSATION = 'Conversation';
 }
 

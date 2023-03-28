@@ -115,8 +115,9 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
 
   @override
   void dispose() {
-    inputController.dispose();
-    recorder.closeRecorder();
+    recorder.closeRecorder().then((_) {
+      inputController.dispose();
+    });
     super.dispose();
   }
 

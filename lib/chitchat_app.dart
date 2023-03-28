@@ -1,7 +1,6 @@
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/utils/functions.dart';
-import 'package:chat_app/main.dart';
 import 'package:chat_app/data/repositories/authentication_repository.dart';
+import 'package:chat_app/services/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/home/home_screen.dart';
@@ -12,15 +11,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:chat_app/utils/injector.dart';
 
 class ChitChatApp extends StatefulWidget {
   final SharedPreferences sharedPreferences;
   final String? deviceToken;
+  final FCMHanlder fcmHanlder;
+  final NotificationService notificationService;
   const ChitChatApp({
     super.key,
     required this.sharedPreferences,
     this.deviceToken,
+    required this.fcmHanlder,
+    required this.notificationService,
   });
 
   @override
@@ -32,7 +34,7 @@ class _ChitChatAppState extends State<ChitChatApp> {
 
   @override
   void initState() {
-    _getUIDAtLocalStorage();
+    getUIDAtLocalStorage();
     super.initState();
   }
 
@@ -59,7 +61,7 @@ class _ChitChatAppState extends State<ChitChatApp> {
               supportedLocales: context.supportedLocales,
               home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {
-                  _initScreenUtilDependency(context);
+                  context.initScreenUtilDependency();
                   _notificationServices(context);
                   if (state is RegisterState) {
                     return const SignUpScreen();
@@ -77,16 +79,8 @@ class _ChitChatAppState extends State<ChitChatApp> {
     );
   }
 
-  _initScreenUtilDependency(BuildContext context) {
-    ScreenUtil.init(
-      context,
-      designSize: Size(MediaQuery.of(context).size.width,
-          MediaQuery.of(context).size.height),
-    );
-  }
-
   _notificationServices(BuildContext context) {
-    notificationService.initNotification(context: context);
+    widget.notificationService.initNotification(context: context);
     FirebaseMessaging.instance.getInitialMessage().then(
       (message) {
         if (message != null) {
@@ -97,7 +91,7 @@ class _ChitChatAppState extends State<ChitChatApp> {
       },
     );
 
-    FirebaseMessaging.onMessage.listen(firebaseMsgOnMessage);
+    FirebaseMessaging.onMessage.listen(widget.fcmHanlder.onMessage);
 
     FirebaseMessaging.onMessageOpenedApp.listen(
       (message) {
@@ -106,7 +100,7 @@ class _ChitChatAppState extends State<ChitChatApp> {
     );
   }
 
-  _getUIDAtLocalStorage() {
+  getUIDAtLocalStorage() {
     final AuthenticationRepository repository = AuthenticationRepositoryImpl(
       widget.sharedPreferences,
     );
