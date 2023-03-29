@@ -1,5 +1,6 @@
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/services/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
@@ -12,7 +13,12 @@ import 'components/ask_ai_button.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserProfile userProfile;
-  const HomeScreen({super.key, required this.userProfile});
+  final FCMHanlder fcmHanlder;
+  const HomeScreen({
+    super.key,
+    required this.userProfile,
+    required this.fcmHanlder,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -25,6 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
+    final routerProvider = context.watch<RouterProvider>();
+    
     return WillPopScope(
       onWillPop: exitApp,
       child: Scaffold(
@@ -57,8 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         body: BlocProvider<ConversationBloc>(
-          create: (_) => ConversationBloc(currentUser: widget.userProfile)
-            ..add(ListenConversationsEvent()),
+          create: (_) => ConversationBloc(
+            currentUser: widget.userProfile,
+            fcmHanlder: widget.fcmHanlder,
+            routerProvider: routerProvider,
+          )..add(ListenConversationsEvent()),
           child: const SafeArea(child: ConversationScreen()),
         ),
         floatingActionButton: AskAIButton(userProfile: widget.userProfile),

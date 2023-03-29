@@ -36,8 +36,10 @@ class _LocalRepositoryImpl implements LocalUserInformationRepository {
     try {
       await _profileLocalDS!.saveProfileToBox(profile);
     }
-    // ignore: empty_catches
-    catch (e) {}
+    
+    catch (e) {
+      log('🚀saveProfile⚡ ERROR: \n ${e.toString()}');
+    }
   }
 
   @override

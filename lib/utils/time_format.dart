@@ -1,8 +1,29 @@
+import 'dart:developer';
+
 import 'package:chat_app/utils/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TimeUtilities {
+  static String formatTime(DateTime time, Locale local) {
+    final now = DateTime.now();
+    if (time.year < now.year) return "${time.day}/${time.month}/${time.year}}";
+    if (time.month < now.month ||
+        !_HandleTools.isDateInCurrentWeek(date: time)) {
+      return _HandleTools.formatMonthTimeByLangugageCode(
+        code: local.languageCode,
+        time: time,
+      );
+    }
+    if (_HandleTools.isDateInCurrentWeek(date: time) && time.day != now.day) {
+      return _HandleTools.formatDayTimeByLangugageCode(
+        code: local.languageCode,
+        time: time,
+      );
+    }
+    return DateFormat('kk:mm').format(time);
+  }
+
   static String differenceTime({
     required BuildContext context,
     required DateTime earlier,
@@ -28,29 +49,6 @@ class TimeUtilities {
       return "$month ${context.languagesExtension.months}";
     }
     return '';
-  }
-
-  /// format time from '12:00 01/10/2000' to 1 thg 10 or Oct 1st (if month equal now), 01/10/2000, 12:00,...
-  static String formatTime(DateTime time, Locale local) {
-    final now = DateTime.now();
-    if (time.year < now.year) return "${time.day}/${time.month}/${time.year}}";
-
-    if (time.month < now.month ||
-        !_HandleTools.isDateInCurrentWeek(date: time)) {
-      return _HandleTools.formatMonthTimeByLangugageCode(
-        code: local.languageCode,
-        time: time,
-      );
-    }
-
-    if (_HandleTools.isDateInCurrentWeek(date: time) && time.day != now.day) {
-      return _HandleTools.formatDayTimeByLangugageCode(
-        code: local.languageCode,
-        time: time,
-      );
-    }
-
-    return "${time.hour}:${time.minute}";
   }
 }
 
@@ -88,8 +86,8 @@ class _HandleTools {
         return 'T7';
       case 'Sun':
         return 'CN';
-
       default:
+        log('🚀_getDayByVietnamese⚡ $day');
         return 'Error';
     }
   }
@@ -97,13 +95,10 @@ class _HandleTools {
   static String formatMonthTimeByLangugageCode({
     required String code,
     required DateTime time,
-  }) {
-    if (code == "vi") {
-      return "${time.day} thg ${time.month}";
-    }
-
-    return '${DateFormat('MMM').format(time)} ${_getDayByEnglish(day: time.day)}';
-  }
+  }) =>
+      code == "vi"
+          ? "${time.day} thg ${time.month}"
+          : '${DateFormat('MMM').format(time)} ${_getDayByEnglish(day: time.day)}';
 
   static String _getDayByEnglish({required int day}) {
     final dayLastLetter = "$day".lastCharacters;
@@ -124,11 +119,9 @@ class _HandleTools {
     int dayOfWeek = now.weekday;
     DateTime startOfWeek = now.subtract(Duration(days: dayOfWeek - 1));
     List<DateTime> daysOfWeek = [];
-
     for (int i = 0; i < 7; i++) {
       daysOfWeek.add(startOfWeek.add(Duration(days: i)));
     }
-
     return daysOfWeek;
   }
 }

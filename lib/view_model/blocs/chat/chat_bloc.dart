@@ -1,17 +1,18 @@
 import 'dart:async';
 
-import 'package:chat_app/utils/constants.dart';
-import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:chat_app/models/injector.dart';
+
 import 'package:chat_app/data/repositories/injector.dart';
+import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/services/injector.dart';
+import 'package:chat_app/utils/constants.dart';
+import 'package:chat_app/view_model/injector.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   final UserProfile currentUser;
   Conversation? conversation;
   final UserProfile friend;
-
   final _messageRepository = MessagesRepository();
   final _conversationRepository = ConversationsRepository();
 
@@ -50,7 +51,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final hasConversation = await _createNewConversationIfNull(
       message: "đã gửi ${event.files.length} file",
     );
-    if (hasConversation["isCreate"] == false) return;
+    if (hasConversation.isCreate == false) return;
     final isCreated = await _messageRepository.remote.sendMessage(
       senderID: currentUser.profile!.id!,
       conversationID: conversation!.id!,
@@ -58,7 +59,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       messageType: event.type,
     );
     if (!isCreated) return;
-    if (hasConversation["isUpdate"] == false) {
+    if (hasConversation.isUpdate == false) {
       final result = await _conversationRepository.remote.updateConversation(
         id: conversation!.id!,
         data: {
@@ -88,14 +89,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final hasConversation = await _createNewConversationIfNull(
       message: event.message,
     );
-    if (hasConversation["isCreate"] == false) return;
+    if (hasConversation.isCreate == false) return;
     final isCreated = await _messageRepository.remote.sendMessage(
       senderID: currentUser.profile!.id!,
       conversationID: conversation!.id!,
       messageContent: event.message,
     );
     if (!isCreated) return;
-    if (hasConversation["isUpdate"] == false) {
+    if (hasConversation.isUpdate == false) {
       final result = await _conversationRepository.remote.updateConversation(
         id: conversation!.id!,
         data: {
@@ -113,7 +114,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       if (!result) return;
     }
     _getMessageList();
-    // _stateMsgSink.add('');
+
+    if (friend.profile != null && friend.profile!.messagingToken != null) {
+      await FCMHanlder.sendMessage(
+        conversationID: conversation?.id ?? '',
+        userProfile: currentUser.profile!,
+        friendProfile: friend.profile!,
+        message: event.message,
+      );
+    }
+
     emit(InitChatState(
       currentUser: currentUser,
       friend: friend,
@@ -121,10 +131,15 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     ));
   }
 
-  Future<Map<String, bool>> _createNewConversationIfNull({
+  Future<_CheckConversation> _createNewConversationIfNull({
     required String message,
   }) async {
-    if (conversation != null) return {"isCreate": true, "isUpdate": false};
+    final checkConversation = _CheckConversation(
+      isCreate: true,
+      isUpdate: false,
+    );
+    if (conversation != null) return checkConversation;
+
     final userIDs = [
       currentUser.profile!.id!,
       friend.profile!.id!,
@@ -133,8 +148,12 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       userIDs: userIDs,
       lastMsg: message,
     );
-    if (conversation == null) return {"isCreate": false, "isUpdate": false};
-    return {"isCreate": true, "isUpdate": true};
+    if (conversation == null) {
+      checkConversation.updateIsCreate(false);
+      return checkConversation;
+    }
+    checkConversation.updateIsUpdate(true);
+    return checkConversation;
   }
 
   _getMessageList() async {
@@ -151,5 +170,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         await _messageRepository.local.createMessage(message: element);
       }
     });
+  }
+}
+
+class _CheckConversation {
+  bool isCreate;
+  bool isUpdate;
+  _CheckConversation({
+    required this.isCreate,
+    required this.isUpdate,
+  });
+
+  updateIsCreate(bool newValue) {
+    isCreate = newValue;
+  }
+
+  updateIsUpdate(bool newValue) {
+    isUpdate = newValue;
   }
 }

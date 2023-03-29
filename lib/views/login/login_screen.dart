@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
-  final String deviceToken;
-  const LoginScreen({super.key, required this.deviceToken});
+  // final String deviceToken;
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -103,14 +103,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   loginApp() {
-    if (isValidPassword || isValidEmail) return;
-    context.read<AuthenticationBloc>().add(
-          NormalLoginEvent(
-            email: email,
-            password: password,
-            deviceToken: widget.deviceToken,
-          ),
-        );
+    // if (isValidPassword || isValidEmail) return;
+    // context.read<AuthenticationBloc>().add(
+    //       NormalLoginEvent(
+    //         email: email,
+    //         password: password,
+    //         deviceToken: widget.deviceToken,
+    //       ),
+    //     );
   }
 
   formatPassword(String password) {

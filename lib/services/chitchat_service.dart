@@ -1,39 +1,38 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:http/http.dart' as http;
-
 import 'package:chat_app/models/ask_chitchat_model.dart';
 import 'package:chat_app/utils/injector.dart';
 
+import 'api_service.dart';
+
 const _headers = {
-  'Authorization': 'Bearer $chatGPTAPIKey',
+  'Authorization': 'Bearer ${APIKey.chatGPT}',
   "Content-Type": "application/json",
 };
 
 class ChitChatService {
+  static final ApiServices _apiServices = ApiServicesImpl();
   // Send Message using ChatGPT API
   static Future<List<AskChitChatModel>> sendMessageGPT({
     required String message,
     required String modelId,
   }) async {
+    final data = {
+      "model": modelId,
+      "messages": [
+        {
+          "role": "user",
+          "content": message,
+        }
+      ]
+    };
     try {
-      final url = Uri.parse("$openAIBaseURL/chat/completions");
-      final data = {
-        "model": modelId,
-        "messages": [
-          {
-            "role": "user",
-            "content": message,
-          }
-        ]
-      };
-      final response = await http.post(
-        url,
+      final response = await _apiServices.post(
+        url: "${BaseUrl.openAI}/chat/completions",
+        dataBody: data,
         headers: _headers,
-        body: jsonEncode(data),
       );
       return _getListMessage(reponse: response.bodyBytes);
     } catch (error) {
@@ -47,17 +46,16 @@ class ChitChatService {
     required String message,
     required String modelId,
   }) async {
+    final data = {
+      "model": modelId,
+      "prompt": message,
+      "max_tokens": 300,
+    };
     try {
-      final url = Uri.parse("$openAIBaseURL/completions");
-      final data = {
-        "model": modelId,
-        "prompt": message,
-        "max_tokens": 300,
-      };
-      final response = await http.post(
-        url,
+      final response = await _apiServices.post(
+        url: "${BaseUrl.openAI}/completions",
+        dataBody: data,
         headers: _headers,
-        body: jsonEncode(data),
       );
       return _getListMessage(reponse: response.bodyBytes);
     } catch (error) {

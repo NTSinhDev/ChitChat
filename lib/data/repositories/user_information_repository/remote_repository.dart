@@ -8,6 +8,11 @@ abstract class RemoteUserInformationRepository {
   });
   Future updatePresence({required String id});
   Future<UserProfile?> getInformationById({required String id});
+  Future<bool> updateDeviceToken({
+    required String deviceToken,
+    required String currentToken,
+    required String? userID,
+  });
 }
 
 class _RemoteRepositoryImpl implements RemoteUserInformationRepository {
@@ -19,6 +24,23 @@ class _RemoteRepositoryImpl implements RemoteUserInformationRepository {
       : _personalInforRemote = ProfileRemoteDataSourceImpl(),
         _storageRemote = StorageRemoteDatasourceImpl(),
         _presenceRemote = PresenceRemoteDatasourceImpl();
+
+  @override
+  Future<bool> updateDeviceToken({
+    required String deviceToken,
+    required String currentToken,
+    required String? userID,
+  }) async {
+    if (userID == null || userID.isEmpty) return false;
+    if (currentToken == deviceToken) return false;
+    final newData = {
+      ProfileField.userMessagingTokenField: deviceToken,
+    };
+    return await _personalInforRemote.updateProfile(
+      data: newData,
+      userID: userID,
+    );
+  }
 
   @override
   Future updatePresence({required String id}) async {

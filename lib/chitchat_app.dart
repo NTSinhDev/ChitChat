@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/data/repositories/authentication_repository.dart';
 import 'package:chat_app/services/injector.dart';
@@ -5,32 +7,38 @@ import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/home/home_screen.dart';
 import 'package:chat_app/views/injector.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:chat_app/widgets/flash_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChitChatApp extends StatefulWidget {
   final SharedPreferences sharedPreferences;
-  final String? deviceToken;
-  final FCMHanlder fcmHanlder;
-  final NotificationService notificationService;
-  const ChitChatApp({
+  late final FCMHanlder fcmHanlder;
+  ChitChatApp({
     super.key,
     required this.sharedPreferences,
-    this.deviceToken,
-    required this.fcmHanlder,
-    required this.notificationService,
-  });
+    required String? token,
+  }) {
+    fcmHanlder = FCMHanlder(
+      notificationService: NotificationService(),
+      deviceToken: token ?? '',
+    );
+
+    logToken();
+  }
+
+  logToken() {
+    log('🚀log⚡ ${fcmHanlder.deviceToken}');
+  }
 
   @override
   State<ChitChatApp> createState() => _ChitChatAppState();
 }
 
 class _ChitChatAppState extends State<ChitChatApp> {
-  late String? _userID;
+  late String? userID;
 
   @override
   void initState() {
@@ -42,17 +50,17 @@ class _ChitChatAppState extends State<ChitChatApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: injectProviders(sharedPreferences: widget.sharedPreferences),
-      child: Consumer2<ThemeProvider, LanguageProvider>(
-        builder: (context, theme, language, child) {
+      child: Consumer3<ThemeProvider, LanguageProvider, RouterProvider>(
+        builder: (context, theme, language, router, child) {
           return BlocProvider<AuthenticationBloc>(
             create: (context) => AuthenticationBloc(
               widget.sharedPreferences,
-            )..add(_userID != null
-                ? CheckAuthenticationEvent(userID: _userID!)
+            )..add(userID != null
+                ? CheckAuthenticationEvent(userID: userID!)
                 : InitLoginEvent()),
             child: MaterialApp(
-              title: 'ChitChat App',
-              debugShowCheckedModeBanner: false,
+              navigatorKey: router.navigatorKey,
+              title: appName,
               themeMode: theme.themeMode,
               theme: AppTheme.light(),
               darkTheme: AppTheme.dark(),
@@ -62,14 +70,18 @@ class _ChitChatAppState extends State<ChitChatApp> {
               home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {
                   context.initScreenUtilDependency();
-                  _notificationServices(context);
+                  widget.fcmHanlder.handleFirebaseMessagingStates(context);
+                  
                   if (state is RegisterState) {
                     return const SignUpScreen();
                   }
                   if (state is LoggedState) {
-                    return HomeScreen(userProfile: state.userProfile);
+                    return HomeScreen(
+                      userProfile: state.userProfile,
+                      fcmHanlder: widget.fcmHanlder,
+                    );
                   }
-                  return LoginScreen(deviceToken: widget.deviceToken!);
+                  return const LoginScreen();
                 },
               ),
             ),
@@ -79,31 +91,10 @@ class _ChitChatAppState extends State<ChitChatApp> {
     );
   }
 
-  _notificationServices(BuildContext context) {
-    widget.notificationService.initNotification(context: context);
-    FirebaseMessaging.instance.getInitialMessage().then(
-      (message) {
-        if (message != null) {
-          Navigator.of(context).pushNamed('/app');
-
-          // showToast('đã push name');
-        }
-      },
-    );
-
-    FirebaseMessaging.onMessage.listen(widget.fcmHanlder.onMessage);
-
-    FirebaseMessaging.onMessageOpenedApp.listen(
-      (message) {
-        Navigator.of(context).pushNamed('/app');
-      },
-    );
-  }
-
   getUIDAtLocalStorage() {
     final AuthenticationRepository repository = AuthenticationRepositoryImpl(
       widget.sharedPreferences,
     );
-    _userID = repository.getUIDAtLocalStorage();
+    userID = repository.getUIDAtLocalStorage();
   }
 }

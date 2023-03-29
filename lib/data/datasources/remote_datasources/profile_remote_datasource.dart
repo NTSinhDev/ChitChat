@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:isolate';
 
 import 'package:chat_app/models/injector.dart';
@@ -10,6 +11,10 @@ abstract class ProfileRemoteDataSource {
   Future<Profile?> createProfile({required User authUser});
   Future<List<Profile>> getAllProfile();
   Future<List<Profile>> getAllProfileByName({required String name});
+  Future<bool> updateProfile({
+    required Map<String, dynamic> data,
+    required String userID,
+  });
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -19,6 +24,20 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     _profileCollection = FirebaseFirestore.instance.collection(
       ProfileField.collectionName,
     );
+  }
+
+  @override
+  Future<bool> updateProfile({
+    required Map<String, dynamic> data,
+    required String userID,
+  }) async {
+    try {
+      await _profileCollection.doc(userID).update(data);
+      return true;
+    } catch (e) {
+      log('🚀updateProfile⚡ ERROR:\n ${e.toString()}');
+      return false;
+    }
   }
 
   @override

@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 export 'providers/language_provider.dart';
 export 'providers/theme_provider.dart';
 export 'providers/virtual_assistant_provider.dart';
+export 'providers/router_provider.dart';
 export 'blocs/authentication/authentication_bloc.dart';
 export 'blocs/authentication/authentication_event.dart';
 export 'blocs/authentication/authentication_state.dart';
@@ -23,6 +24,7 @@ List<SingleChildWidget> injectProviders({
 }) {
   return [
     ChangeNotifierProvider(create: (_) => VirtualAssistantProvider()),
+    ChangeNotifierProvider(create: (_) => RouterProvider()),
     ChangeNotifierProvider(create: (_) => ThemeProvider(sharedPreferences)),
     ChangeNotifierProvider(create: (_) => LanguageProvider(sharedPreferences)),
   ];

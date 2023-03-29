@@ -28,9 +28,8 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
 
   @override
   Future<void> saveProfileToBox(Profile profile) async {
-    final isOpen = !_profileBox.isOpen;
-    final contain = _profileBox.containsKey(profile.id);
-    if (isOpen || contain) return;
+    // final contain = _profileBox.containsKey(profile.id);
+    if (!_profileBox.isOpen) return;
 
     await _profileBox.put(profile.id, profile);
   }

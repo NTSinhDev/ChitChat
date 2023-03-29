@@ -1,35 +1,31 @@
-import 'package:chat_app/utils/enums.dart';
-import 'package:chat_app/widgets/flash_message_widget.dart';
+import 'dart:convert';
+
+import 'package:chat_app/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:rxdart/subjects.dart';
 
 class NotificationService {
+  final onNotificationClick = ReplaySubject<Map<String, dynamic>?>();
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   void initNotification({required BuildContext context}) async {
     const androidInitializationSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
+        AndroidInitializationSettings(NotificationsConstantData.defaultIcon);
     const iosInitializationSettings = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
     );
-
     const initializationSettings = InitializationSettings(
       android: androidInitializationSettings,
       iOS: iosInitializationSettings,
     );
-
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (details) =>
-          onDidReceiveNotificationResponse(
-        details,
-        context,
-      ),
-    );
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: (details) {
+      onDidReceiveNotificationResponse(details, context);
+    });
   }
 
   Future<void> showNotification({
@@ -46,15 +42,15 @@ class NotificationService {
       payload: payload,
       NotificationDetails(
         android: AndroidNotificationDetails(
-          'com.example.eximbank_app',
-          'eximbank',
+          NotificationsConstantData.channelId,
+          NotificationsConstantData.channelName,
           importance: Importance.max,
           priority: Priority.max,
           largeIcon: urlImage.isEmpty ? null : FilePathAndroidBitmap(urlImage),
-          channelDescription: "Main Channel Notifiaction",
+          channelDescription: NotificationsConstantData.channelDescription,
         ),
         iOS: const DarwinNotificationDetails(
-          sound: 'default.wav',
+          sound: NotificationsConstantData.sound,
           presentAlert: true,
           presentBadge: true,
           presentSound: true,
@@ -64,13 +60,11 @@ class NotificationService {
   }
 
   void onDidReceiveNotificationResponse(
-      NotificationResponse details, BuildContext context) {
+    NotificationResponse details,
+    BuildContext context,
+  ) {
     if (details.payload != null && details.payload!.isNotEmpty) {
-      FlashMessageWidget(
-        context: context,
-        message: details.payload!,
-        type: FlashMessageType.warning,
-      );
+      onNotificationClick.sink.add(jsonDecode(details.payload!));
     }
   }
 }

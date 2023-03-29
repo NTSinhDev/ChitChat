@@ -1,7 +1,24 @@
 const int maxValueInteger = 10000000;
-const dateMsg = 'kk:mm dd/MM/yyyy';
-const chatGPTAPIKey = "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";
-const openAIBaseURL = "https://api.openai.com/v1";
+const String appName = 'ChitChat App';
+
+class NotificationsConstantData {
+  static const String defaultIcon = '@mipmap/ic_launcher';
+  static const String channelId = 'com.example.eximbank_app';
+  static const String channelName = 'eximbank';
+  static const String channelDescription = "Main Channel Notifiaction";
+  static const String sound = 'default.wav';
+}
+
+class APIKey {
+  static const chatGPT = "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";
+  static const cloudMessagingServer =
+      "key=AAAArffwF7w:APA91bEJc_DNuvI9ng4WwbgKC0q0VG_P6ZxeR3cYC9P7gmh0cTwpVI0K7a4D2R9f6i76VQq-V6v0NJ0QxguhBMi1H-NPsxJqZk5GfDjoaXdUchjGN1tMkTqPpo0fxLm0bRf4FGGacHEt";
+}
+
+class BaseUrl {
+  static const openAI = "https://api.openai.com/v1";
+  static const fcmSend = "https://fcm.googleapis.com/fcm/send";
+}
 
 class StorageKey {
   /// s là viết tắc SharedPreference
@@ -25,6 +42,7 @@ class ProfileField {
   // static const String isEmailVerifiedField = "is_email_verified";
   static const String urlImageField = "urlImage";
   static const String userMessagingTokenField = "userMessagingToken";
+  static const String senderID = "senderID";
 }
 
 class ConversationsField {
@@ -37,6 +55,8 @@ class ConversationsField {
   static const String nameChat = 'nameChat';
   static const String isActive = 'isActive';
   static const String typeMessage = 'typeMessage';
+  static const String conversationID = "conversationID";
+
 }
 
 class ConversationMessagesField {

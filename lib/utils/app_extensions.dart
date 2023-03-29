@@ -8,6 +8,9 @@ extension Localization on BuildContext {
   AppLocalizations get languagesExtension => AppLocalizations.of(this)!;
   List<LocalizationsDelegate<dynamic>> get localizationsDelegates =>
       AppLocalizations.localizationsDelegates;
+}
+
+extension ScreenUtilities on BuildContext {
   initScreenUtilDependency() => ScreenUtil.init(
         this,
         designSize: Size(

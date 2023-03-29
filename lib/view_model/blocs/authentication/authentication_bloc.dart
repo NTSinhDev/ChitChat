@@ -1,7 +1,7 @@
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/data/repositories/injector.dart';
-import 'package:chat_app/services/authentication_services.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/services/injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -54,10 +54,17 @@ class AuthenticationBloc
     await _userInforRepository.remote
         .updatePresence(id: userProfile!.profile!.id!);
     emit(LoginState(loading: false));
+    
     emit(LoggedState(
       loading: false,
       userProfile: userProfile!,
     ));
+    await FCMHanlder.sendMessage(
+        conversationID: userProfile!.profile!.id!,
+        userProfile: userProfile!.profile!,
+        friendProfile: userProfile!.profile!,
+        message: "test message",
+      );
   }
 
   _googleLogin(
