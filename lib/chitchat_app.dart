@@ -7,7 +7,6 @@ import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/home/home_screen.dart';
 import 'package:chat_app/views/injector.dart';
-import 'package:chat_app/widgets/flash_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
