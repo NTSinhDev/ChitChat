@@ -76,13 +76,13 @@ class _HandleTools {
         return 'T2';
       case 'Tues':
         return 'T3';
-      case 'Wednes':
+      case 'Wed':
         return 'T4';
       case 'Thurs':
         return 'T5';
       case 'Fri':
         return 'T6';
-      case 'Satur':
+      case 'Sat':
         return 'T7';
       case 'Sun':
         return 'CN';

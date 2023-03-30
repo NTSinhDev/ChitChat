@@ -28,7 +28,7 @@ class FCMHanlder {
       "priority": "high",
       "data": {
         ConversationsField.conversationID: conversationID,
-        ProfileField.senderID: userProfile.id ?? '',
+        ProfileField.senderID: userProfile.id ?? ''
       },
       "to": friendProfile.messagingToken!
     };

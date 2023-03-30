@@ -1,3 +1,5 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 const int maxValueInteger = 10000000;
 const String appName = 'ChitChat App';
 
@@ -10,9 +12,8 @@ class NotificationsConstantData {
 }
 
 class APIKey {
-  static const chatGPT = "2oC0hGeUluxSRLV3M2OVT3BlbkFJ4dnvno00zbAKFDNbVCcS";
-  static const cloudMessagingServer =
-      "key=AAAArffwF7w:APA91bEJc_DNuvI9ng4WwbgKC0q0VG_P6ZxeR3cYC9P7gmh0cTwpVI0K7a4D2R9f6i76VQq-V6v0NJ0QxguhBMi1H-NPsxJqZk5GfDjoaXdUchjGN1tMkTqPpo0fxLm0bRf4FGGacHEt";
+  static final chatGPT = dotenv.env['OpenAI_API_KEY'];
+  static final cloudMessagingServer = "key=${dotenv.env['CLOUD_MESSAGING_SERVER_KEY']}";
 }
 
 class BaseUrl {
@@ -56,7 +57,6 @@ class ConversationsField {
   static const String isActive = 'isActive';
   static const String typeMessage = 'typeMessage';
   static const String conversationID = "conversationID";
-
 }
 
 class ConversationMessagesField {
