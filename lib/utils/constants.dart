@@ -10,7 +10,7 @@ class NotificationsConstantData {
 }
 
 class APIKey {
-  static const chatGPT = "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";
+  static const chatGPT = "2oC0hGeUluxSRLV3M2OVT3BlbkFJ4dnvno00zbAKFDNbVCcS";
   static const cloudMessagingServer =
       "key=AAAArffwF7w:APA91bEJc_DNuvI9ng4WwbgKC0q0VG_P6ZxeR3cYC9P7gmh0cTwpVI0K7a4D2R9f6i76VQq-V6v0NJ0QxguhBMi1H-NPsxJqZk5GfDjoaXdUchjGN1tMkTqPpo0fxLm0bRf4FGGacHEt";
 }

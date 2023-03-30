@@ -20,10 +20,6 @@ class ConversationScreen extends StatelessWidget {
     return BlocListener<ConversationBloc, ConversationState>(
       listener: (context, state) {
         if (state is ConversationInitial) {
-          FlashMessageWidget(
-              context: context,
-              message: conversationBloc.fcmHanlder.deviceToken,
-              type: FlashMessageType.success);
           conversationBloc.add(
             HandleNotificationServiceEvent(
               context: context,
