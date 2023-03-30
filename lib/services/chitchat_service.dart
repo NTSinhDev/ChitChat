@@ -7,13 +7,19 @@ import 'package:chat_app/utils/injector.dart';
 
 import 'api_service.dart';
 
-const _headers = {
-  'Authorization': 'Bearer ${APIKey.chatGPT}',
-  "Content-Type": "application/json",
-};
+enum PrivateKey { sk }
 
 class ChitChatService {
   static final ApiServices _apiServices = ApiServicesImpl();
+  static final _headers = {
+    'Authorization': 'Bearer ${getAPIKey()}',
+    "Content-Type": "application/json",
+  };
+  static String getAPIKey() {
+    final head = PrivateKey.sk.toString().split('.').last;
+    return "$head-${APIKey.chatGPT}";
+  }
+
   // Send Message using ChatGPT API
   static Future<List<AskChitChatModel>> sendMessageGPT({
     required String message,
