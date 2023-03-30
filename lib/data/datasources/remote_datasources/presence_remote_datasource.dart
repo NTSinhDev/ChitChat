@@ -19,6 +19,8 @@ class PresenceRemoteDatasourceImpl implements PresenceRemoteDatasource {
 
   @override
   Future<void> updatePresence({required String userID}) async {
+    // TODO: kiểm tra kết nối mạng tại đây:
+    //? các trạng thái: kết nối, mất kết nối, kết nối dán đoạn, đang kết nối.
     await presenceRealtimeDB
         .child(userID)
         .update(_presenceStatus(status: true))

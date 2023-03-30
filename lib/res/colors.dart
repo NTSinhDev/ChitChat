@@ -25,4 +25,7 @@ class ResColors {
   static Color darkGrey({required bool isDarkmode}) {
     return isDarkmode ? Colors.grey[800]! : Colors.grey;
   }
+
+  static purpleMessage({required bool theme}) =>
+      theme ? ResColors.darkPurple : ResColors.deepPurpleAccent;
 }

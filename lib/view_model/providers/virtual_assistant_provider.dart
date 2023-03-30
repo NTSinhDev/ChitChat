@@ -1,4 +1,4 @@
-import 'package:chat_app/services/api_service.dart';
+import 'package:chat_app/services/chitchat_service.dart';
 import 'package:chat_app/models/ask_chitchat_model.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -13,17 +13,22 @@ class VirtualAssistantProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  addErrorMessage({required String msg}) {
+    chatList.add(AskChitChatModel(msg: msg, chatIndex: 1));
+    notifyListeners();
+  }
+
   Future<void> sendMessageAndGetAnswers({
     required String msg,
     required String chosenModelId,
   }) async {
     if (chosenModelId.toLowerCase().startsWith("gpt")) {
-      chatList.addAll(await ApiService.sendMessageGPT(
+      chatList.addAll(await ChitChatService.sendMessageGPT(
         message: msg,
         modelId: chosenModelId,
       ));
     } else {
-      chatList.addAll(await ApiService.sendMessage(
+      chatList.addAll(await ChitChatService.sendMessage(
         message: msg,
         modelId: chosenModelId,
       ));

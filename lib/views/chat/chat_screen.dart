@@ -1,7 +1,7 @@
 import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/utils/functions.dart';
 import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/chat/input_messages_module/input_messages_module.dart';
 import 'package:chat_app/views/chat/messages_module/message_view.dart';
@@ -11,11 +11,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+part 'chat_screen_app_bar.dart';
 
 class ChatScreen extends StatefulWidget {
   final UserProfile currentUser;
-  final UserInformation friendInfo;
+  final UserProfile friendInfo;
   final Conversation? conversation;
 
   const ChatScreen({
@@ -43,7 +44,7 @@ class _ChatScreenState extends State<ChatScreen> {
           return true;
         },
         child: Scaffold(
-          appBar: _chatScreenAppBarWidget(context),
+          appBar: buildAppBar(context, widget.friendInfo),
           body: Column(
             children: const [
               MessageView(),
@@ -52,65 +53,6 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  AppBar _chatScreenAppBarWidget(BuildContext context) {
-    return AppBar(
-      toolbarHeight: 72.h,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () => Navigator.pop(context),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          StateAvatar(
-            urlImage: widget.friendInfo.informations.urlImage,
-            userId: widget.friendInfo.informations.profile?.id ?? '',
-            radius: 40.r,
-          ),
-          Spaces.w12,
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                formatName(
-                  name: widget.friendInfo.informations.profile!.fullName,
-                ),
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              StreamBuilder<DatabaseEvent>(
-                  stream: PresenceRemoteDatasourceImpl().getPresence(
-                    userID: widget.friendInfo.informations.profile!.id!,
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(
-                        AppLocalizations.of(context)!.onl,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelLarge!
-                            .copyWith(fontSize: 10.r),
-                      );
-                    }
-                    return Container();
-                  }),
-            ],
-          ),
-        ],
-      ),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: Icon(
-            CupertinoIcons.info_circle_fill,
-            color: Colors.blue,
-            size: 30.r,
-          ),
-        ),
-        Spaces.w4,
-      ],
     );
   }
 }

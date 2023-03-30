@@ -7,7 +7,7 @@
 // import 'package:dotted_border/dotted_border.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:chat_app/utils/injector.dart';
 // import 'package:lottie/lottie.dart';
 // import 'package:provider/provider.dart';
 
@@ -42,7 +42,7 @@
 //                           SizedBox(
 //                             width: 8.w,
 //                           ),
-//                           Text(AppLocalizations.of(context)!.add_friend),
+//                           Text(context.languagesExtension.add_friend),
 //                         ],
 //                       ),
 //                     ),
@@ -166,7 +166,7 @@
 //               ),
 //               SizedBox(height: 4.h),
 //               Text(
-//                 AppLocalizations.of(context)!.add_friend,
+//                 context.languagesExtension.add_friend,
 //                 overflow: TextOverflow.ellipsis,
 //                 maxLines: 2,
 //                 textAlign: TextAlign.center,

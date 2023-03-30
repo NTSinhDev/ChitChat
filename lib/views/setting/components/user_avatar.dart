@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:provider/provider.dart';
 
 class UserAvatar extends StatefulWidget {
@@ -111,7 +111,7 @@ class _UserAvatarState extends State<UserAvatar> {
       backgroundColor: Colors.transparent,
       builder: (BuildContext bcontext) {
         return SettingBtmSheet(
-          btmSheetTitle: AppLocalizations.of(bcontext)!.change_avatar,
+          btmSheetTitle: bcontext.languagesExtension.change_avatar,
           btmSheetItems: [
             SettingBottomSheetItem(
               ontap: () => pickImage(
@@ -122,7 +122,7 @@ class _UserAvatarState extends State<UserAvatar> {
                 CupertinoIcons.camera_fill,
                 color: Colors.black,
               ),
-              title: AppLocalizations.of(bcontext)!.take_a_photo,
+              title: bcontext.languagesExtension.take_a_photo,
             ),
             SettingBottomSheetItem(
               ontap: () => pickImage(
@@ -133,7 +133,7 @@ class _UserAvatarState extends State<UserAvatar> {
                 CupertinoIcons.photo,
                 color: Colors.black,
               ),
-              title: AppLocalizations.of(bcontext)!.select_photo_gallery,
+              title: bcontext.languagesExtension.select_photo_gallery,
             )
           ],
         );
@@ -148,9 +148,9 @@ class _UserAvatarState extends State<UserAvatar> {
       if (!mounted) return;
 
       if (image == null) {
-        return FlashMessage(
+        return FlashMessageWidget(
           context: context,
-          message: AppLocalizations.of(context)!.could_not_update_avatar,
+          message: context.languagesExtension.could_not_update_avatar,
           type: FlashMessageType.error,
         );
       }
@@ -166,9 +166,9 @@ class _UserAvatarState extends State<UserAvatar> {
   updateAvatarListen(BuildContext context, SettingState state) {
     if (state is UpdatedAvatarState) {
       if (state.error != null && state.error!) {
-        FlashMessage(
+        FlashMessageWidget(
           context: context,
-          message: AppLocalizations.of(context)!.could_not_update_avatar,
+          message: context.languagesExtension.could_not_update_avatar,
           type: FlashMessageType.error,
         );
       }

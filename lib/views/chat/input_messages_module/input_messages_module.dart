@@ -13,7 +13,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 
@@ -98,7 +98,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
                   child: Icon(
                     Icons.send_rounded,
                     size: 28.h,
-                    color: Colors.blue,
+                    color: ResColors.purpleMessage(theme: theme),
                   ),
                 ),
               ],
@@ -115,8 +115,9 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
 
   @override
   void dispose() {
-    inputController.dispose();
-    recorder.closeRecorder();
+    recorder.closeRecorder().then((_) {
+      inputController.dispose();
+    });
     super.dispose();
   }
 

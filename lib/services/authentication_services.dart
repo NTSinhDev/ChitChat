@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -28,6 +30,7 @@ class AuthenticationServices {
     await _firebaseAuth.signOut();
     // Sign out from Google Sign In
     final googleAccount = await _googleSignIn.signOut();
+    log('🚀log⚡ $googleAccount');
     if (googleAccount == null) {
       return true;
     } else {

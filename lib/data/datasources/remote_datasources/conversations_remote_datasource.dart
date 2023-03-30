@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:chat_app/utils/constants.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,17 +8,17 @@ abstract class ConversationsRemoteDataSource {
   Future<Conversation?> createNewConversation({
     required Conversation conversation,
   });
-
   Future<String> isExistedConversation({
     required String createID,
     required String beCreatedID,
   });
-
   Future<Conversation?> getConversation({required String conversationId});
-
   Future updateConversation({
     required String id,
     required Map<String, dynamic> data,
+  });
+  Stream<Iterable<Conversation>?> listenConversationsData({
+    required String userId,
   });
 }
 
@@ -32,6 +31,30 @@ class ConversationsRemoteDataSourceImpl
       ConversationsField.collectionName,
     );
   }
+
+  @override
+  Stream<Iterable<Conversation>?> listenConversationsData({
+    required String userId,
+  }) =>
+      _conversationCollection
+          .where(ConversationsField.listUser, arrayContains: userId)
+          .orderBy(
+            ConversationsField.stampTimeLastText,
+            descending: true,
+          )
+          .snapshots()
+          .map((querySnapshot) {
+        if (querySnapshot.size == 0 || querySnapshot.docs.isEmpty) return [];
+
+        return querySnapshot.docs.map(
+          (queryDocumentSnapshot) {
+            return ParsedSnapshotData(parsedTo: ParsedTo.conversation).parsed(
+              data: queryDocumentSnapshot.data(),
+              id: queryDocumentSnapshot.id,
+            );
+          },
+        );
+      });
 
   @override
   Future<bool> updateConversation({

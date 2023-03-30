@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
-class GetRealSize {
-  static Future<ui.Image> getSize(String path) {
+class ImageUtilities {
+  static Future<ui.Image> getRealSize(String path) {
     Image image = Image.network(path);
     Completer<ui.Image> completer = Completer<ui.Image>();
     image.image.resolve(const ImageConfiguration()).addListener(

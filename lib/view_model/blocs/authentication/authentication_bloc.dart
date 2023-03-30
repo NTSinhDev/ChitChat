@@ -1,7 +1,7 @@
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/data/repositories/injector.dart';
-import 'package:chat_app/services/authentication_services.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/services/injector.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -46,17 +46,25 @@ class AuthenticationBloc
   ) async {
     emit(LoginState(loading: true));
 
-    userProfile = await _userInforRepository.lc.getProfile(
+    userProfile = await _userInforRepository.local.getProfile(
       userID: event.userID,
     );
 
     if (userProfile == null) return emit(LoginState(loading: false));
-    await _userInforRepository.rm.updatePresence(id: userProfile!.profile!.id!);
+    await _userInforRepository.remote
+        .updatePresence(id: userProfile!.profile!.id!);
     emit(LoginState(loading: false));
+    
     emit(LoggedState(
       loading: false,
       userProfile: userProfile!,
     ));
+    await FCMHanlder.sendMessage(
+        conversationID: userProfile!.profile!.id!,
+        userProfile: userProfile!.profile!,
+        friendProfile: userProfile!.profile!,
+        message: "test message",
+      );
   }
 
   _googleLogin(
@@ -78,18 +86,18 @@ class AuthenticationBloc
 
   Future<void> _storageData() async {
     await _authenticationRepository.saveUIdToLocal(userProfile: userProfile);
-    await _userInforRepository.lc.saveProfile(profile: userProfile!.profile);
-    await _userInforRepository.lc.saveImageFile(userProfile: userProfile);
+    await _userInforRepository.local.saveProfile(profile: userProfile!.profile);
+    await _userInforRepository.local.saveImageFile(userProfile: userProfile);
   }
 
   _logoutEvent(LogoutEvent event, Emitter<AuthenticationState> emit) async {
     final isLogout = await _authenticationRepository.logout();
-    if (!isLogout) {
-      return emit(LoggedState(
-        loading: false,
-        userProfile: userProfile!,
-      ));
-    }
+    // if (!isLogout) {
+    //   return emit(LoggedState(
+    //     loading: false,
+    //     userProfile: userProfile!,
+    //   ));
+    // }
 
     emit(LoginState(loading: false));
   }

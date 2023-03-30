@@ -47,7 +47,7 @@ class InputMessageWidget extends StatelessWidget {
                             : ResColors.darkGrey(isDarkmode: false),
                       ),
                   border: InputBorder.none,
-                  hintText: AppLocalizations.of(context)!.inbox,
+                  hintText: context.languagesExtension.inbox,
                 ),
               ),
             ),
@@ -56,9 +56,9 @@ class InputMessageWidget extends StatelessWidget {
               onTap: ontapEmoji,
               child: Container(
                 margin: EdgeInsets.fromLTRB(0, 0, 6.w, 12.h),
-                child: const Icon(
+                child: Icon(
                   Icons.sentiment_satisfied_alt_outlined,
-                  color: Colors.blue,
+                  color: ResColors.purpleMessage(theme: theme),
                 ),
               ),
             ),

@@ -1,5 +1,5 @@
 import 'package:chat_app/models/injector.dart';
-import 'package:chat_app/utils/image_helper.dart';
+import 'package:chat_app/utils/image.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/blocs/chat/chat_bloc.dart';
 import 'package:chat_app/views/chat/messages_module/components/injector.dart';
@@ -26,7 +26,7 @@ class MediaMessage extends StatelessWidget {
         constraints: BoxConstraints(
           maxWidth: maxWidth * 7 / 10,
         ),
-        margin: EdgeInsets.only(top: 2.h),
+        margin: EdgeInsets.only(top: 8.h),
         child: Column(
           children: _buildMediaRows(context),
         ),
@@ -72,14 +72,15 @@ class MediaMessage extends StatelessWidget {
     bool? oneFile,
   }) {
     final mediaName = message.listNameImage.elementAt(index);
-    final fileExtension = SplitHelper.getFileExtension(fileName: mediaName);
+    final fileExtension = SplitUtilities.getFileExtension(fileName: mediaName);
     return StreamBuilder<String?>(
       stream: chatBloc.getFile(fileName: mediaName),
       builder: (context, fileSnapshot) {
         if (fileSnapshot.hasData) {
           if (fileExtension == 'jpg' || fileExtension == 'png') {
             return StreamBuilder<ui.Image>(
-              stream: GetRealSize.getSize(fileSnapshot.data ?? '').asStream(),
+              stream: ImageUtilities.getRealSize(fileSnapshot.data ?? '')
+                  .asStream(),
               builder: (context, sizeSnapshot) {
                 if (sizeSnapshot.hasData) {
                   return ImageMessage(

@@ -1,17 +1,16 @@
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/utils/enum/enums.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class FlashMessage {
+class FlashMessageWidget {
   final String message;
   final FlashMessageType type;
 
-  FlashMessage({
+  FlashMessageWidget({
     required BuildContext context,
     required this.message,
     required this.type,
@@ -34,7 +33,7 @@ class FlashMessage {
           ),
         );
         const color = Colors.red;
-        final title = AppLocalizations.of(context)!.error;
+        final title = context.languagesExtension.error;
 
         return _FlashMessageModel(
           fontOfTitle: fontOf,
@@ -51,7 +50,7 @@ class FlashMessage {
           ),
         );
         const color = Colors.orange;
-        final title = AppLocalizations.of(context)!.warning;
+        final title = context.languagesExtension.warning;
 
         return _FlashMessageModel(
           fontOfTitle: fontOf,
@@ -66,7 +65,7 @@ class FlashMessage {
           size: 24,
         );
         const color = Colors.blue;
-        final title = AppLocalizations.of(context)!.info;
+        final title = context.languagesExtension.info;
         return _FlashMessageModel(
           fontOfTitle: fontOf,
           title: title,
@@ -77,7 +76,7 @@ class FlashMessage {
         const Widget fontOf =
             Icon(Icons.check_circle, color: Colors.green, size: 22);
         const color = Colors.green;
-        final title = AppLocalizations.of(context)!.success;
+        final title = context.languagesExtension.success;
         return _FlashMessageModel(
           fontOfTitle: fontOf,
           title: title,

@@ -5,11 +5,10 @@ import 'package:chat_app/views/login/components/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
-  final String deviceToken;
-  const LoginScreen({super.key, required this.deviceToken});
+  // final String deviceToken;
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -28,12 +27,12 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is LoginState) {
           if (state.loading) {
-            LoadingScreen().show(context: context);
+            LoadingScreenWidget().show(context: context);
           } else {
-            LoadingScreen().hide();
+            LoadingScreenWidget().hide();
           }
           if (state.message != null) {
-            FlashMessage(
+            FlashMessageWidget(
               context: context,
               message: state.message!,
               type: FlashMessageType.error,
@@ -57,8 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SignInTitle(),
                   Spaces.h40,
                   InputTextField(
-                    title: AppLocalizations.of(context)!.email,
-                    hint: AppLocalizations.of(context)!.enter_your_email,
+                    title: context.languagesExtension.email,
+                    hint: context.languagesExtension.enter_your_email,
                     icon: Icons.email,
                     keyInput: 'email',
                     obscure: false,
@@ -68,12 +67,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   WarningMessage(
                     isDataValid: isValidEmail,
-                    message: AppLocalizations.of(context)!.required_email,
+                    message: context.languagesExtension.required_email,
                   ),
                   Spaces.h20,
                   InputTextField(
-                    title: AppLocalizations.of(context)!.password,
-                    hint: AppLocalizations.of(context)!.enter_your_password,
+                    title: context.languagesExtension.password,
+                    hint: context.languagesExtension.enter_your_password,
                     icon: Icons.lock,
                     keyInput: 'password',
                     obscure: true,
@@ -87,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const ForgotPasswordBtn(),
                   LargeRoundButton(
-                    textButton: AppLocalizations.of(context)!.login_btn,
+                    textButton: context.languagesExtension.login_btn,
                     onTap: loginApp,
                   ),
                   const SignInOtherWays(),
@@ -104,26 +103,26 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   loginApp() {
-    if (isValidPassword || isValidEmail) return;
-    context.read<AuthenticationBloc>().add(
-          NormalLoginEvent(
-            email: email,
-            password: password,
-            deviceToken: widget.deviceToken,
-          ),
-        );
+    // if (isValidPassword || isValidEmail) return;
+    // context.read<AuthenticationBloc>().add(
+    //       NormalLoginEvent(
+    //         email: email,
+    //         password: password,
+    //         deviceToken: widget.deviceToken,
+    //       ),
+    //     );
   }
 
   formatPassword(String password) {
     if (password.isEmpty) {
       setState(() {
         isValidPassword = true;
-        messagePassword = AppLocalizations.of(context)!.required_password;
+        messagePassword = context.languagesExtension.required_password;
       });
     } else if (password.length < 6) {
       setState(() {
         isValidPassword = true;
-        messagePassword = AppLocalizations.of(context)!.more_than_5_charac;
+        messagePassword = context.languagesExtension.more_than_5_charac;
       });
     } else {
       setState(() {

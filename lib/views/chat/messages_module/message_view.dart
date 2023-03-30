@@ -5,16 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/models/injector.dart';
 
-class MessageView extends StatefulWidget {
+class MessageView extends StatelessWidget {
   const MessageView({
     super.key,
   });
 
-  @override
-  State<MessageView> createState() => _MessageViewState();
-}
-
-class _MessageViewState extends State<MessageView> {
   @override
   Widget build(BuildContext context) {
     final chat = context.read<ChatBloc>();
@@ -29,9 +24,9 @@ class _MessageViewState extends State<MessageView> {
             builder: (context, chatState) {
               if (chatState is InitChatState) {
                 if (chatState.conversation == null) {
-                  return EmptyMessage(friend: chatState.friend);
+                  return EmptyMessageView(friend: chatState.friend);
                 }
-                return _messageListWidget(chat.msgListStream);
+                return buildMessageList(chat.msgListStream);
               }
 
               return const Center(
@@ -47,7 +42,7 @@ class _MessageViewState extends State<MessageView> {
     );
   }
 
-  Widget _messageListWidget(Stream<Iterable<Message>> stream) {
+  Widget buildMessageList(Stream<Iterable<Message>> stream) {
     return StreamBuilder<Iterable<Message>>(
       stream: stream,
       builder: (context, snapshot) {
@@ -56,10 +51,10 @@ class _MessageViewState extends State<MessageView> {
           return ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(0),
             itemCount: msgList!.length,
             itemBuilder: (context, index) {
               final message = msgList.elementAt(index);
-              // init clustermessage
 
               return MessageItem(message: message);
               // return Column(

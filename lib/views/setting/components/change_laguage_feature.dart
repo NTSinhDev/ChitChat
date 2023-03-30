@@ -4,7 +4,7 @@ import 'package:chat_app/views/setting/components/feature_setting.dart';
 import 'package:chat_app/views/setting/components/setting_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:chat_app/utils/injector.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,7 @@ class ChangeLanguageFeature extends StatelessWidget {
   Widget build(BuildContext context) {
     return FeatureSetting(
       icon: CupertinoIcons.textformat,
-      title: AppLocalizations.of(context)!.language,
+      title: context.languagesExtension.language,
       // color: Colors.green[400]!,
       onTap: () => _changeLanguage(context),
     );
@@ -34,7 +34,7 @@ class ChangeLanguageFeature extends StatelessWidget {
           locale: 'vi_VN',
           code: 'vi',
           img: ImgAnmStrings.iVietnam,
-          title: AppLocalizations.of(context)!.viet_nam,
+          title: context.languagesExtension.viet_nam,
         );
 
         final btmSheetItem2 = _createSettingBottomSheetItem(
@@ -43,11 +43,11 @@ class ChangeLanguageFeature extends StatelessWidget {
           locale: 'en_US',
           code: 'en',
           img: ImgAnmStrings.iEnglish,
-          title: AppLocalizations.of(context)!.english,
+          title: context.languagesExtension.english,
         );
 
         return SettingBtmSheet(
-          btmSheetTitle: AppLocalizations.of(bContext)!.change_language,
+          btmSheetTitle: context.languagesExtension.change_language,
           btmSheetItems: [btmSheetItem1, btmSheetItem2],
         );
       },

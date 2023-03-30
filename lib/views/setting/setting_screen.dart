@@ -5,12 +5,11 @@ import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/change_laguage_feature.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
 import 'package:chat_app/views/setting/components/user_avatar.dart';
+import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'components/change_darkmode_feature.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -27,7 +26,7 @@ class SettingScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context)!.personal,
+            context.languagesExtension.personal,
             style: Theme.of(context).textTheme.displayLarge,
           ),
           centerTitle: true,
@@ -72,16 +71,18 @@ class SettingScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ChangeDarkmodeFeature(userID: userProfile.profile!.id!,),
+              ChangeDarkmodeFeature(
+                userID: userProfile.profile!.id!,
+              ),
               Spaces.h12,
               const ChangeLanguageFeature(),
               Spaces.h12,
               FeatureSetting(
                 icon: CupertinoIcons.person_circle,
-                title: AppLocalizations.of(context)!.personal_info,
+                title: context.languagesExtension.personal_info,
                 // color: Colors.deepPurple[400]!,
                 onTap: () {
-                  FlashMessage(
+                  FlashMessageWidget(
                     context: context,
                     message: "Đây là nội dung thông báo",
                     type: FlashMessageType.error,
@@ -91,17 +92,19 @@ class SettingScreen extends StatelessWidget {
               Spaces.h12,
               FeatureSetting(
                 icon: Icons.error_outline,
-                title: AppLocalizations.of(context)!.list_ban,
+                title: context.languagesExtension.list_ban,
                 // color: Colors.orange[400]!,
                 onTap: () {},
               ),
               Spaces.h12,
               FeatureSetting(
                 icon: Icons.logout,
-                title: AppLocalizations.of(context)!.logout,
+                title: context.languagesExtension.logout,
                 // color: Colors.pink[400]!,
-                onTap: () =>
-                    context.read<AuthenticationBloc>().add(LogoutEvent()),
+                onTap: () {
+                  context.read<AuthenticationBloc>().add(LogoutEvent());
+                  Navigator.of(context).pop(context);
+                },
               ),
               Spaces.h24,
             ],

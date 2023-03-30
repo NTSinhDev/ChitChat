@@ -8,16 +8,14 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rxdart/rxdart.dart';
+import 'components/user_search_list.dart';
 
 class SearchScreen extends StatefulWidget {
-  final List<UserInformation>? listFriend;
-  final UserProfile currentUser;
+  final List<UserProfile>? listFriend;
   const SearchScreen({
     super.key,
     this.listFriend,
-    required this.currentUser,
   });
 
   @override
@@ -65,7 +63,7 @@ class _SearchScreenState extends State<SearchScreen> {
               listener: (context, state) async {
                 if (state is SearchInitialState) {
                   if (state.error != null) {
-                    FlashMessage(
+                    FlashMessageWidget(
                       context: context,
                       message: state.error!,
                       type: FlashMessageType.error,
@@ -97,13 +95,13 @@ class _SearchScreenState extends State<SearchScreen> {
               builder: (context, state) {
                 if (state is SearchInitialState) {
                   return bodySearchScreenWidget(
-                    label: AppLocalizations.of(context)!.recommend,
+                    label: context.languagesExtension.recommend,
                     listStream: state.friendsSubject,
                   );
                 }
                 if (state is SearchingState) {
                   return bodySearchScreenWidget(
-                    label: AppLocalizations.of(context)!.result,
+                    label: context.languagesExtension.result,
                     listStream: state.usersSubject,
                     loading: state.loading,
                   );
