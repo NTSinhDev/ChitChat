@@ -78,13 +78,16 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
           //* khởi tạo các dữ liệu ban đầu
           final namePath = routerProvider.getNamePath();
           final conversationList = await conversationsStream.first;
-          final Conversation checkConversation = conversationList.firstWhere(
-            (element) => element.id == value["conversationId"],
-          );
-          final friend = await getFriendInfomation(
-              id: checkConversation.listUser
-                  .where((element) => element != currentUser.profile?.id)
-                  .first);
+          final sinh = conversationList.toList();
+          log('🚀log⚡ $sinh');
+          final Conversation checkConversation = sinh
+              .where(
+                (element) =>
+                    element.id == value[ConversationsField.conversationID],
+              )
+              .first;
+          final friend =
+              await getFriendInfomation(id: value[ProfileField.senderID]);
 
           //* nếu như namePath có giá trị thì gọi phương thức push của bộ điều hướng
           //* để chuyển đến màn hình Chat
@@ -144,7 +147,6 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       currentToken: currentUser.profile?.messagingToken ?? '',
     );
     if (response) {
-      
       currentUser.profile!.messagingToken = fcmHanlder.deviceToken;
       _userInformationRepo.local.saveProfile(profile: currentUser.profile);
     }
