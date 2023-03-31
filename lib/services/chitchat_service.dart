@@ -7,13 +7,15 @@ import 'package:chat_app/utils/injector.dart';
 
 import 'api_service.dart';
 
+
+Map<String, String> _headers(String key) => {
+      'Authorization': 'Bearer $key',
+      "Content-Type": "application/json",
+    };
+    
 class ChitChatService {
-  static final _headers = {
-    'Authorization': 'Bearer ${APIKey.chatGPT}',
-    "Content-Type": "application/json",
-  };
   static final ApiServices _apiServices = ApiServicesImpl();
-  
+
   // Send Message using ChatGPT API
   static Future<List<AskChitChatModel>> sendMessageGPT({
     required String message,
@@ -28,11 +30,12 @@ class ChitChatService {
         }
       ]
     };
+    final apiKey = await APIKey.chatGPT;
     try {
       final response = await _apiServices.post(
         url: "${BaseUrl.openAI}/chat/completions",
         dataBody: data,
-        headers: _headers,
+        headers: _headers(apiKey),
       );
       return _getListMessage(reponse: response.bodyBytes);
     } catch (error) {
@@ -51,11 +54,12 @@ class ChitChatService {
       "prompt": message,
       "max_tokens": 300,
     };
+    final apiKey = await APIKey.chatGPT;
     try {
       final response = await _apiServices.post(
         url: "${BaseUrl.openAI}/completions",
         dataBody: data,
-        headers: _headers,
+        headers: _headers(apiKey),
       );
       return _getListMessage(reponse: response.bodyBytes);
     } catch (error) {
@@ -64,6 +68,8 @@ class ChitChatService {
     }
   }
 }
+
+
 
 List<AskChitChatModel> _getListMessage({required List<int> reponse}) {
   _BaseResponse baseResponse = _BaseResponse.fromJson(reponse);

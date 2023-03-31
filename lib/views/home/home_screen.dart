@@ -1,3 +1,4 @@
+import 'package:chat_app/data/datasources/remote_datasources/key_remote_datesource.dart';
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/services/injector.dart';
@@ -29,10 +30,16 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentPage = 0;
 
   @override
+  void initState() {
+    super.initState();
+    KeyRemoteDataSourceImpl().getAPIKey();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     final routerProvider = context.watch<RouterProvider>();
-    
+
     return WillPopScope(
       onWillPop: exitApp,
       child: Scaffold(
@@ -72,7 +79,10 @@ class _HomeScreenState extends State<HomeScreen> {
           )..add(ListenConversationsEvent()),
           child: const SafeArea(child: ConversationScreen()),
         ),
-        floatingActionButton: AskAIButton(userProfile: widget.userProfile),
+        floatingActionButton: AskAIButton(
+          userProfile: widget.userProfile,
+          isZoomOut: true,
+        ),
       ),
     );
   }

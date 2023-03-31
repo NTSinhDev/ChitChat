@@ -29,7 +29,6 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
-  flutter_dotenv: ^5.0.2
   flutter_local_notifications: ^13.0.0
   flutter_localizations:
     sdk: flutter
@@ -81,5 +80,4 @@ flutter:
     - assets/avatars/
     - assets/animations/
     - assets/logos/
-    - key.env
   generate: true

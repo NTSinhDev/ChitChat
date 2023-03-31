@@ -97,7 +97,7 @@ class ConversationsRemoteDataSourceImpl
           .set(conversation.toMap())
           .then((value) => getConversation(conversationId: conversation.id!));
     } catch (e) {
-      log('🚀Lỗi khi tạo phòng hoặc lấy thông tin phòng chat! \nChi tiết: ${e.toString()}');
+      log('🚀createNewConversation \nChi tiết: ${e.toString()}');
       return null;
     }
   }
