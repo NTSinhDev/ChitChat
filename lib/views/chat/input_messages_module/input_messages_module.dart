@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_sound/flutter_sound.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -95,12 +96,12 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
                 Spaces.w14,
                 InkWell(
                   onTap: () => _sendMessage(inputController.text),
-                  child: Icon(
-                    Icons.send_rounded,
-                    size: 28.h,
+                  child: FaIcon(
+                    FontAwesomeIcons.paperPlane,
                     color: ResColors.purpleMessage(theme: theme),
                   ),
                 ),
+                Spaces.w8,
               ],
             ),
           ),

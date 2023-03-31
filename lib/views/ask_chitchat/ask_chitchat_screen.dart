@@ -31,18 +31,18 @@ class _AskChitChatcreenState extends State<AskChitChatcreen> {
   }
 
   @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final theme = context.watch<ThemeProvider>().isDarkMode;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ResColors.purpleMessage(theme: theme),
+        foregroundColor: Colors.white,
         title: Text(
           "Xin chào! Tôi có thể giúp gì?",
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context)
+              .textTheme
+              .titleMedium!
+              .copyWith(color: Colors.white),
         ),
         centerTitle: true,
       ),
@@ -50,26 +50,32 @@ class _AskChitChatcreenState extends State<AskChitChatcreen> {
         child: Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                reverse: true,
-                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 14.w),
-                physics: const BouncingScrollPhysics(),
-                child: ListView.builder(
-                  controller: scrollController,
-                  itemCount: assistantProvider.getChatList.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final isSender =
-                        assistantProvider.getChatList[index].chatIndex == 0;
-                    return MessageWidget(
-                      isSender: isSender,
-                      child: ContentOfMsgWidget(
-                        content: assistantProvider.getChatList[index].msg,
+              child: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: SingleChildScrollView(
+                  reverse: true,
+                  padding: EdgeInsets.symmetric(
+                    vertical: 10.h,
+                    horizontal: 14.w,
+                  ),
+                  physics: const BouncingScrollPhysics(),
+                  child: ListView.builder(
+                    controller: scrollController,
+                    itemCount: assistantProvider.getChatList.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final isSender =
+                          assistantProvider.getChatList[index].chatIndex == 0;
+                      return MessageWidget(
                         isSender: isSender,
-                      ),
-                    );
-                  },
+                        child: ContentOfMsgWidget(
+                          content: assistantProvider.getChatList[index].msg,
+                          isSender: isSender,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
@@ -77,7 +83,7 @@ class _AskChitChatcreenState extends State<AskChitChatcreen> {
             Spaces.h15,
             InputRequest(
               isTyping: (callback) => setState(() {
-                if(!callback) scrollListToEND();
+                if (!callback) scrollListToEND();
                 isTyping = callback;
               }),
             ),
@@ -93,5 +99,11 @@ class _AskChitChatcreenState extends State<AskChitChatcreen> {
       duration: const Duration(seconds: 2),
       curve: Curves.easeOut,
     );
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }

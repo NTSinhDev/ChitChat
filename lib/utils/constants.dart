@@ -1,4 +1,5 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'package:chat_app/data/datasources/remote_datasources/key_remote_datesource.dart';
 
 const int maxValueInteger = 10000000;
 const String appName = 'ChitChat App';
@@ -12,8 +13,10 @@ class NotificationsConstantData {
 }
 
 class APIKey {
-  static final chatGPT = dotenv.env['OpenAI_API_KEY'];
-  static final cloudMessagingServer = "key=${dotenv.env['CLOUD_MESSAGING_SERVER_KEY']}";
+  // static final chatGPT = "Your API key";
+  static final chatGPT = KeyRemoteDataSourceImpl().getAPIKey();
+  // static final cloudMessagingServer = "key=Your Messaging Server Key";
+  static const cloudMessagingServer = "key=AAAArffwF7w:APA91bEJc_DNuvI9ng4WwbgKC0q0VG_P6ZxeR3cYC9P7gmh0cTwpVI0K7a4D2R9f6i76VQq-V6v0NJ0QxguhBMi1H-NPsxJqZk5GfDjoaXdUchjGN1tMkTqPpo0fxLm0bRf4FGGacHEt";
 }
 
 class BaseUrl {

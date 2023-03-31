@@ -48,6 +48,8 @@ class _InputRequestState extends State<InputRequest> {
             children: [
               Expanded(
                 child: TextField(
+                  maxLines: 6,
+                  minLines: 1,
                   style: Theme.of(context).textTheme.bodyMedium,
                   controller: textEditingController,
                   onSubmitted: (value) async => await sendMessageFCT(),
@@ -62,7 +64,10 @@ class _InputRequestState extends State<InputRequest> {
               ),
               IconButton(
                 onPressed: sendMessageFCT,
-                icon: const FaIcon(FontAwesomeIcons.paperPlane),
+                icon: FaIcon(
+                  FontAwesomeIcons.paperPlane,
+                  color: ResColors.purpleMessage(theme: theme),
+                ),
               ),
             ],
           ),
