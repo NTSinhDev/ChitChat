@@ -28,49 +28,52 @@ class ConversationScreen extends StatelessWidget {
           );
         }
       },
-      child: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 20.h),
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SearchBar(),
-            Spaces.h20,
-            // ListOnlineUser(listFriend: sortListUserToOnlState(listFriend!)),
-            StreamBuilder<Iterable<Conversation>>(
-              stream: conversationBloc.conversationsStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData &&
-                    snapshot.data != null &&
-                    snapshot.data!.isNotEmpty) {
-                  return ConversationsListView(conversations: snapshot.data!);
-                }
-                return Padding(
-                  padding: EdgeInsets.only(top: 280.h),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BlocProvider(
-                            create: (context) => SearchBloc(
-                              currentUser: conversationBloc.currentUser,
+      child: RefreshIndicator(
+        onRefresh: () async {},
+        child: SingleChildScrollView(
+          padding: EdgeInsets.only(top: 20.h),
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SearchBar(),
+              Spaces.h20,
+              // ListOnlineUser(listFriend: sortListUserToOnlState(listFriend!)),
+              StreamBuilder<Iterable<Conversation>>(
+                stream: conversationBloc.conversationsStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData &&
+                      snapshot.data != null &&
+                      snapshot.data!.isNotEmpty) {
+                    return ConversationsListView(conversations: snapshot.data!);
+                  }
+                  return Padding(
+                    padding: EdgeInsets.only(top: 280.h),
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BlocProvider(
+                              create: (context) => SearchBloc(
+                                currentUser: conversationBloc.currentUser,
+                              ),
+                              child: const SearchScreen(),
                             ),
-                            child: const SearchScreen(),
                           ),
+                        );
+                      },
+                      child: const Center(
+                        child: Text(
+                          "Let find some chat",
                         ),
-                      );
-                    },
-                    child: const Center(
-                      child: Text(
-                        "Let find some chat",
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
