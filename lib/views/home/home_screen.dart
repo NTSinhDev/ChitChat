@@ -1,16 +1,20 @@
-import 'package:chat_app/data/datasources/remote_datasources/key_remote_datesource.dart';
-import 'package:chat_app/models/user_profile.dart';
+import 'dart:developer' as dev;
+import 'dart:math';
+
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/services/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
+
 import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:chat_app/models/injector.dart';
 import 'components/ask_ai_button.dart';
+
+part 'components/app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   final UserProfile userProfile;
@@ -27,13 +31,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime timeBackPressed = DateTime.now();
-  int currentPage = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    KeyRemoteDataSourceImpl().getAPIKey();
-  }
+  double endTweenValue = 0;
+  bool isGestureActive = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,47 +41,71 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return WillPopScope(
       onWillPop: exitApp,
-      child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 68.h,
-          backgroundColor: ResColors.purpleMessage(theme: theme),
-          title: Row(
-            children: [
-              InkWell(
-                onTap: () => navigateToSettingScreen(context),
-                child: Container(
-                  margin: EdgeInsets.only(right: 16.w),
-                  child: Center(
-                    child: StateAvatar(
+      child: Stack(
+        children: [
+          SettingScreen(userProfile: widget.userProfile),
+          TweenAnimationBuilder(
+            tween: Tween<double>(
+              begin: 0,
+              end: endTweenValue,
+            ),
+            duration: const Duration(milliseconds: 100),
+            builder: (context, value, child) {
+              return Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()
+                  ..setEntry(3, 2, 0.001)
+                  ..setEntry(0, 3, 250 * value)
+                  ..rotateY((pi / 6) * value),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(
+                        endTweenValue == 0 ? endTweenValue : 24),
+                    bottomLeft: Radius.circular(
+                        endTweenValue == 0 ? endTweenValue : 24),
+                  ),
+                  child: Scaffold(
+                    appBar: _homeScreenAppBar(
+                      context: context,
                       urlImage: widget.userProfile.urlImage,
-                      userId: '',
-                      radius: 44.r,
+                      theme: theme,
+                      openSetting: () {
+                        dev.log('🚀log⚡');
+                        setState(() {
+                          endTweenValue == 0
+                              ? endTweenValue = 1
+                              : endTweenValue = 0;
+                          isGestureActive = true;
+                        });
+                      },
+                    ),
+                    body: BlocProvider<ConversationBloc>(
+                      create: (_) => ConversationBloc(
+                        currentUser: widget.userProfile,
+                        fcmHanlder: widget.fcmHanlder,
+                        routerProvider: routerProvider,
+                      )..add(ListenConversationsEvent()),
+                      child: const ConversationScreen(),
+                    ),
+                    floatingActionButton: AskAIButton(
+                      userProfile: widget.userProfile,
+                      isZoomOut: true,
                     ),
                   ),
                 ),
-              ),
-              Text(
-                context.languagesExtension.chats,
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge!
-                    .copyWith(color: Colors.white),
-              ),
-            ],
+              );
+            },
           ),
-        ),
-        body: BlocProvider<ConversationBloc>(
-          create: (_) => ConversationBloc(
-            currentUser: widget.userProfile,
-            fcmHanlder: widget.fcmHanlder,
-            routerProvider: routerProvider,
-          )..add(ListenConversationsEvent()),
-          child: const SafeArea(child: ConversationScreen()),
-        ),
-        floatingActionButton: AskAIButton(
-          userProfile: widget.userProfile,
-          isZoomOut: true,
-        ),
+          if (isGestureActive)
+            GestureDetector(
+              onHorizontalDragUpdate: (details) {
+                setState(() {
+                  endTweenValue = 0;
+                  isGestureActive = false;
+                });
+              },
+            )
+        ],
       ),
     );
   }

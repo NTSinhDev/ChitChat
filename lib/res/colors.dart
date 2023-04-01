@@ -10,6 +10,12 @@ class ResColors {
   static const customPurple = Color.fromARGB(255, 114, 36, 249);
   static const redAccent = Colors.redAccent;
 
+  static const customNewVeryDarkPurple = Color(0xff4f3cc9);
+  static const customNewDarkPurple = Color(0xff6a4997);
+  static const customNewLightPurple = Color(0xffa682df);
+  static const customNewMediumPurple = Color(0xffa684dd);
+  static const backgroundLightPurple = Color(0xfff2eaff);
+
   static Color appColor({required bool isDarkmode}) {
     return isDarkmode ? const Color(0xfafafafa) : const Color(0xFF303030);
   }
@@ -26,6 +32,12 @@ class ResColors {
     return isDarkmode ? Colors.grey[800]! : Colors.grey;
   }
 
-  static purpleMessage({required bool theme}) =>
+  static Color purpleMessage({required bool theme}) =>
       theme ? ResColors.darkPurple : ResColors.deepPurpleAccent;
+
+  static Color customNewPurple({required bool isDarkmode}) {
+    return isDarkmode
+        ? ResColors.customNewDarkPurple
+        : ResColors.customNewLightPurple;
+  }
 }

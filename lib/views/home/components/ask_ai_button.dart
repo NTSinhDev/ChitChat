@@ -29,7 +29,6 @@ class _AskAIButtonState extends State<AskAIButton> {
       width: widget.isZoomOut ? 60.w : 178.w,
       height: 48.h,
       child: FloatingActionButton(
-  
         onPressed: () => _navigateAskChitChatScreen(context),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(

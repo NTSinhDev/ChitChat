@@ -16,7 +16,6 @@ class ChangeLanguageFeature extends StatelessWidget {
     return FeatureSetting(
       icon: CupertinoIcons.textformat,
       title: context.languagesExtension.language,
-      // color: Colors.green[400]!,
       onTap: () => _changeLanguage(context),
     );
   }
@@ -69,11 +68,6 @@ class ChangeLanguageFeature extends StatelessWidget {
         ),
         title: title,
         ontap: () => lang.toggleLocale(language: locale),
-        trailing: lang.locale.languageCode == code
-            ? const Icon(
-                CupertinoIcons.check_mark_circled,
-                color: Colors.blue,
-              )
-            : null,
+        isActive: lang.locale.languageCode == code,
       );
 }

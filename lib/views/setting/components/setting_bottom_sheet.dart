@@ -1,5 +1,8 @@
+import 'package:chat_app/res/colors.dart';
 import 'package:chat_app/res/dimens.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SettingBtmSheet extends StatelessWidget {
@@ -14,15 +17,13 @@ class SettingBtmSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = _fetchBottomSheetItemToList(context: context);
+    final theme = context.watch<ThemeProvider>().isDarkMode;
 
     return Container(
-      height: 180.h,
-      padding: EdgeInsets.symmetric(
-        vertical: 12.h,
-        horizontal: 20.w,
-      ),
+      height: 220.h,
+      padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: ResColors.appColor(isDarkmode: !theme),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12.h),
           topRight: Radius.circular(12.h),
@@ -33,10 +34,7 @@ class SettingBtmSheet extends StatelessWidget {
           children: [
             Text(
               btmSheetTitle,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(color: Colors.black),
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
             Spaces.h8,
             ...items,
@@ -46,32 +44,54 @@ class SettingBtmSheet extends StatelessWidget {
     );
   }
 
-  List<Widget> _fetchBottomSheetItemToList({required BuildContext context}) =>
-      btmSheetItems
-          .map((bottomSheetItem) => ListTile(
+  List<Widget> _fetchBottomSheetItemToList({required BuildContext context}) {
+    final isDarkmode = context.watch<ThemeProvider>().isDarkMode;
+    return btmSheetItems
+        .map((bottomSheetItem) => Container(
+              margin: EdgeInsets.only(bottom: 12.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: MediaQuery.of(context).size.width / 5,
+              ),
+              decoration: BoxDecoration(
+                color: bottomSheetItem.isActive
+                    ? ResColors.customNewPurple(isDarkmode: isDarkmode)
+                    : ResColors.appColor(isDarkmode: isDarkmode)
+                        .withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(0),
                 onTap: bottomSheetItem.ontap,
-                leading: bottomSheetItem.leading,
-                title: Text(
-                  bottomSheetItem.title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium!
-                      .copyWith(color: Colors.black),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    bottomSheetItem.leading,
+                    Spaces.w14,
+                    Text(
+                      bottomSheetItem.title,
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                            color:
+                                bottomSheetItem.isActive ? Colors.white : null,
+                          ),
+                    ),
+                    Spaces.w20,
+                  ],
                 ),
-                trailing: bottomSheetItem.trailing,
-              ))
-          .toList();
+              ),
+            ))
+        .toList();
+  }
 }
 
 class SettingBottomSheetItem {
   final Function()? ontap;
   final Widget leading;
   final String title;
-  final Widget? trailing;
+  final bool isActive;
   SettingBottomSheetItem({
     required this.ontap,
     required this.leading,
     required this.title,
-    this.trailing,
+    this.isActive = false,
   });
 }

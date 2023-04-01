@@ -10,7 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'components/change_darkmode_feature.dart';
 
 class SettingScreen extends StatelessWidget {
   final UserProfile userProfile;
@@ -20,96 +19,86 @@ class SettingScreen extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final theme = context.watch<ThemeProvider>().isDarkMode;
     // app states
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(userProfile),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            context.languagesExtension.personal,
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
-          centerTitle: true,
-        ),
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Spaces.h12,
-              _buildUserInformation(context),
-              Spaces.h24,
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 1.2,
-                child: const Divider(thickness: 1.2),
+        body: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: theme ? Alignment.topLeft : Alignment.bottomRight,
+                  end: theme ? Alignment.bottomRight : Alignment.topLeft,
+                  colors: const [
+                    ResColors.darkPurple,
+                    ResColors.deepPurple,
+                    ResColors.redAccent,
+                  ],
+                ),
               ),
-              Spaces.h24,
-              _buildSettingOptions(context),
-            ],
-          ),
+            ),
+            SafeArea(
+              child: SizedBox(
+                width: 264.w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Spaces.h12,
+                    _buildUserInformation(context),
+                    _buildSettingOptions(context),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildSettingOptions(BuildContext context) {
+    final themeProvider = context.read<ThemeProvider>();
     return Expanded(
-      child: Container(
-        decoration: BoxDecoration(
-            // boxShadow: const [
-            //   BoxShadow(
-            //     color: Colors.black26,
-            //     offset: Offset(0, 20),
-            //     blurRadius: 20,
-            //   ),
-            // ],
-            // color: Colors.blue[100],
-            // borderRadius: BorderRadius.only(
-            //   topLeft: Radius.circular(32.h),
-            //   topRight: Radius.circular(32.h),
-            // ),
-            ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              ChangeDarkmodeFeature(
-                userID: userProfile.profile!.id!,
-              ),
-              Spaces.h12,
-              const ChangeLanguageFeature(),
-              Spaces.h12,
-              FeatureSetting(
-                icon: CupertinoIcons.person_circle,
-                title: context.languagesExtension.personal_info,
-                // color: Colors.deepPurple[400]!,
-                onTap: () {
-                  FlashMessageWidget(
-                    context: context,
-                    message: "Đây là nội dung thông báo",
-                    type: FlashMessageType.error,
-                  );
-                },
-              ),
-              Spaces.h12,
-              FeatureSetting(
-                icon: Icons.error_outline,
-                title: context.languagesExtension.list_ban,
-                // color: Colors.orange[400]!,
-                onTap: () {},
-              ),
-              Spaces.h12,
-              FeatureSetting(
-                icon: Icons.logout,
-                title: context.languagesExtension.logout,
-                // color: Colors.pink[400]!,
-                onTap: () {
-                  context.read<AuthenticationBloc>().add(LogoutEvent());
-                  Navigator.of(context).pop(context);
-                },
-              ),
-              Spaces.h24,
-            ],
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FeatureSetting(
+            icon: CupertinoIcons.circle_lefthalf_fill,
+            title: themeProvider.isDarkMode
+                ? context.languagesExtension.lightmode
+                : context.languagesExtension.darkmode,
+            onTap: () {
+              themeProvider.toggleTheme(
+                  isOn: !themeProvider.isDarkMode,
+                  userID: userProfile.profile?.id ?? '');
+            },
           ),
-        ),
+          SizedBox(
+            width: 220.w,
+            child: const Divider(
+              thickness: 0.2,
+              color: Colors.white,
+            ),
+          ),
+          const ChangeLanguageFeature(),
+          SizedBox(
+            width: 220.w,
+            child: const Divider(
+              thickness: 0.2,
+              color: Colors.white,
+            ),
+          ),
+          FeatureSetting(
+            icon: Icons.logout,
+            title: context.languagesExtension.logout,
+            onTap: () {
+              context.read<AuthenticationBloc>().add(LogoutEvent());
+              Navigator.of(context).pop(context);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -125,7 +114,7 @@ class SettingScreen extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .displayLarge!
-              .copyWith(fontSize: 20.h),
+              .copyWith(fontSize: 20.h, color: Colors.white),
         ),
       ],
     );
