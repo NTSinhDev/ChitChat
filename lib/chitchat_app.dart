@@ -76,7 +76,6 @@ class _ChitChatAppState extends State<ChitChatApp> {
                   }
                   if (state is LoggedState) {
                     return HomeScreen(
-                      userProfile: state.userProfile,
                       fcmHanlder: widget.fcmHanlder,
                     );
                   }

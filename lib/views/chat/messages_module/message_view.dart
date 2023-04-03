@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/models/injector.dart';
+import 'package:provider/provider.dart';
 
 class MessageView extends StatelessWidget {
   const MessageView({
@@ -12,7 +13,7 @@ class MessageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chat = context.read<ChatBloc>();
+    final chat = Provider.of<ChatBloc>(context, listen: false);
     return Expanded(
       child: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rxdart/rxdart.dart';
+import 'components/input_text_field_search.dart';
 import 'components/user_search_list.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -46,7 +47,7 @@ class _SearchScreenState extends State<SearchScreen> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => exitSearchScreen(context),
           ),
-          title: InputFieldWidget(
+          title: InputTextFieldSearch(
             padding: 0,
             boxDecorationColor: theme ? ResColors.mdblack! : Colors.white,
             suffixIconColor: theme ? Colors.white : Colors.black,

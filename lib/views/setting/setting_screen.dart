@@ -10,26 +10,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+late UserProfile _userProfile;
+late bool _theme;
+
 class SettingScreen extends StatelessWidget {
-  final UserProfile userProfile;
-  const SettingScreen({
-    super.key,
-    required this.userProfile,
-  });
+  const SettingScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    final theme = context.watch<ThemeProvider>().isDarkMode;
+    _userProfile = context.watch<AuthenticationBloc>().userProfile!;
+    _theme = context.watch<ThemeProvider>().isDarkMode;
     // app states
     return BlocProvider<SettingBloc>(
-      create: (context) => SettingBloc(userProfile),
+      create: (context) => SettingBloc(_userProfile),
       child: Scaffold(
         body: Stack(
           children: [
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: theme ? Alignment.topLeft : Alignment.bottomRight,
-                  end: theme ? Alignment.bottomRight : Alignment.topLeft,
+                  begin: _theme ? Alignment.topLeft : Alignment.bottomRight,
+                  end: _theme ? Alignment.bottomRight : Alignment.topLeft,
                   colors: const [
                     ResColors.darkPurple,
                     ResColors.deepPurple,
@@ -68,13 +68,14 @@ class SettingScreen extends StatelessWidget {
             icon: themeProvider.isDarkMode
                 ? CupertinoIcons.circle_righthalf_fill
                 : CupertinoIcons.circle_lefthalf_fill,
-            title:  themeProvider.isDarkMode
+            title: themeProvider.isDarkMode
                 ? context.languagesExtension.lightmode
                 : context.languagesExtension.darkmode,
             onTap: () {
               themeProvider.toggleTheme(
-                  isOn: !themeProvider.isDarkMode,
-                  userID: userProfile.profile?.id ?? '');
+                isOn: !themeProvider.isDarkMode,
+                userID: _userProfile.profile?.id ?? '',
+              );
             },
           ),
           // Space
@@ -115,7 +116,7 @@ class SettingScreen extends StatelessWidget {
         const UserAvatar(),
         Spaces.h10,
         Text(
-          userProfile.profile!.fullName,
+          _userProfile.profile!.fullName,
           maxLines: 4,
           style: Theme.of(context)
               .textTheme

@@ -4,23 +4,22 @@ import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/services/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/admin/admin_screen.dart';
 
 import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:chat_app/models/injector.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'components/ask_ai_button.dart';
 
 part 'components/app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
-  final UserProfile userProfile;
   final FCMHanlder fcmHanlder;
   const HomeScreen({
     super.key,
-    required this.userProfile,
     required this.fcmHanlder,
   });
 
@@ -36,13 +35,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
+    final userProfile = context.watch<AuthenticationBloc>().userProfile!;
     final routerProvider = context.watch<RouterProvider>();
 
     return WillPopScope(
       onWillPop: exitApp,
       child: Stack(
         children: [
-          SettingScreen(userProfile: widget.userProfile),
+          const SettingScreen(),
           TweenAnimationBuilder(
             tween: Tween<double>(
               begin: 0,
@@ -68,7 +68,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Scaffold(
                     appBar: _homeScreenAppBar(
                       context: context,
-                      urlImage: widget.userProfile.urlImage,
                       theme: theme,
                       openSetting: () {
                         setState(() {
@@ -81,14 +80,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     body: BlocProvider<ConversationBloc>(
                       create: (_) => ConversationBloc(
-                        currentUser: widget.userProfile,
+                        currentUser: userProfile,
                         fcmHanlder: widget.fcmHanlder,
                         routerProvider: routerProvider,
                       )..add(ListenConversationsEvent()),
                       child: const ConversationScreen(),
                     ),
                     floatingActionButton: AskAIButton(
-                      userProfile: widget.userProfile,
+                      userProfile: userProfile,
                       isZoomOut: true,
                     ),
                   ),

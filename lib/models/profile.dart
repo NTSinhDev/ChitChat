@@ -13,12 +13,14 @@ class Profile {
   String fullName;
   @HiveField(3)
   String? messagingToken;
+  bool isAdmin;
 
   Profile({
     this.id,
     required this.email,
     required this.fullName,
     this.messagingToken,
+    this.isAdmin = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -33,11 +35,12 @@ class Profile {
   factory Profile.fromMap(Map<String, dynamic> map, String id) {
     return Profile(
       id: id,
-      email: map[ProfileField.emailField] as String,
-      fullName: map[ProfileField.fullNameField] as String,
-      messagingToken: map[ProfileField.userMessagingTokenField] != null
-          ? map[ProfileField.userMessagingTokenField] as String
+      email: map[ProfileField.email] as String,
+      fullName: map[ProfileField.fullName] as String,
+      messagingToken: map[ProfileField.userMessagingToken] != null
+          ? map[ProfileField.userMessagingToken] as String
           : null,
+      isAdmin: map[ProfileField.isAdmin] == null ? false : true,
     );
   }
 }

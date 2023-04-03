@@ -30,12 +30,13 @@ class StorageKey {
 
 class ProfileField {
   static const String collectionName = "Profiles";
-  static const String idUserField = "idUser";
-  static const String emailField = "email";
-  static const String fullNameField = "fullname";
+  static const String idUser = "idUser";
+  static const String email = "email";
+  static const String fullName = "fullname";
   // static const String isEmailVerifiedField = "is_email_verified";
-  static const String urlImageField = "urlImage";
-  static const String userMessagingTokenField = "userMessagingToken";
+  static const String urlImage = "urlImage";
+  static const String userMessagingToken = "userMessagingToken";
+  static const String isAdmin = "isAdmin";
   static const String senderID = "senderID";
 }
 

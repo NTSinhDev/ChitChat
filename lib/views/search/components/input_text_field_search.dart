@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-class InputFieldWidget extends StatefulWidget {
-  const InputFieldWidget({
+class InputTextFieldSearch extends StatefulWidget {
+  const InputTextFieldSearch({
     Key? key,
     required this.onSubmitted,
     required this.onChanged,
@@ -46,10 +46,10 @@ class InputFieldWidget extends StatefulWidget {
   final bool enableRTLHintText;
   final Color cursorColor;
   @override
-  State<InputFieldWidget> createState() => _InputFieldWidgetState();
+  State<InputTextFieldSearch> createState() => _InputTextFieldSearchState();
 }
 
-class _InputFieldWidgetState extends State<InputFieldWidget> {
+class _InputTextFieldSearchState extends State<InputTextFieldSearch> {
   late final TextEditingController textEditingController;
   @override
   void initState() {

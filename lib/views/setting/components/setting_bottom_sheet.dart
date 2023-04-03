@@ -20,7 +20,7 @@ class SettingBtmSheet extends StatelessWidget {
     final theme = context.watch<ThemeProvider>().isDarkMode;
 
     return Container(
-      height: 220.h,
+      height: 200.h,
       padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
       decoration: BoxDecoration(
         color: ResColors.appColor(isDarkmode: !theme),
@@ -36,7 +36,7 @@ class SettingBtmSheet extends StatelessWidget {
               btmSheetTitle,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            Spaces.h8,
+            Spaces.h12,
             ...items,
           ],
         ),
@@ -49,9 +49,6 @@ class SettingBtmSheet extends StatelessWidget {
     return btmSheetItems
         .map((bottomSheetItem) => Container(
               margin: EdgeInsets.only(bottom: 12.h),
-              padding: EdgeInsets.symmetric(
-                horizontal: MediaQuery.of(context).size.width / 5,
-              ),
               decoration: BoxDecoration(
                 color: bottomSheetItem.isActive
                     ? ResColors.customNewPurple(isDarkmode: isDarkmode)
@@ -74,7 +71,6 @@ class SettingBtmSheet extends StatelessWidget {
                                 bottomSheetItem.isActive ? Colors.white : null,
                           ),
                     ),
-                    Spaces.w20,
                   ],
                 ),
               ),

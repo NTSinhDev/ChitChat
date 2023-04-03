@@ -44,9 +44,9 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<List<Profile>> getAllProfileByName({required String name}) async {
     final String text = "$name\uf8ff";
     return await _profileCollection
-        .orderBy(ProfileField.fullNameField, descending: true)
-        .where(ProfileField.fullNameField, isGreaterThanOrEqualTo: name)
-        .where(ProfileField.fullNameField, isLessThanOrEqualTo: text)
+        .orderBy(ProfileField.fullName, descending: true)
+        .where(ProfileField.fullName, isGreaterThanOrEqualTo: name)
+        .where(ProfileField.fullName, isLessThanOrEqualTo: text)
         .get()
         .then(
       (querySnapshot) async {
@@ -104,15 +104,23 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<Profile?> createProfile({required User authUser}) async {
     final profileMap = {
-      ProfileField.idUserField: authUser.uid,
-      ProfileField.emailField: authUser.email,
-      ProfileField.fullNameField: authUser.displayName,
-      ProfileField.urlImageField: "",
-      ProfileField.userMessagingTokenField: "",
+      ProfileField.idUser: authUser.uid,
+      ProfileField.email: authUser.email,
+      ProfileField.fullName: authUser.displayName,
+      ProfileField.urlImage: "",
+      ProfileField.userMessagingToken: "",
     };
 
     await _profileCollection.doc(authUser.uid).set(profileMap);
     return await getProfileById(userID: authUser.uid);
+  }
+
+  Future<String> createNewProfile(String name) async {
+    final data = Profile(email: 'Virtual', fullName: name).toMap();
+    return await _profileCollection.add(data).then((doc) {
+      doc.set(Profile(id: doc.id, email: 'Virtual', fullName: name).toMap());
+      return doc.id;
+    });
   }
 
   @override

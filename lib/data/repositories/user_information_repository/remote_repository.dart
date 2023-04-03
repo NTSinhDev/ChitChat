@@ -34,7 +34,7 @@ class _RemoteRepositoryImpl implements RemoteUserInformationRepository {
     if (userID == null || userID.isEmpty) return false;
     if (currentToken == deviceToken) return false;
     final newData = {
-      ProfileField.userMessagingTokenField: deviceToken,
+      ProfileField.userMessagingToken: deviceToken,
     };
     return await _personalInforRemote.updateProfile(
       data: newData,
