@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class KeyRemoteDataSource {
-  Future<String> getAPIKey();
+  Future<List<String>> getAPIKey();
 }
 
 class KeyRemoteDataSourceImpl implements KeyRemoteDataSource {
@@ -13,17 +13,19 @@ class KeyRemoteDataSourceImpl implements KeyRemoteDataSource {
   }
 
   @override
-  Future<String> getAPIKey() async {
+  Future<List<String>> getAPIKey() async {
     try {
       return await _keyCollection.get().then((querySnapshot) {
         if (querySnapshot.size > 0) {
-          return querySnapshot.docs.first.id;
+          return querySnapshot.docs.map((docSnapshot) {
+            return docSnapshot.id;
+          }).toList();
         }
-        return '';
+        return [];
       });
     } catch (e) {
       log('🚀getAPIKey⚡ ERROR \n${e.toString()}');
-      return '';
+      return [];
     }
   }
 }

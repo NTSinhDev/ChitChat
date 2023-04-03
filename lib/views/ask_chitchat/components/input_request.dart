@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/view_model/providers/apikey_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -19,11 +20,13 @@ class _InputRequestState extends State<InputRequest> {
   bool isTyping = false;
   final TextEditingController textEditingController = TextEditingController();
   late final VirtualAssistantProvider assistantProvider;
+  late final APIKeyProvider apiKeyProvider;
 
   @override
   void initState() {
     super.initState();
     assistantProvider = context.read<VirtualAssistantProvider>();
+    apiKeyProvider = context.read<APIKeyProvider>();
   }
 
   @override
@@ -91,6 +94,7 @@ class _InputRequestState extends State<InputRequest> {
       await assistantProvider.sendMessageAndGetAnswers(
         msg: msg,
         chosenModelId: "gpt-3.5-turbo-0301",
+        apiKey: apiKeyProvider.chatGPTKey,
       );
     } catch (error) {
       log("error $error");

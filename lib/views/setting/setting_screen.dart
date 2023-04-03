@@ -5,7 +5,6 @@ import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/setting/components/change_laguage_feature.dart';
 import 'package:chat_app/views/setting/components/feature_setting.dart';
 import 'package:chat_app/views/setting/components/user_avatar.dart';
-import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -64,9 +63,12 @@ class SettingScreen extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          // Change theme: lightmode, darkmode
           FeatureSetting(
-            icon: CupertinoIcons.circle_lefthalf_fill,
-            title: themeProvider.isDarkMode
+            icon: themeProvider.isDarkMode
+                ? CupertinoIcons.circle_righthalf_fill
+                : CupertinoIcons.circle_lefthalf_fill,
+            title:  themeProvider.isDarkMode
                 ? context.languagesExtension.lightmode
                 : context.languagesExtension.darkmode,
             onTap: () {
@@ -75,6 +77,7 @@ class SettingScreen extends StatelessWidget {
                   userID: userProfile.profile?.id ?? '');
             },
           ),
+          // Space
           SizedBox(
             width: 220.w,
             child: const Divider(
@@ -82,7 +85,9 @@ class SettingScreen extends StatelessWidget {
               color: Colors.white,
             ),
           ),
+          // Change language
           const ChangeLanguageFeature(),
+          // Space
           SizedBox(
             width: 220.w,
             child: const Divider(
@@ -90,6 +95,7 @@ class SettingScreen extends StatelessWidget {
               color: Colors.white,
             ),
           ),
+          // Logout
           FeatureSetting(
             icon: Icons.logout,
             title: context.languagesExtension.logout,
@@ -107,7 +113,7 @@ class SettingScreen extends StatelessWidget {
     return Column(
       children: [
         const UserAvatar(),
-        Spaces.h12,
+        Spaces.h10,
         Text(
           userProfile.profile!.fullName,
           maxLines: 4,

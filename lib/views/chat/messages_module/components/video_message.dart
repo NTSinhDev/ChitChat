@@ -2,12 +2,10 @@ import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/providers/theme_provider.dart';
 import 'package:chat_app/views/chat/messages_module/components/cannot_load_img.dart';
 import 'package:chat_app/views/chat/messages_module/components/loading_msg.dart';
-import 'package:chat_app/utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
-import 'package:chat_app/utils/injector.dart';
 
 class VideoMessage extends StatefulWidget {
   final String path;

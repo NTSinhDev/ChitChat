@@ -3,6 +3,7 @@ import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/view_model/providers/apikey_provider.dart';
 import 'package:chat_app/views/chat/input_messages_module/input_messages_module.dart';
 import 'package:chat_app/views/chat/messages_module/message_view.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
@@ -38,6 +39,7 @@ class _ChatScreenState extends State<ChatScreen> {
         currentUser: widget.currentUser,
         conversation: widget.conversation,
         friend: widget.friendInfo,
+        serverKey: context.watch<APIKeyProvider>().messagingServerKey,
       ),
       child: WillPopScope(
         onWillPop: () async {

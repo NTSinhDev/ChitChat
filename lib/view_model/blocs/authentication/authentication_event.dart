@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:chat_app/models/user_profile.dart';
 
 abstract class AuthenticationEvent {
@@ -29,9 +28,7 @@ class NormalLoginEvent extends AuthenticationEvent {
 
 class CheckAuthenticationEvent extends AuthenticationEvent {
   final String userID;
-  CheckAuthenticationEvent({
-    required this.userID,
-  });
+  CheckAuthenticationEvent({required this.userID});
 }
 
 class InitLoginEvent extends AuthenticationEvent {}

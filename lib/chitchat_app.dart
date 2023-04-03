@@ -70,7 +70,7 @@ class _ChitChatAppState extends State<ChitChatApp> {
                 builder: (context, state) {
                   context.initScreenUtilDependency();
                   widget.fcmHanlder.handleFirebaseMessagingStates(context);
-                  
+
                   if (state is RegisterState) {
                     return const SignUpScreen();
                   }

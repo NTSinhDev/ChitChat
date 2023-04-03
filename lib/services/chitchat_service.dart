@@ -20,6 +20,7 @@ class ChitChatService {
   static Future<List<AskChitChatModel>> sendMessageGPT({
     required String message,
     required String modelId,
+    required String apiKey,
   }) async {
     final data = {
       "model": modelId,
@@ -30,7 +31,6 @@ class ChitChatService {
         }
       ]
     };
-    final apiKey = await APIKey.chatGPT;
     try {
       final response = await _apiServices.post(
         url: "${BaseUrl.openAI}/chat/completions",
@@ -48,13 +48,13 @@ class ChitChatService {
   static Future<List<AskChitChatModel>> sendMessage({
     required String message,
     required String modelId,
+        required String apiKey,
   }) async {
     final data = {
       "model": modelId,
       "prompt": message,
       "max_tokens": 300,
     };
-    final apiKey = await APIKey.chatGPT;
     try {
       final response = await _apiServices.post(
         url: "${BaseUrl.openAI}/completions",

@@ -1,10 +1,8 @@
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/utils/enums.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/views/conversations/components/search_bar.dart';
-import 'package:chat_app/widgets/flash_message_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

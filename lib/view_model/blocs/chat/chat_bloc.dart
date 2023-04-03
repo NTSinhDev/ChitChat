@@ -26,10 +26,13 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Stream<Iterable<Message>> get msgListStream => _msgListSubject.stream;
   StreamSink<Iterable<Message>> get _msgListSink => _msgListSubject.sink;
 
+  final String serverKey; 
+
   ChatBloc({
     required this.currentUser,
     required this.conversation,
     required this.friend,
+    required this.serverKey,
   }) : super(InitChatState(
             currentUser: currentUser,
             friend: friend,
@@ -121,6 +124,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         userProfile: currentUser.profile!,
         friendProfile: friend.profile!,
         message: event.message,
+        apiKey: serverKey,
       );
     }
 

@@ -1,4 +1,3 @@
-import 'dart:developer' as dev;
 import 'dart:math';
 
 import 'package:chat_app/res/injector.dart';
@@ -60,9 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(
-                        endTweenValue == 0 ? endTweenValue : 24),
+                      endTweenValue == 0 ? endTweenValue : 24,
+                    ),
                     bottomLeft: Radius.circular(
-                        endTweenValue == 0 ? endTweenValue : 24),
+                      endTweenValue == 0 ? endTweenValue : 24,
+                    ),
                   ),
                   child: Scaffold(
                     appBar: _homeScreenAppBar(
@@ -70,7 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       urlImage: widget.userProfile.urlImage,
                       theme: theme,
                       openSetting: () {
-                        dev.log('🚀log⚡');
                         setState(() {
                           endTweenValue == 0
                               ? endTweenValue = 1
@@ -109,15 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  navigateToSettingScreen(BuildContext context) => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SettingScreen(
-            userProfile: widget.userProfile,
-          ),
-        ),
-      );
 
   Future<bool> exitApp() async {
     final difference = DateTime.now().difference(timeBackPressed);

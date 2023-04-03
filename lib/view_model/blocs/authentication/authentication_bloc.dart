@@ -59,12 +59,6 @@ class AuthenticationBloc
       loading: false,
       userProfile: userProfile!,
     ));
-    // await FCMHanlder.sendMessage(
-    //     conversationID: userProfile!.profile!.id!,
-    //     userProfile: userProfile!.profile!,
-    //     friendProfile: userProfile!.profile!,
-    //     message: "test message",
-    //   );
   }
 
   _googleLogin(

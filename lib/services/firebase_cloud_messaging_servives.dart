@@ -18,10 +18,12 @@ class FCMHanlder {
     required Profile userProfile,
     required String message,
     required String conversationID,
+    required String apiKey,
   }) async {
+    log('🚀log⚡ hehehe');
     final headers = <String, String>{
       'Content-type': 'application/json',
-      'Authorization': APIKey.cloudMessagingServer,
+      'Authorization': apiKey,
     };
     final dataBody = {
       "notification": {"title": userProfile.fullName, "body": message},

@@ -12,10 +12,7 @@ AppBar _homeScreenAppBar({
     title: Row(
       children: [
         GestureDetector(
-          onTap: () {
-            dev.log('🚀log⚡');
-            openSetting();
-          },
+          onTap: () => openSetting(),
           child: Container(
             margin: EdgeInsets.only(right: 16.w),
             child: Center(

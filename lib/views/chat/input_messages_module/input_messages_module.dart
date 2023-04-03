@@ -14,7 +14,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:media_picker_widget/media_picker_widget.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:chat_app/utils/injector.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 

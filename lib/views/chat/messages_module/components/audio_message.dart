@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/injector.dart';
-import 'package:chat_app/view_model/blocs/chat/chat_bloc.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';

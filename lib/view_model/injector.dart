@@ -1,4 +1,5 @@
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/view_model/providers/apikey_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,6 +24,7 @@ List<SingleChildWidget> injectProviders({
   required SharedPreferences sharedPreferences,
 }) {
   return [
+    ChangeNotifierProvider(create: (_) => APIKeyProvider()..getAPIKey()),
     ChangeNotifierProvider(create: (_) => VirtualAssistantProvider()),
     ChangeNotifierProvider(create: (_) => RouterProvider()),
     ChangeNotifierProvider(create: (_) => ThemeProvider(sharedPreferences)),

@@ -1,4 +1,3 @@
-import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
