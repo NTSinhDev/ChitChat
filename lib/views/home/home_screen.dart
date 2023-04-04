@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime timeBackPressed = DateTime.now();
   double endTweenValue = 0;
   bool isGestureActive = false;
-  bool isExpandAskBtn = true;
 
   @override
   Widget build(BuildContext context) {
@@ -90,17 +89,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           });
                         },
                       ),
-                      body: ConversationScreen(
-                        fcmHanlder: widget.fcmHanlder,
-                        scrollCallBack: (isExpand) {
-                          setState(() {
-                            isExpandAskBtn = isExpand;
-                          });
-                        },
-                      ),
+                      body: ConversationScreen(fcmHanlder: widget.fcmHanlder),
                       floatingActionButton: AskAIButton(
                         userProfile: widget.userProfile,
-                        isExpand: isExpandAskBtn,
                       ),
                     ),
                   ),

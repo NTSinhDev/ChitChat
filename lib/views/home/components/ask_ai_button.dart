@@ -10,12 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AskAIButton extends StatefulWidget {
   final UserProfile userProfile;
-  final bool isExpand;
-  const AskAIButton({
-    super.key,
-    required this.userProfile,
-    required this.isExpand,
-  });
+  const AskAIButton({super.key, required this.userProfile});
 
   @override
   State<AskAIButton> createState() => _AskAIButtonState();
@@ -25,9 +20,8 @@ class _AskAIButtonState extends State<AskAIButton> {
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 100),
-      width: widget.isExpand ? 178.w : 60.w,
+    return SizedBox(
+      width: 178.w,
       height: 48.h,
       child: FloatingActionButton(
         onPressed: () => _navigateAskChitChatScreen(context),
@@ -45,16 +39,14 @@ class _AskAIButtonState extends State<AskAIButton> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const FaIcon(FontAwesomeIcons.solidComments),
-            if (widget.isExpand) ...[
-              Spaces.w12,
-              Text(
-                context.languagesExtension.ask_ChitChat,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium!
-                    .copyWith(color: Colors.white, fontSize: 13.0),
-              ),
-            ],
+            Spaces.w12,
+            Text(
+              context.languagesExtension.ask_ChitChat,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Colors.white, fontSize: 13.0),
+            ),
           ],
         ),
       ),
