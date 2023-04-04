@@ -28,7 +28,7 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     searchBloc = context.read<SearchBloc>();
-    searchBloc.add(SearchingEvent(searchName: ''));
+    // searchBloc.add(SearchingEvent(searchName: ''));
   }
 
   @override

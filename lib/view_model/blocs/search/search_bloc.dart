@@ -10,6 +10,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   final _userInformationRepo = UserInformationRepository();
   final _conversationRepo = ConversationsRepository();
+
   final _usersSubject = ReplaySubject<List<UserProfile>>();
   final _friendsSubject = ReplaySubject<List<UserProfile>>();
 
@@ -35,11 +36,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     on<JoinConversationEvent>((event, emit) async {
       if (event.userIDs[0].isEmpty || event.userIDs[0].isEmpty) {
         return emit(SearchInitialState(
-          friendsSubject:
-              _searchKeyWhenComeBack.isEmpty ? _friendsSubject : _usersSubject,
-          currentUser: currentUser,
-          error: "Error when get conversation data!",
-        ));
+            friendsSubject: _searchKeyWhenComeBack.isEmpty
+                ? _friendsSubject
+                : _usersSubject,
+            currentUser: currentUser,
+            error: "Error when get conversation data!"));
       }
 
       final conversation = await _conversationRepo.remote.getConversationData(
@@ -59,6 +60,18 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             _searchKeyWhenComeBack.isEmpty ? _friendsSubject : _usersSubject,
         currentUser: currentUser,
       ));
+    });
+
+    on<UpdateFriendListEvent>((event, emit) {
+      if (event.friendProfile == null) return;
+      friendList.add(event.friendProfile!);
+      _friendsSubject.add(friendList);
+      emit(
+        SearchInitialState(
+          friendsSubject: _friendsSubject,
+          currentUser: currentUser,
+        ),
+      );
     });
   }
 

@@ -24,12 +24,15 @@ class ConversationItem extends StatelessWidget {
     final conversationBloc = context.watch<ConversationBloc>();
     final locale = context.watch<LanguageProvider>().locale;
     final isDarkmode = context.watch<ThemeProvider>().isDarkMode;
-
+    // final searchBloc = context.read<SearchBloc>();
     return FutureBuilder<UserProfile?>(
       future: friendProfile,
       builder: (context, snapshot) {
         UserProfile? userProfile;
-        if (snapshot.hasData) userProfile = snapshot.data;
+        if (snapshot.hasData) {
+          userProfile = snapshot.data;
+        }
+        // searchBloc.add(UpdateFriendListEvent(friendProfile: userProfile!));
 
         return ListTile(
           onTap: () async => await _navigateToChatScreen(
@@ -39,7 +42,10 @@ class ConversationItem extends StatelessWidget {
           ),
           leading: StateAvatar(
             urlImage: userProfile?.urlImage ?? URLImage(),
-            userId: userProfile?.profile?.id ?? '',
+            userId: handleUserIdForStateAvatarWidget(
+              userProfile?.profile?.id,
+              conversationBloc,
+            ),
             radius: 56.r,
           ),
           title: Container(
@@ -74,14 +80,12 @@ class ConversationItem extends StatelessWidget {
                                 blurRadius: 1,
                               ),
                           ],
-                          borderRadius: BorderRadius.circular(
-                            4.r,
-                          ),
+                          borderRadius: BorderRadius.circular(4.r),
                         ),
                         child: Text(
-                          'ảo',
+                          'Ảo',
                           style:
-                              Theme.of(context).textTheme.labelSmall!.copyWith(
+                              Theme.of(context).textTheme.bodySmall!.copyWith(
                                     fontSize: 8.5,
                                     color: ResColors.customNewDarkPurple,
                                   ),
@@ -137,6 +141,13 @@ class ConversationItem extends StatelessWidget {
         );
       },
     );
+  }
+
+  String handleUserIdForStateAvatarWidget(String? id, ConversationBloc bloc) {
+    if (id == null || id.isEmpty || id == bloc.currentUser.profile!.id!) {
+      return '';
+    }
+    return id;
   }
 
   _navigateToChatScreen(

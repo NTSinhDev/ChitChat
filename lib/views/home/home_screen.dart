@@ -32,80 +32,90 @@ class _HomeScreenState extends State<HomeScreen> {
   DateTime timeBackPressed = DateTime.now();
   double endTweenValue = 0;
   bool isGestureActive = false;
+  bool isExpandAskBtn = true;
 
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
+    final currentUser = context.watch<AuthenticationBloc>().userProfile!;
     final routerProvider = context.watch<RouterProvider>();
-
-    return WillPopScope(
-      onWillPop: exitApp,
-      child: Stack(
-        children: [
-          SettingScreen(userProfile: widget.userProfile),
-          TweenAnimationBuilder(
-            tween: Tween<double>(
-              begin: 0,
-              end: endTweenValue,
-            ),
-            duration: const Duration(milliseconds: 100),
-            builder: (context, value, child) {
-              return Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.identity()
-                  ..setEntry(3, 2, 0.001)
-                  ..setEntry(0, 3, 250 * value)
-                  ..rotateY((pi / 6) * value),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                      endTweenValue == 0 ? endTweenValue : 24,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ConversationBloc>(
+          create: (_) => ConversationBloc(
+            currentUser: currentUser,
+            fcmHanlder: widget.fcmHanlder,
+            routerProvider: routerProvider,
+          )..add(ListenConversationsEvent()),
+        ),
+        BlocProvider<SearchBloc>(
+          create: (_) => SearchBloc(currentUser: currentUser),
+        ),
+      ],
+      child: WillPopScope(
+        onWillPop: exitApp,
+        child: Stack(
+          children: [
+            SettingScreen(userProfile: widget.userProfile),
+            TweenAnimationBuilder(
+              tween: Tween<double>(begin: 0, end: endTweenValue),
+              duration: const Duration(milliseconds: 200),
+              builder: (context, value, child) {
+                return Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.identity()
+                    ..setEntry(3, 2, 0.001)
+                    ..setEntry(0, 3, 250 * value)
+                    ..rotateY((pi / 6) * value),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(
+                        endTweenValue == 0 ? endTweenValue : 24,
+                      ),
+                      bottomLeft: Radius.circular(
+                        endTweenValue == 0 ? endTweenValue : 24,
+                      ),
                     ),
-                    bottomLeft: Radius.circular(
-                      endTweenValue == 0 ? endTweenValue : 24,
-                    ),
-                  ),
-                  child: Scaffold(
-                    appBar: _homeScreenAppBar(
-                      context: context,
-                      urlImage: widget.userProfile.urlImage,
-                      theme: theme,
-                      openSetting: () {
-                        setState(() {
-                          endTweenValue == 0
-                              ? endTweenValue = 1
-                              : endTweenValue = 0;
-                          isGestureActive = true;
-                        });
-                      },
-                    ),
-                    body: BlocProvider<ConversationBloc>(
-                      create: (_) => ConversationBloc(
-                        currentUser: widget.userProfile,
+                    child: Scaffold(
+                      appBar: _homeScreenAppBar(
+                        context: context,
+                        urlImage: widget.userProfile.urlImage,
+                        theme: theme,
+                        openSetting: () {
+                          setState(() {
+                            endTweenValue == 0
+                                ? endTweenValue = 1
+                                : endTweenValue = 0;
+                            isGestureActive = true;
+                          });
+                        },
+                      ),
+                      body: ConversationScreen(
                         fcmHanlder: widget.fcmHanlder,
-                        routerProvider: routerProvider,
-                      )..add(ListenConversationsEvent()),
-                      child: const ConversationScreen(),
-                    ),
-                    floatingActionButton: AskAIButton(
-                      userProfile: widget.userProfile,
-                      isZoomOut: true,
+                        scrollCallBack: (isExpand) {
+                          setState(() {
+                            isExpandAskBtn = isExpand;
+                          });
+                        },
+                      ),
+                      floatingActionButton: AskAIButton(
+                        userProfile: widget.userProfile,
+                        isExpand: isExpandAskBtn,
+                      ),
                     ),
                   ),
-                ),
-              );
-            },
-          ),
-          if (isGestureActive)
-            GestureDetector(
-              onHorizontalDragUpdate: (details) {
-                setState(() {
+                );
+              },
+            ),
+            if (isGestureActive)
+              GestureDetector(
+                onHorizontalDragUpdate: (details) => setState(() {
                   endTweenValue = 0;
                   isGestureActive = false;
-                });
-              },
-            )
-        ],
+                }),
+              ),
+          ],
+        ),
       ),
     );
   }

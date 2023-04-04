@@ -24,12 +24,6 @@ class ChitChatApp extends StatefulWidget {
       notificationService: NotificationService(),
       deviceToken: token ?? '',
     );
-
-    logToken();
-  }
-
-  logToken() {
-    log('🚀log⚡ ${fcmHanlder.deviceToken}');
   }
 
   @override

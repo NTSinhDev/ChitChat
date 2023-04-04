@@ -10,11 +10,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class AskAIButton extends StatefulWidget {
   final UserProfile userProfile;
-  final bool isZoomOut;
+  final bool isExpand;
   const AskAIButton({
     super.key,
     required this.userProfile,
-    required this.isZoomOut,
+    required this.isExpand,
   });
 
   @override
@@ -25,8 +25,9 @@ class _AskAIButtonState extends State<AskAIButton> {
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
-    return SizedBox(
-      width: widget.isZoomOut ? 60.w : 178.w,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 100),
+      width: widget.isExpand ? 178.w : 60.w,
       height: 48.h,
       child: FloatingActionButton(
         onPressed: () => _navigateAskChitChatScreen(context),
@@ -44,7 +45,7 @@ class _AskAIButtonState extends State<AskAIButton> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const FaIcon(FontAwesomeIcons.solidComments),
-            if (!widget.isZoomOut) ...[
+            if (widget.isExpand) ...[
               Spaces.w12,
               Text(
                 context.languagesExtension.ask_ChitChat,

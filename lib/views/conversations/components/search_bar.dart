@@ -14,7 +14,7 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final conversationBloc = context.watch<ConversationBloc>();
+    final searchBloc = context.watch<SearchBloc>();
     // setup UI
     final theme = context.watch<ThemeProvider>().isDarkMode;
     final Color bgColor = theme
@@ -26,21 +26,16 @@ class SearchBar extends StatelessWidget {
       height: 48.h,
       margin: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(100.r), color: bgColor),
+        borderRadius: BorderRadius.circular(100.r),
+        color: bgColor,
+      ),
       child: InkWell(
         onTap: () {
-          FlashMessageWidget(
-            context: context,
-            message: 'Lấy listUser => search',
-            type: FlashMessageType.warning,
-          );
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => BlocProvider(
-                create: (context) => SearchBloc(
-                  currentUser: conversationBloc.currentUser,
-                ),
+                create: (context) => searchBloc,
                 child: const SearchScreen(),
               ),
             ),
