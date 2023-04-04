@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chat_app/models/injector.dart';
+import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
@@ -22,32 +23,20 @@ class ConversationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final conversationBloc = context.watch<ConversationBloc>();
     final locale = context.watch<LanguageProvider>().locale;
+    final isDarkmode = context.watch<ThemeProvider>().isDarkMode;
 
     return FutureBuilder<UserProfile?>(
       future: friendProfile,
       builder: (context, snapshot) {
         UserProfile? userProfile;
-        if (snapshot.hasData) {
-          userProfile = snapshot.data;
-        }
+        if (snapshot.hasData) userProfile = snapshot.data;
+
         return ListTile(
-          onTap: () async {
-            if (userProfile == null) return;
-            await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (nContext) {
-                  return ChatScreen(
-                    conversation: conversation,
-                    currentUser: conversationBloc.currentUser,
-                    friendInfo: userProfile!,
-                  );
-                },
-                settings: RouteSettings(
-                  name: "conversation:${conversation.id}",
-                ),
-              ),
-            );
-          },
+          onTap: () async => await _navigateToChatScreen(
+            context,
+            conversationBloc,
+            userProfile,
+          ),
           leading: StateAvatar(
             urlImage: userProfile?.urlImage ?? URLImage(),
             userId: userProfile?.profile?.id ?? '',
@@ -58,12 +47,48 @@ class ConversationItem extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  userProfile?.profile?.fullName ?? "",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(fontSize: 14.r),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      userProfile?.profile?.fullName ?? "",
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(fontSize: 14.r),
+                    ),
+                    if (userProfile != null &&
+                        userProfile.profile != null &&
+                        userProfile.profile!.email == 'Virtual') ...[
+                      Spaces.w4,
+                      Container(
+                        padding: EdgeInsets.all(2.h),
+                        decoration: BoxDecoration(
+                          color: ResColors.backgroundLightPurple,
+                          boxShadow: [
+                            if (!isDarkmode)
+                              const BoxShadow(
+                                color: ResColors.customNewDarkPurple,
+                                offset: Offset(1, 1),
+                                blurRadius: 1,
+                              ),
+                          ],
+                          borderRadius: BorderRadius.circular(
+                            4.r,
+                          ),
+                        ),
+                        child: Text(
+                          'ảo',
+                          style:
+                              Theme.of(context).textTheme.labelSmall!.copyWith(
+                                    fontSize: 8.5,
+                                    color: ResColors.customNewDarkPurple,
+                                  ),
+                        ),
+                      ),
+                    ]
+                  ],
                 ),
                 Text(
                   TimeUtilities.formatTime(
@@ -111,6 +136,28 @@ class ConversationItem extends StatelessWidget {
           // ),
         );
       },
+    );
+  }
+
+  _navigateToChatScreen(
+    BuildContext context,
+    ConversationBloc conversationBloc,
+    UserProfile? userProfile,
+  ) async {
+    if (userProfile == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (nContext) {
+          return ChatScreen(
+            conversation: conversation,
+            currentUser: conversationBloc.currentUser,
+            friendInfo: userProfile,
+          );
+        },
+        settings: RouteSettings(
+          name: "conversation:${conversation.id}",
+        ),
+      ),
     );
   }
 

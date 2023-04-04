@@ -34,12 +34,13 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    final serverKey = context.watch<APIKeyProvider>().messagingServerKey;
+    return BlocProvider<ChatBloc>(
       create: (context) => ChatBloc(
         currentUser: widget.currentUser,
         conversation: widget.conversation,
         friend: widget.friendInfo,
-        serverKey: context.watch<APIKeyProvider>().messagingServerKey,
+        serverKey: serverKey,
       ),
       child: WillPopScope(
         onWillPop: () async {

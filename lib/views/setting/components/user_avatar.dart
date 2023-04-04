@@ -140,8 +140,10 @@ class _UserAvatarState extends State<UserAvatar> {
     );
   }
 
-  Future pickImage(
-      {required ImageSource source, required BuildContext context}) async {
+  Future pickImage({
+    required ImageSource source,
+    required BuildContext context,
+  }) async {
     try {
       final image = await ImagePicker().pickImage(source: source);
       if (!mounted) return;
