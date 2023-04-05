@@ -74,7 +74,7 @@ class _HandleTools {
     switch (day) {
       case 'Mon':
         return 'T2';
-      case 'Tues':
+      case 'Tue':
         return 'T3';
       case 'Wed':
         return 'T4';

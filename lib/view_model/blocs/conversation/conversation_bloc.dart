@@ -21,9 +21,9 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   final _userInformationRepo = UserInformationRepository();
 
   // Conversations data
-  Iterable<Conversation> conversations = [];
-  final _behaviorConversations = BehaviorSubject<Iterable<Conversation>>();
-  Stream<Iterable<Conversation>> get conversationsStream {
+  List<ConversationData> _conversations = [];
+  final _behaviorConversations = BehaviorSubject<List<ConversationData>>();
+  Stream<List<ConversationData>> get conversationsStream {
     return _behaviorConversations.stream;
   }
 
@@ -35,29 +35,51 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     required this.fcmHanlder,
     required this.routerProvider,
   }) : super(ConversationInitial(
-          conversationsStream: BehaviorSubject<Iterable<Conversation>>().stream,
+          conversationsStream:
+              BehaviorSubject<Iterable<ConversationData>>().stream,
           userId: currentUser.profile?.id ?? '',
         )) {
-    _updateConversationsData();
-
-    on<ListenConversationsEvent>((event, emit) async {
-      // local data
-      await _conversationRepo.local.openConversationsBox();
-      final dataSavedAtLocal = await _conversationRepo.local.getConversations();
-      _behaviorConversations.sink.add(dataSavedAtLocal);
-
-      _conversationRepo.remote
-          .conversationsDataStream(userId: currentUser.profile!.id!)
-          .listen((convers) async {
-        _behaviorConversations.sink.add(convers ?? []);
-        conversations = convers ?? [];
-        await _saveToLocal(conversations: convers);
-      });
-
+    on<GetLocalConversationsEvent>((event, emit) async {
+      await _conversationRepo.local.openBoxs();
+      final conversationsData = await _conversationRepo.local
+          .getConversationsData(currentUser.profile!.id!);
+      _behaviorConversations.sink.add(conversationsData);
+      _conversations = conversationsData;
       emit(ConversationInitial(
         conversationsStream: _behaviorConversations.stream,
         userId: currentUser.profile!.id!,
       ));
+    });
+
+    _behaviorConversations.listen((value) => _conversations = value);
+
+    on<ListenConversationsEvent>((event, emit) async {
+      _conversationRepo.remote
+          .conversationsDataStream(userId: currentUser.profile!.id!)
+          .listen((Iterable<Conversation> dataStream) async {
+        // Handle data to get conversations data list
+        List<ConversationData> conversationsData = [];
+        final conversationsStream = dataStream.toList();
+        for (var i = 0; i < conversationsStream.length; i++) {
+          final friendId = conversationsStream[i].listUser.length == 1
+              ? conversationsStream[i].listUser[0]
+              : conversationsStream[i]
+                  .listUser
+                  .firstWhere((element) => element != currentUser.profile!.id!);
+          final friendProfile = await _userInformationRepo.remote
+              .getInformationById(id: friendId);
+          final conversationData = ConversationData(
+            conversation: conversationsStream[i],
+            friend: friendProfile!,
+          );
+          conversationsData.add(conversationData);
+        }
+
+        if (conversationsData != _conversations) {
+          _behaviorConversations.sink.add(conversationsData);
+        }
+        await _saveToLocal(conversations: conversationsData);
+      });
     });
 
     on<HandleNotificationServiceEvent>((event, emit) {
@@ -78,16 +100,9 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
           //* khởi tạo các dữ liệu ban đầu
           final namePath = routerProvider.getNamePath();
           final conversationList = await conversationsStream.first;
-          final sinh = conversationList.toList();
-          log('🚀log⚡ $sinh');
-          final Conversation checkConversation = sinh
-              .where(
-                (element) =>
-                    element.id == value[ConversationsField.conversationID],
-              )
-              .first;
-          final friend =
-              await getFriendInfomation(id: value[ProfileField.senderID]);
+          final conversationData = conversationList.firstWhere((element) =>
+              element.conversation.id ==
+              value[ConversationsField.conversationID]);
 
           //* nếu như namePath có giá trị thì gọi phương thức push của bộ điều hướng
           //* để chuyển đến màn hình Chat
@@ -97,31 +112,31 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
               MaterialPageRoute(
                 builder: (context) {
                   return ChatScreen(
-                    conversation: checkConversation,
+                    conversation: conversationData.conversation,
                     currentUser: currentUser,
-                    friendInfo: friend ?? UserProfile(urlImage: URLImage()),
+                    friendInfo: conversationData.friend,
                   );
                 },
                 settings: RouteSettings(
-                  name: "conversation:${checkConversation.id}",
+                  name: "conversation:${conversationData.conversation.id}",
                 ),
               ),
             );
           } else {
-            if (checkConversation.id == null) return;
+            if (conversationData.conversation.id == null) return;
             if (namePath == "/") {
               log("check get inside");
               await navigator.push(
                 MaterialPageRoute(
                   builder: (context) {
                     return ChatScreen(
-                      conversation: checkConversation,
+                      conversation: conversationData.conversation,
                       currentUser: currentUser,
-                      friendInfo: friend ?? UserProfile(urlImage: URLImage()),
+                      friendInfo: conversationData.friend,
                     );
                   },
                   settings: RouteSettings(
-                    name: "conversation:${checkConversation.id}",
+                    name: "conversation:${conversationData.conversation.id}",
                   ),
                 ),
               );
@@ -129,8 +144,8 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
               await _checkChatPageOrReplace(
                 namePath: namePath,
                 navigator: navigator,
-                conversation: checkConversation,
-                friend: friend,
+                conversation: conversationData.conversation,
+                friend: conversationData.friend,
               );
             }
           }
@@ -185,18 +200,15 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     }
   }
 
-  Future _saveToLocal({required Iterable<Conversation>? conversations}) async {
-    if (conversations == null) return;
+  Future _saveToLocal({required List<ConversationData> conversations}) async {
+    if (conversations.isEmpty) return;
 
-    for (var element in conversations) {
+    for (ConversationData element in conversations) {
       await _conversationRepo.local.createConversation(
-        conversation: element,
+        conversation: element.conversation,
+        friendProfile: element.friend,
       );
     }
-  }
-
-  _updateConversationsData() {
-    _behaviorConversations.listen((value) => conversations = value);
   }
 
   Future<UserProfile?> getFriendInfomation({required String id}) async =>

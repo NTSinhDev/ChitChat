@@ -17,7 +17,7 @@ abstract class ConversationsRemoteDataSource {
     required String id,
     required Map<String, dynamic> data,
   });
-  Stream<Iterable<Conversation>?> listenConversationsData({
+  Stream<Iterable<Conversation>> listenConversationsData({
     required String userId,
   });
 }
@@ -33,7 +33,7 @@ class ConversationsRemoteDataSourceImpl
   }
 
   @override
-  Stream<Iterable<Conversation>?> listenConversationsData({
+  Stream<Iterable<Conversation>> listenConversationsData({
     required String userId,
   }) =>
       _conversationCollection

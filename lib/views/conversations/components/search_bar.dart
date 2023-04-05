@@ -14,7 +14,7 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final searchBloc = context.watch<SearchBloc>();
+    final currentUser = context.watch<ConversationBloc>().currentUser;
     // setup UI
     final theme = context.watch<ThemeProvider>().isDarkMode;
     final Color bgColor = theme
@@ -34,8 +34,8 @@ class SearchBar extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                create: (context) => searchBloc,
+              builder: (context) => BlocProvider<SearchBloc>(
+                create: (context) => SearchBloc(currentUser: currentUser),
                 child: const SearchScreen(),
               ),
             ),

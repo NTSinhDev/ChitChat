@@ -38,19 +38,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     final currentUser = context.watch<AuthenticationBloc>().userProfile!;
     final routerProvider = context.watch<RouterProvider>();
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<ConversationBloc>(
-          create: (_) => ConversationBloc(
-            currentUser: currentUser,
-            fcmHanlder: widget.fcmHanlder,
-            routerProvider: routerProvider,
-          )..add(ListenConversationsEvent()),
-        ),
-        BlocProvider<SearchBloc>(
-          create: (_) => SearchBloc(currentUser: currentUser),
-        ),
-      ],
+    return BlocProvider<ConversationBloc>(
+      create: (_) => ConversationBloc(
+        currentUser: currentUser,
+        fcmHanlder: widget.fcmHanlder,
+        routerProvider: routerProvider,
+      )
+        ..add(GetLocalConversationsEvent())
+        ..add(ListenConversationsEvent()),
       child: WillPopScope(
         onWillPop: exitApp,
         child: Stack(

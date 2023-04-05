@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'components/conversations_listview.dart';
 
-class ConversationScreen extends StatefulWidget {
+class ConversationScreen extends StatelessWidget {
   final FCMHanlder fcmHanlder;
   const ConversationScreen({
     super.key,
@@ -18,19 +18,18 @@ class ConversationScreen extends StatefulWidget {
   });
 
   @override
-  State<ConversationScreen> createState() => _ConversationScreenState();
-}
-
-class _ConversationScreenState extends State<ConversationScreen> {
-  @override
   Widget build(BuildContext context) {
-    final routerProvider = context.watch<RouterProvider>();
     final conversationBloc = context.read<ConversationBloc>();
+    final routerProvider = context.watch<RouterProvider>();
     return BlocListener<ConversationBloc, ConversationState>(
       listener: (context, state) {
         if (state is ConversationInitial) {
-          conversationBloc.add(HandleNotificationServiceEvent(
-              context: context, navigatorKey: routerProvider.navigatorKey));
+          conversationBloc.add(
+            HandleNotificationServiceEvent(
+              context: context,
+              navigatorKey: routerProvider.navigatorKey,
+            ),
+          );
         }
       },
       child: RefreshIndicator(
@@ -43,17 +42,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
             children: [
               const SearchBar(),
               Spaces.h20,
-              const ListOnlineUser(),
-              StreamBuilder<Iterable<Conversation>>(
+              // const ListOnlineUser(),
+              StreamBuilder<List<ConversationData>>(
                 stream: conversationBloc.conversationsStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData &&
                       snapshot.data != null &&
                       snapshot.data!.isNotEmpty) {
-                    return ConversationsListView(
-                        conversations: snapshot.data!);
+                    return ConversationsListView(conversations: snapshot.data!);
                   }
-                  return const EmptyConversation();
+                  return Container();
                 },
               ),
             ],

@@ -12,7 +12,7 @@ abstract class RemoteConversationsRepository {
     required String id,
     required Map<String, dynamic> data,
   });
-  Stream<Iterable<Conversation>?> conversationsDataStream({
+  Stream<Iterable<Conversation>> conversationsDataStream({
     required String userId,
   });
 }
@@ -21,7 +21,7 @@ class _RemoteRepositoryImpl implements RemoteConversationsRepository {
   final _conversationsRemoteDS = ConversationsRemoteDataSourceImpl();
 
   @override
-  Stream<Iterable<Conversation>?> conversationsDataStream({
+  Stream<Iterable<Conversation>> conversationsDataStream({
     required String userId,
   }) =>
       _conversationsRemoteDS.listenConversationsData(userId: userId);
