@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/models/user_profile.dart';
 import 'package:chat_app/data/repositories/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
@@ -44,21 +46,27 @@ class AuthenticationBloc
     CheckAuthenticationEvent event,
     Emitter<AuthenticationState> emit,
   ) async {
+    log('🚀_checkAuthEvent⚡ start');
     emit(LoginState(loading: true));
 
     userProfile = await _userInforRepository.local.getProfile(
       userID: event.userID,
     );
+    log('🚀_checkAuthEvent⚡ $userProfile');
 
     if (userProfile == null) return emit(LoginState(loading: false));
-    await _userInforRepository.remote
+    final catchError = await _userInforRepository.remote
         .updatePresence(id: userProfile!.profile!.id!);
+    if (catchError != null) {
+      return emit(LoginState(loading: false, message: catchError));
+    }
+
     emit(LoginState(loading: false));
-    
     emit(LoggedState(
       loading: false,
       userProfile: userProfile!,
     ));
+    log('🚀_checkAuthEvent⚡ success');
   }
 
   _googleLogin(

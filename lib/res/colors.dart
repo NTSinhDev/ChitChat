@@ -16,6 +16,21 @@ class ResColors {
   static const customNewMediumPurple = Color(0xffa684dd);
   static const backgroundLightPurple = Color(0xfff2eaff);
 
+  static const sunshine = [
+    Color(0xff75AAF0),
+    Color(0xff7BC1FA),
+    // crayolaLemonYellow,
+    bananaYellow,
+    // ripeMango,
+    // deepSaffron,
+    // princetonOrange,
+  ];
+  static const crayolaLemonYellow = Color(0xffFDE659);
+  static const bananaYellow = Color(0xffFFE134);
+  static const ripeMango = Color(0xffFFBF2E);
+  static const deepSaffron = Color(0xffFF9E28);
+  static const princetonOrange = Color(0xffFE7C22);
+
   static Color appColor({required bool isDarkmode}) {
     return isDarkmode ? const Color(0xfafafafa) : const Color(0xFF303030);
   }

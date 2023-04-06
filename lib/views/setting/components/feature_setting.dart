@@ -5,11 +5,13 @@ class FeatureSetting extends StatelessWidget {
   final IconData icon;
   final String title;
   final Function()? onTap;
+  final Color? iconColor;
   const FeatureSetting({
     super.key,
     required this.icon,
     required this.title,
     this.onTap,
+    this.iconColor,
   });
 
   @override
@@ -19,7 +21,7 @@ class FeatureSetting extends StatelessWidget {
       padding: EdgeInsets.all(2.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12.w),
-        color: Colors.lightBlue[500]!.withOpacity(0.2),
+        color: Colors.white.withOpacity(0.2),
       ),
       child: ListTile(
         onTap: onTap,
@@ -29,7 +31,7 @@ class FeatureSetting extends StatelessWidget {
           child: Center(
             child: Icon(
               icon,
-              color: Colors.white,
+              color: iconColor ?? Colors.white,
               size: 25.h,
             ),
           ),
@@ -39,7 +41,7 @@ class FeatureSetting extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .bodyLarge!
-              .copyWith(color: Colors.white, fontSize: 15.r),
+              .copyWith(color: iconColor ?? Colors.white, fontSize: 15.r),
         ),
       ),
     );

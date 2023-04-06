@@ -2,7 +2,6 @@ import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/services/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/views/conversations/components/empty_conversations.dart';
 import 'package:chat_app/views/conversations/components/list_online_user.dart';
 import 'package:chat_app/views/conversations/components/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -20,42 +19,33 @@ class ConversationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final conversationBloc = context.read<ConversationBloc>();
-    final routerProvider = context.watch<RouterProvider>();
-    return BlocListener<ConversationBloc, ConversationState>(
-      listener: (context, state) {
-        if (state is ConversationInitial) {
-          conversationBloc.add(
-            HandleNotificationServiceEvent(
-              context: context,
-              navigatorKey: routerProvider.navigatorKey,
+    return RefreshIndicator(
+      onRefresh: () async {},
+      child: SingleChildScrollView(
+        padding: EdgeInsets.only(top: 20.h),
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SearchBar(),
+            Spaces.h12,
+            StreamBuilder<List<ConversationData>>(
+              stream: conversationBloc.conversationsStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData &&
+                    snapshot.data != null &&
+                    snapshot.data!.isNotEmpty) {
+                  return Column(
+                    children: [
+                      ListOnlineUser(conversationsData: snapshot.data!),
+                      ConversationsListView(conversations: snapshot.data!),
+                    ],
+                  );
+                }
+                return Container();
+              },
             ),
-          );
-        }
-      },
-      child: RefreshIndicator(
-        onRefresh: () async {},
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(top: 20.h),
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SearchBar(),
-              Spaces.h20,
-              // const ListOnlineUser(),
-              StreamBuilder<List<ConversationData>>(
-                stream: conversationBloc.conversationsStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData &&
-                      snapshot.data != null &&
-                      snapshot.data!.isNotEmpty) {
-                    return ConversationsListView(conversations: snapshot.data!);
-                  }
-                  return Container();
-                },
-              ),
-            ],
-          ),
+          ],
         ),
       ),
     );

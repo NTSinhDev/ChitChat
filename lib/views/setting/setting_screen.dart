@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingScreen extends StatelessWidget {
   final UserProfile userProfile;
@@ -28,14 +29,14 @@ class SettingScreen extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: theme ? Alignment.topLeft : Alignment.bottomRight,
-                  end: theme ? Alignment.bottomRight : Alignment.topLeft,
-                  colors: const [
-                    ResColors.darkPurple,
-                    ResColors.deepPurple,
-                    ResColors.redAccent,
-                  ],
-                ),
+                    begin: theme ? Alignment.topRight : Alignment.bottomRight,
+                    end: theme ? Alignment.bottomRight : Alignment.topLeft,
+                    colors: theme
+                        ? [
+                            ResColors.customNewDarkPurple,
+                            ResColors.customNewVeryDarkPurple,
+                          ]
+                        : ResColors.sunshine.reversed.toList()),
               ),
             ),
             SafeArea(
@@ -66,9 +67,12 @@ class SettingScreen extends StatelessWidget {
           // Change theme: lightmode, darkmode
           FeatureSetting(
             icon: themeProvider.isDarkMode
-                ? CupertinoIcons.circle_righthalf_fill
-                : CupertinoIcons.circle_lefthalf_fill,
-            title:  themeProvider.isDarkMode
+                ? CupertinoIcons.sun_max_fill
+                : CupertinoIcons.moon_fill,
+            iconColor: themeProvider.isDarkMode
+                ? ResColors.deepSaffron
+                : ResColors.customNewVeryDarkPurple,
+            title: themeProvider.isDarkMode
                 ? context.languagesExtension.lightmode
                 : context.languagesExtension.darkmode,
             onTap: () {

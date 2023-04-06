@@ -45,7 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
         routerProvider: routerProvider,
       )
         ..add(GetLocalConversationsEvent())
-        ..add(ListenConversationsEvent()),
+        ..add(ListenConversationsEvent())
+        ..add(HandleNotificationServiceEvent(
+          context: context,
+          navigatorKey: routerProvider.navigatorKey,
+        )),
       child: WillPopScope(
         onWillPop: exitApp,
         child: Stack(

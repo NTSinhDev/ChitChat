@@ -35,8 +35,6 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     required this.fcmHanlder,
     required this.routerProvider,
   }) : super(ConversationInitial(
-          conversationsStream:
-              BehaviorSubject<Iterable<ConversationData>>().stream,
           userId: currentUser.profile?.id ?? '',
         )) {
     on<GetLocalConversationsEvent>((event, emit) async {
@@ -44,11 +42,6 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       final conversationsData = await _conversationRepo.local
           .getConversationsData(currentUser.profile!.id!);
       _behaviorConversations.sink.add(conversationsData);
-      _conversations = conversationsData;
-      emit(ConversationInitial(
-        conversationsStream: _behaviorConversations.stream,
-        userId: currentUser.profile!.id!,
-      ));
     });
 
     _behaviorConversations.listen((value) => _conversations = value);
@@ -78,7 +71,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         if (conversationsData != _conversations) {
           _behaviorConversations.sink.add(conversationsData);
         }
-        await _saveToLocal(conversations: conversationsData);
+        _saveToLocal(conversations: conversationsData);
       });
     });
 
@@ -200,7 +193,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     }
   }
 
-  Future _saveToLocal({required List<ConversationData> conversations}) async {
+  _saveToLocal({required List<ConversationData> conversations}) async {
     if (conversations.isEmpty) return;
 
     for (ConversationData element in conversations) {
@@ -209,6 +202,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         friendProfile: element.friend,
       );
     }
+    log('Finished 🚀saveToLocal⚡ ConversationsData');
   }
 
   Future<UserProfile?> getFriendInfomation({required String id}) async =>

@@ -2,7 +2,6 @@ import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/res/colors.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
-import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,19 +14,16 @@ class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUser = context.watch<ConversationBloc>().currentUser;
-    // setup UI
     final theme = context.watch<ThemeProvider>().isDarkMode;
-    final Color bgColor = theme
-        ? ResColors.darkGrey(isDarkmode: theme)
-        : ResColors.lightGrey(isDarkmode: theme);
-    final Color contentColor = theme ? Colors.white : Colors.grey[800]!;
 
     return Container(
       height: 48.h,
       margin: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100.r),
-        color: bgColor,
+        color: theme
+            ? ResColors.darkGrey(isDarkmode: theme)
+            : ResColors.lightGrey(isDarkmode: theme),
       ),
       child: InkWell(
         onTap: () {
@@ -44,14 +40,18 @@ class SearchBar extends StatelessWidget {
         child: Row(
           children: [
             Spaces.w20,
-            Icon(CupertinoIcons.search, color: contentColor, size: 24.r),
+            Icon(
+              CupertinoIcons.search,
+              color: theme ? Colors.white : Colors.grey[800]!,
+              size: 24.r,
+            ),
             Spaces.w12,
             Text(
               context.languagesExtension.search,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .copyWith(color: contentColor),
+                  .copyWith(color: theme ? Colors.white : Colors.grey[800]!),
             ),
           ],
         ),

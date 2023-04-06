@@ -6,7 +6,7 @@ abstract class RemoteUserInformationRepository {
     required String path,
     required String userID,
   });
-  Future updatePresence({required String id});
+  Future<String?> updatePresence({required String id});
   Future<UserProfile?> getInformationById({required String id});
   Future<bool> updateDeviceToken({
     required String deviceToken,
@@ -43,8 +43,8 @@ class _RemoteRepositoryImpl implements RemoteUserInformationRepository {
   }
 
   @override
-  Future updatePresence({required String id}) async {
-    if (id.isEmpty) return;
+  Future<String?> updatePresence({required String id}) async {
+    if (id.isEmpty) return 'không có dữ liệu người dùng';
     return _presenceRemote.updatePresence(userID: id);
   }
 
