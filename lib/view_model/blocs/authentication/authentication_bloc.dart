@@ -46,13 +46,11 @@ class AuthenticationBloc
     CheckAuthenticationEvent event,
     Emitter<AuthenticationState> emit,
   ) async {
-    log('🚀_checkAuthEvent⚡ start');
     emit(LoginState(loading: true));
 
     userProfile = await _userInforRepository.local.getProfile(
       userID: event.userID,
     );
-    log('🚀_checkAuthEvent⚡ $userProfile');
 
     if (userProfile == null) return emit(LoginState(loading: false));
     final catchError = await _userInforRepository.remote
@@ -66,7 +64,6 @@ class AuthenticationBloc
       loading: false,
       userProfile: userProfile!,
     ));
-    log('🚀_checkAuthEvent⚡ success');
   }
 
   _googleLogin(

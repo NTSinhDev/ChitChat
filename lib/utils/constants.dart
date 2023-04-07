@@ -43,6 +43,7 @@ class ConversationsField {
   static const String collectionName = "Conversations";
   static const String chatID = 'id';
   static const String listUser = 'listUser';
+  static const String readByUsers = 'readByUsers';
   static const String stampTimeLastText = 'stampTimeLastText';
   static const String stampTime = 'stampTime';
   static const String lastText = 'lastText';

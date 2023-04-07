@@ -42,6 +42,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       final conversationsData = await _conversationRepo.local
           .getConversationsData(currentUser.profile!.id!);
       _behaviorConversations.sink.add(conversationsData);
+      log('💯 Lấy dữ liệu cuộc hội thoại ở local');
     });
 
     _behaviorConversations.listen((value) => _conversations = value);
@@ -70,16 +71,25 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
 
         if (conversationsData != _conversations) {
           _behaviorConversations.sink.add(conversationsData);
+          log('💯 Lấy dữ liệu cuộc hội thoại ở Firebase');
+          _saveToLocal(conversations: conversationsData);
         }
-        _saveToLocal(conversations: conversationsData);
       });
     });
-
+    on<ReadConversationEvent>((event, emit) async {
+      List<String> newData = event.conversation.readByUsers;
+      newData.add(currentUser.profile!.id!);
+      final data = {
+        ConversationsField.readByUsers: newData,
+      };
+      await _conversationRepo.remote
+          .updateConversation(id: event.conversation.id!, data: data);
+    });
     on<HandleNotificationServiceEvent>((event, emit) {
       //* Tạo bộ điều hướng
       final navigator = Navigator.of(event.context);
 
-      log("start onnoti");
+      log('💯 Bắt đầu nhận thông báo');
       //* bắt đầu xử lý thông báo khi ấn vào thông báo
       //* tại đây lăng nghe xự kiện ấn vào thông báo
       fcmHanlder.notificationService.onNotificationClick.listen(
@@ -145,6 +155,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         },
       );
     });
+
     _saveDeviceToken();
   }
 

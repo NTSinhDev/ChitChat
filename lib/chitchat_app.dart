@@ -1,25 +1,31 @@
 import 'dart:developer';
 
-import 'package:chat_app/res/injector.dart';
-import 'package:chat_app/data/repositories/authentication_repository.dart';
-import 'package:chat_app/services/injector.dart';
-import 'package:chat_app/utils/injector.dart';
-import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/views/home/home_screen.dart';
-import 'package:chat_app/views/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:chat_app/data/repositories/authentication_repository.dart';
+import 'package:chat_app/res/injector.dart';
+import 'package:chat_app/services/injector.dart';
+import 'package:chat_app/utils/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/home/home_screen.dart';
+import 'package:chat_app/views/injector.dart';
+
 class ChitChatApp extends StatefulWidget {
   final SharedPreferences sharedPreferences;
   late final FCMHanlder fcmHanlder;
+  late final String? userID;
   ChitChatApp({
     super.key,
-    required this.sharedPreferences,
     required String? token,
+    required this.sharedPreferences,
   }) {
+    final AuthenticationRepository repository = AuthenticationRepositoryImpl(
+      sharedPreferences,
+    );
+    userID = repository.getUIDAtLocalStorage();
     fcmHanlder = FCMHanlder(
       notificationService: NotificationService(),
       deviceToken: token ?? '',
@@ -31,13 +37,7 @@ class ChitChatApp extends StatefulWidget {
 }
 
 class _ChitChatAppState extends State<ChitChatApp> {
-  late String? userID;
-
-  @override
-  void initState() {
-    getUIDAtLocalStorage();
-    super.initState();
-  }
+  bool beInitializedData = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class _ChitChatAppState extends State<ChitChatApp> {
           return BlocProvider<AuthenticationBloc>(
             create: (context) => AuthenticationBloc(
               widget.sharedPreferences,
-            )..add(userID != null
-                ? CheckAuthenticationEvent(userID: userID!)
+            )..add(widget.userID != null
+                ? CheckAuthenticationEvent(userID: widget.userID!)
                 : InitLoginEvent()),
             child: MaterialApp(
               navigatorKey: router.navigatorKey,
@@ -62,13 +62,18 @@ class _ChitChatAppState extends State<ChitChatApp> {
               supportedLocales: context.supportedLocales,
               home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {
-                  context.initScreenUtilDependency();
-                  widget.fcmHanlder.handleFirebaseMessagingStates(context);
+                  if (!beInitializedData) {
+                    log('🧠 Khởi tạo: ScreenUtil, handleFirebaseMessagingStates');
+                    context.initScreenUtilDependency();
+                    widget.fcmHanlder.handleFirebaseMessagingStates(context);
+                    beInitializedData = true;
+                  }
 
                   if (state is RegisterState) {
                     return const SignUpScreen();
                   }
                   if (state is LoggedState) {
+                    log('💯 Vào trang chủ');
                     return HomeScreen(
                       userProfile: state.userProfile,
                       fcmHanlder: widget.fcmHanlder,
@@ -82,12 +87,5 @@ class _ChitChatAppState extends State<ChitChatApp> {
         },
       ),
     );
-  }
-
-  getUIDAtLocalStorage() {
-    final AuthenticationRepository repository = AuthenticationRepositoryImpl(
-      widget.sharedPreferences,
-    );
-    userID = repository.getUIDAtLocalStorage();
   }
 }

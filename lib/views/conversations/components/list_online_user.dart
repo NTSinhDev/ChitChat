@@ -104,9 +104,7 @@ class _ListOnlineUserState extends State<ListOnlineUser> {
             DottedBorder(
               borderType: BorderType.RRect,
               radius: Radius.circular(30.r),
-              color: theme
-                  ? ResColors.customNewLightPurple
-                  : ResColors.purpleMessage(theme: theme),
+              color: ResColors.customNewLightPurple,
               strokeWidth: 2,
               padding: EdgeInsets.all(2.h),
               child: ClipRRect(

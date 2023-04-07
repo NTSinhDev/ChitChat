@@ -26,7 +26,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   Stream<Iterable<Message>> get msgListStream => _msgListSubject.stream;
   StreamSink<Iterable<Message>> get _msgListSink => _msgListSubject.sink;
 
-  final String serverKey; 
+  final String serverKey;
 
   ChatBloc({
     required this.currentUser,
@@ -110,6 +110,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
               (element) => element != currentUser.profile!.id!,
             ),
           ],
+          ConversationsField.readByUsers: [currentUser.profile!.id!],
           ConversationsField.stampTimeLastText:
               DateTime.now().millisecondsSinceEpoch,
         },

@@ -23,7 +23,7 @@ class MessageAdapter extends TypeAdapter<Message> {
       content: fields[3] as String?,
       listNameImage: (fields[4] as List).cast<String>(),
       nameRecord: fields[5] as String?,
-      stampTime: fields[6] as DateTime,
+      stampTime: fields[6] as DateTime?,
       messageType: fields[7] as String,
       messageStatus: fields[8] as String,
     );

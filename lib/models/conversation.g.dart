@@ -25,13 +25,14 @@ class ConversationAdapter extends TypeAdapter<Conversation> {
       stampTime: fields[1] as DateTime,
       stampTimeLastText: fields[2] as DateTime,
       listUser: (fields[7] as List).cast<String>(),
+      readByUsers: (fields[8] as List).cast<String>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Conversation obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class ConversationAdapter extends TypeAdapter<Conversation> {
       ..writeByte(6)
       ..write(obj.typeMessage)
       ..writeByte(7)
-      ..write(obj.listUser);
+      ..write(obj.listUser)
+      ..writeByte(8)
+      ..write(obj.readByUsers);
   }
 
   @override

@@ -21,6 +21,8 @@ class Conversation {
   final String typeMessage;
   @HiveField(7)
   List<String> listUser = [];
+  @HiveField(8)
+  List<String> readByUsers = [];
 
   Conversation({
     this.id,
@@ -31,6 +33,7 @@ class Conversation {
     required this.stampTime,
     required this.stampTimeLastText,
     required this.listUser,
+    required this.readByUsers,
   });
 
   Map<String, dynamic> toMap() {
@@ -63,33 +66,9 @@ class Conversation {
       isActive: map[ConversationsField.isActive] as bool,
       typeMessage: map[ConversationsField.typeMessage] as String,
       listUser: List<String>.from(map[ConversationsField.listUser] as List),
+      readByUsers: map[ConversationsField.readByUsers] == null
+          ? []
+          : List<String>.from(map[ConversationsField.readByUsers] as List),
     );
-  }
-
-  Conversation copyWith({
-    String? id,
-    DateTime? stampTime,
-    DateTime? stampTimeChat,
-    String? lastText,
-    String? nameChat,
-    bool? isActive,
-    String? typeMessage,
-    List<String>? listUser,
-  }) {
-    return Conversation(
-      id: id ?? this.id,
-      stampTime: stampTime ?? this.stampTime,
-      stampTimeLastText: stampTimeLastText,
-      lastMessage: lastText ?? lastMessage,
-      nameChat: nameChat ?? this.nameChat,
-      isActive: isActive ?? this.isActive,
-      typeMessage: typeMessage ?? this.typeMessage,
-      listUser: listUser ?? this.listUser,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'Conversation(id: $id, stampTime: $stampTime, stampTimeLastText: $stampTimeLastText, lastText: $lastMessage, nameChat: $nameChat, isActive: $isActive, typeMessage: $typeMessage, listUser: $listUser)';
   }
 }

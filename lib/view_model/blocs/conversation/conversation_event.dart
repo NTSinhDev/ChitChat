@@ -1,9 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'conversation_bloc.dart';
 
 abstract class ConversationEvent {}
 
-class ListenConversationsEvent extends ConversationEvent{}
-class GetLocalConversationsEvent extends ConversationEvent{}
+class ListenConversationsEvent extends ConversationEvent {}
+
+class GetLocalConversationsEvent extends ConversationEvent {}
 
 class HandleNotificationServiceEvent extends ConversationEvent {
   final BuildContext context;
@@ -12,4 +14,9 @@ class HandleNotificationServiceEvent extends ConversationEvent {
     required this.context,
     required this.navigatorKey,
   });
+}
+
+class ReadConversationEvent extends ConversationEvent {
+  final Conversation conversation;
+  ReadConversationEvent({required this.conversation});
 }

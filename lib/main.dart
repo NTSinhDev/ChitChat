@@ -9,11 +9,13 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
+  log('🚀 Đang khởi tạo WidgetsFlutterBinding, Firebase, Hive, sharedPreferences');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Hive.initFlutter();
   final sharedPreferences = await SharedPreferences.getInstance();
   final deviceToken = await FirebaseMessaging.instance.getToken();
+  log('💯 Đã Khởi tạo xong 🤩');
 
   FirebaseMessaging.onBackgroundMessage(onBackground);
 
@@ -22,6 +24,7 @@ Future<void> main() async {
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
 
+  log('🚀 Bắt đầu');
   runApp(ChitChatApp(sharedPreferences: sharedPreferences, token: deviceToken));
 }
 
