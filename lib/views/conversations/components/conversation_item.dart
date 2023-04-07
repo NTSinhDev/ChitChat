@@ -22,15 +22,35 @@ class ConversationItem extends StatefulWidget {
 }
 
 class _ConversationItemState extends State<ConversationItem> {
+  bool isRead = false;
   @override
   Widget build(BuildContext context) {
     final conversationBloc = context.watch<ConversationBloc>();
     return ListTile(
-      onTap: () async => await _navigateToChatScreen(
-        context,
-        conversationBloc,
-        widget.friendProfile,
-      ),
+      onTap: () async {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (nContext) {
+              return ChatScreen(
+                conversation: widget.conversation,
+                currentUser: conversationBloc.currentUser,
+                friendInfo: widget.friendProfile,
+              );
+            },
+            settings: RouteSettings(
+              name: "conversation:${widget.conversation.id}",
+            ),
+          ),
+        );
+        if (!mounted) return;
+        if (!_isRead(context, conversationBloc.currentUser.profile!.id!)) {
+          conversationBloc
+              .add(ReadConversationEvent(conversation: widget.conversation));
+          setState(() {
+            isRead = true;
+          });
+        }
+      },
       leading: StateAvatar(
         urlImage: widget.friendProfile.urlImage,
         userId: _handleUserIdForStateAvatarWidget(
@@ -132,6 +152,7 @@ class _ConversationItemState extends State<ConversationItem> {
   }
 
   // Functions
+
   String _handleUserIdForStateAvatarWidget(String? id, ConversationBloc bloc) {
     if (id == null || id.isEmpty || id == bloc.currentUser.profile!.id!) {
       return '';
@@ -139,34 +160,8 @@ class _ConversationItemState extends State<ConversationItem> {
     return id;
   }
 
-  _navigateToChatScreen(
-    BuildContext context,
-    ConversationBloc conversationBloc,
-    UserProfile? userProfile,
-  ) async {
-    if (userProfile == null) return;
-    if (!_isRead(context, conversationBloc.currentUser.profile!.id!)) {
-      conversationBloc
-          .add(ReadConversationEvent(conversation: widget.conversation));
-    }
-    await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (nContext) {
-          return ChatScreen(
-            conversation: widget.conversation,
-            currentUser: conversationBloc.currentUser,
-            friendInfo: userProfile,
-          );
-        },
-        settings: RouteSettings(
-          name: "conversation:${widget.conversation.id}",
-        ),
-      ),
-    );
-  }
-
   bool _isRead(BuildContext context, String id) {
-    if (widget.conversation.readByUsers.contains(id)) {
+    if (isRead || widget.conversation.readByUsers.contains(id)) {
       return true;
     }
     return false;

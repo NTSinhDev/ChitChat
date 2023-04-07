@@ -114,7 +114,7 @@ class _ListOnlineUserState extends State<ListOnlineUser> {
                   width: 52.w,
                   color: theme
                       ? ResColors.darkGrey(isDarkmode: theme).withOpacity(0.5)
-                      : Colors.grey[300],
+                      : ResColors.lightGrey(isDarkmode: theme),
                   child: Center(
                     child: Icon(
                       Icons.add_sharp,
