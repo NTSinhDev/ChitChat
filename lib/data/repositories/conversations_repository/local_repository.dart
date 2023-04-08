@@ -40,7 +40,7 @@ class _LocalRepositoryImpl implements LocalConversationsRepository {
   ) async {
     List<ConversationData> datas = [];
     final conversations = _conversationsLocalDS.getConversations().toList();
-    conversations.sort((a, b) => b.stampTimeLastText.compareTo(a.stampTime));
+    conversations.sort((a, b) => b.stampTimeLastText.compareTo(a.stampTimeLastText));
     for (var i = 0; i < conversations.length; i++) {
       final friendId = conversations[i].listUser.length == 1
           ? conversations[i].listUser[0]

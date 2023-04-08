@@ -1,4 +1,5 @@
 import 'package:chat_app/utils/constants.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 part 'conversation.g.dart';
@@ -70,5 +71,39 @@ class Conversation {
           ? []
           : List<String>.from(map[ConversationsField.readByUsers] as List),
     );
+  }
+
+  @override
+  String toString() {
+    return 'Conversation(id: $id, stampTime: $stampTime, stampTimeLastText: $stampTimeLastText, lastText: $lastMessage, nameChat: $nameChat, isActive: $isActive, typeMessage: $typeMessage, listUser: $listUser)';
+  }
+
+   @override
+  bool operator ==(covariant Conversation other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.id == id &&
+      other.stampTime == stampTime &&
+      other.stampTimeLastText == stampTimeLastText &&
+      other.lastMessage == lastMessage &&
+      other.nameChat == nameChat &&
+      other.isActive == isActive &&
+      other.typeMessage == typeMessage &&
+      listEquals(other.listUser, listUser) &&
+      listEquals(other.readByUsers, readByUsers);
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+      stampTime.hashCode ^
+      stampTimeLastText.hashCode ^
+      lastMessage.hashCode ^
+      nameChat.hashCode ^
+      isActive.hashCode ^
+      typeMessage.hashCode ^
+      listUser.hashCode ^
+      readByUsers.hashCode;
   }
 }

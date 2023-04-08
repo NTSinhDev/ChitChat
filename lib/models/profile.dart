@@ -40,4 +40,27 @@ class Profile {
           : null,
     );
   }
+
+  @override
+  String toString() {
+    return 'Profile(id: $id, email: $email, fullName: $fullName, messagingToken: $messagingToken)';
+  }
+
+  @override
+  bool operator ==(covariant Profile other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.email == email &&
+        other.fullName == fullName &&
+        other.messagingToken == messagingToken;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        email.hashCode ^
+        fullName.hashCode ^
+        messagingToken.hashCode;
+  }
 }

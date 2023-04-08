@@ -11,6 +11,7 @@ class ConversationsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      padding: const EdgeInsets.all(0),
       physics: const NeverScrollableScrollPhysics(),
       itemCount: conversations.length,
       shrinkWrap: true,
@@ -26,6 +27,8 @@ class ConversationsListView extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
+        // color: Colors.red,
+        height: 8.h,
         width: MediaQuery.of(context).size.width - 108.w,
         margin: EdgeInsets.only(right: 20.w),
         child: const Divider(),

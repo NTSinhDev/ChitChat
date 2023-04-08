@@ -34,44 +34,44 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     required this.currentUser,
     required this.fcmHanlder,
     required this.routerProvider,
-  }) : super(ConversationInitial(
-          userId: currentUser.profile?.id ?? '',
-        )) {
-    on<GetLocalConversationsEvent>((event, emit) async {
+  }) : super(ConversationInitial(userId: currentUser.profile?.id ?? '')) {
+    _behaviorConversations.listen((value) => _conversations = value);
+    on<ListenConversationsEvent>((event, emit) async {
+      log('🚀 Tải dữ liệu cuộc trò chuyện ở local');
       await _conversationRepo.local.openBoxs();
-      final conversationsData = await _conversationRepo.local
+      List<ConversationData> conversationsData = await _conversationRepo.local
           .getConversationsData(currentUser.profile!.id!);
       _behaviorConversations.sink.add(conversationsData);
-      log('💯 Lấy dữ liệu cuộc hội thoại ở local');
-    });
 
-    _behaviorConversations.listen((value) => _conversations = value);
-
-    on<ListenConversationsEvent>((event, emit) async {
+      log('🚀 Bắt đầu tải dữ liệu các cuộc trò chuyện...');
       _conversationRepo.remote
           .conversationsDataStream(userId: currentUser.profile!.id!)
           .listen((Iterable<Conversation> dataStream) async {
-        // Handle data to get conversations data list
-        List<ConversationData> conversationsData = [];
-        final conversationsStream = dataStream.toList();
-        for (var i = 0; i < conversationsStream.length; i++) {
-          final friendId = conversationsStream[i].listUser.length == 1
-              ? conversationsStream[i].listUser[0]
-              : conversationsStream[i]
+        final conversationList = dataStream.toList();
+        for (var i = 0; i < conversationList.length; i++) {
+          // Get friend infomation
+          final friendId = conversationList[i].listUser.length == 1
+              ? conversationList[i].listUser[0]
+              : conversationList[i]
                   .listUser
                   .firstWhere((element) => element != currentUser.profile!.id!);
           final friendProfile = await _userInformationRepo.remote
               .getInformationById(id: friendId);
-          final conversationData = ConversationData(
-            conversation: conversationsStream[i],
-            friend: friendProfile!,
-          );
-          conversationsData.add(conversationData);
+
+          // Check is Equals data
+          if (friendProfile!.profile == conversationsData[i].friend.profile &&
+              conversationList[i] == conversationsData[i].conversation) {
+          } else {
+            final conversationData = ConversationData(
+              conversation: conversationList[i],
+              friend: friendProfile,
+            );
+            conversationsData[i] = conversationData;
+            _behaviorConversations.sink.add(conversationsData);
+          }
         }
 
         if (conversationsData != _conversations) {
-          _behaviorConversations.sink.add(conversationsData);
-          log('💯 Lấy dữ liệu cuộc hội thoại ở Firebase');
           _saveToLocal(conversations: conversationsData);
         }
       });

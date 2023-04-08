@@ -1,16 +1,16 @@
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/services/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
-
 import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/models/injector.dart';
+import 'components/animate_home_screen.dart';
 import 'components/ask_ai_button.dart';
 
 part 'components/app_bar.dart';
@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
         fcmHanlder: widget.fcmHanlder,
         routerProvider: routerProvider,
       )
-        ..add(GetLocalConversationsEvent())
         ..add(ListenConversationsEvent())
         ..add(HandleNotificationServiceEvent(
           context: context,
@@ -55,54 +54,35 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Stack(
           children: [
             SettingScreen(userProfile: widget.userProfile),
-            TweenAnimationBuilder(
-              tween: Tween<double>(begin: 0, end: endTweenValue),
-              duration: const Duration(milliseconds: 200),
-              builder: (context, value, child) {
-                return Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.identity()
-                    ..setEntry(3, 2, 0.001)
-                    ..setEntry(0, 3, 250 * value)
-                    ..rotateY((pi / 6) * value),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        endTweenValue == 0 ? endTweenValue : 24,
-                      ),
-                      bottomLeft: Radius.circular(
-                        endTweenValue == 0 ? endTweenValue : 24,
-                      ),
-                    ),
-                    child: Scaffold(
-                      appBar: _homeScreenAppBar(
-                        context: context,
-                        urlImage: widget.userProfile.urlImage,
-                        theme: theme,
-                        openSetting: () {
-                          setState(() {
-                            endTweenValue == 0
-                                ? endTweenValue = 1
-                                : endTweenValue = 0;
-                            isGestureActive = true;
-                          });
-                        },
-                      ),
-                      body: ConversationScreen(fcmHanlder: widget.fcmHanlder),
-                      floatingActionButton: AskAIButton(
-                        userProfile: widget.userProfile,
-                      ),
-                    ),
-                  ),
-                );
-              },
+            AnimateHomeScreen(
+              endTweenValue: endTweenValue,
+              appbar: _homeScreenAppBar(
+                context: context,
+                urlImage: widget.userProfile.urlImage,
+                theme: theme,
+                openSetting: () {
+                  setState(() {
+                    endTweenValue == 0 ? endTweenValue = 1 : endTweenValue = 0;
+                    isGestureActive = true;
+                  });
+                },
+              ),
+              body: ConversationScreen(fcmHanlder: widget.fcmHanlder),
+              floatingBtn: AskAIButton(userProfile: widget.userProfile),
             ),
             if (isGestureActive)
               GestureDetector(
-                onHorizontalDragUpdate: (details) => setState(() {
-                  endTweenValue = 0;
-                  isGestureActive = false;
-                }),
+                onHorizontalDragUpdate: (details) {
+                  final x = details.delta.dx;
+                  final xNegative = x * -1;
+                  if (details.delta.dx < 0 && xNegative > 4) {
+                    log('🚀log⚡ $x && $xNegative');
+                    setState(() {
+                      endTweenValue = 0;
+                      isGestureActive = false;
+                    });
+                  }
+                },
               ),
           ],
         ),

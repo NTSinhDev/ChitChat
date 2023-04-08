@@ -22,69 +22,61 @@ class ConversationItem extends StatefulWidget {
 }
 
 class _ConversationItemState extends State<ConversationItem> {
-  bool isRead = false;
+  bool isReadMsg = false;
+
+  late final ConversationBloc conversationBloc;
+  late final ThemeProvider theme;
+  late final LanguageProvider lang;
+  @override
+  void initState() {
+    super.initState();
+    conversationBloc = context.read<ConversationBloc>();
+    theme = context.read<ThemeProvider>();
+    lang = context.read<LanguageProvider>();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final conversationBloc = context.watch<ConversationBloc>();
     return ListTile(
-      onTap: () async {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (nContext) {
-              return ChatScreen(
-                conversation: widget.conversation,
-                currentUser: conversationBloc.currentUser,
-                friendInfo: widget.friendProfile,
-              );
-            },
-            settings: RouteSettings(
-              name: "conversation:${widget.conversation.id}",
-            ),
-          ),
-        );
-        if (!mounted) return;
-        if (!_isRead(context, conversationBloc.currentUser.profile!.id!)) {
-          conversationBloc
-              .add(ReadConversationEvent(conversation: widget.conversation));
-          setState(() {
-            isRead = true;
-          });
-        }
-      },
+      onTap: () async => await ontapConversation(context),
       leading: StateAvatar(
         urlImage: widget.friendProfile.urlImage,
-        userId: _handleUserIdForStateAvatarWidget(
-          widget.friendProfile.profile?.id,
-          conversationBloc,
-        ),
+        userId: handleUserId(widget.friendProfile.profile?.id),
         radius: 56.r,
       ),
       title: Container(
-        margin: EdgeInsets.only(bottom: 5.h),
+        margin: EdgeInsets.only(bottom: 4.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _conversationNameWidget(context),
-            _timeLastMsgWidget(context, conversationBloc),
+            conversationName(context),
+            timeAndNotidyRead(context),
           ],
         ),
       ),
-      subtitle: Text(
-        _handleMessageContent(
-          context,
-          conversationBloc.currentUser.profile!.id!,
-          widget.friendProfile.profile?.id ?? '',
-        ),
-        overflow: TextOverflow.ellipsis,
-        style:
-            Theme.of(context).textTheme.headlineSmall!.copyWith(fontSize: 13.r),
-      ),
+      subtitle: _messageWidget(context),
     );
   }
 
   // Wigets
-  Widget _timeLastMsgWidget(BuildContext context, ConversationBloc bloc) {
-    final locale = context.watch<LanguageProvider>().locale;
+  Text _messageWidget(BuildContext context) {
+    final messageContent = widget.conversation.listUser.first ==
+            conversationBloc.currentUser.profile!.id!
+        ? "${context.languagesExtension.you}: ${widget.conversation.lastMessage}"
+        : widget.conversation.lastMessage;
+    return Text(
+      messageContent,
+      overflow: TextOverflow.ellipsis,
+      maxLines: textMaxLines(context),
+      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+            fontSize: 12.r,
+            fontWeight: textFontWeight(context),
+            color: textColor(context),
+          ),
+    );
+  }
+
+  Widget timeAndNotidyRead(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -92,14 +84,16 @@ class _ConversationItemState extends State<ConversationItem> {
         Text(
           TimeUtilities.formatTime(
             widget.conversation.stampTimeLastText,
-            locale,
+            lang.locale,
           ),
-          style: Theme.of(context)
-              .textTheme
-              .bodySmall!
-              .copyWith(fontSize: 12, color: Colors.grey[700]),
+          style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                fontSize: 12.r,
+                color: textColor(context) ?? Colors.grey[700],
+                fontWeight: textFontWeight(context),
+              ),
         ),
-        if (!_isRead(context, bloc.currentUser.profile!.id!)) ...[
+        // Notify if have not read yet
+        if (!isRead(context, conversationBloc.currentUser.profile!.id!)) ...[
           Spaces.w12,
           const Badge(
             alignment: AlignmentDirectional.centerEnd,
@@ -110,16 +104,17 @@ class _ConversationItemState extends State<ConversationItem> {
     );
   }
 
-  Widget _conversationNameWidget(BuildContext context) {
-    final isDarkmode = context.watch<ThemeProvider>().isDarkMode;
+  Widget conversationName(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
           widget.friendProfile.profile?.fullName ?? "",
-          style:
-              Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 14.r),
+          style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                fontSize: 14.r,
+                fontWeight: textFontWeight(context),
+              ),
         ),
         if (widget.friendProfile.profile != null &&
             widget.friendProfile.profile!.email == 'Virtual') ...[
@@ -129,7 +124,7 @@ class _ConversationItemState extends State<ConversationItem> {
             decoration: BoxDecoration(
               color: ResColors.backgroundLightPurple,
               boxShadow: [
-                if (!isDarkmode)
+                if (!theme.isDarkMode)
                   const BoxShadow(
                     color: ResColors.customNewDarkPurple,
                     offset: Offset(1, 1),
@@ -152,27 +147,66 @@ class _ConversationItemState extends State<ConversationItem> {
   }
 
   // Functions
+  Color? textColor(BuildContext context) {
+    if (!isRead(context, conversationBloc.currentUser.profile!.id!)) {
+      return theme.isDarkMode ? Colors.white : Colors.black;
+    }
+    return null;
+  }
 
-  String _handleUserIdForStateAvatarWidget(String? id, ConversationBloc bloc) {
-    if (id == null || id.isEmpty || id == bloc.currentUser.profile!.id!) {
+  FontWeight? textFontWeight(BuildContext context) {
+    if (!isRead(context, conversationBloc.currentUser.profile!.id!)) {
+      return FontWeight.bold;
+    }
+    return null;
+  }
+
+  int? textMaxLines(BuildContext context) {
+    if (!isRead(context, conversationBloc.currentUser.profile!.id!)) {
+      return 3;
+    }
+    return null;
+  }
+
+  Future ontapConversation(BuildContext context) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (nContext) {
+          return ChatScreen(
+            conversation: widget.conversation,
+            currentUser: conversationBloc.currentUser,
+            friendInfo: widget.friendProfile,
+          );
+        },
+        settings: RouteSettings(
+          name: "conversation:${widget.conversation.id}",
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    if (!isRead(context, conversationBloc.currentUser.profile!.id!)) {
+      conversationBloc
+          .add(ReadConversationEvent(conversation: widget.conversation));
+      setState(() {
+        isReadMsg = true;
+      });
+    }
+  }
+
+  String handleUserId(String? id) {
+    if (id == null ||
+        id.isEmpty ||
+        id == conversationBloc.currentUser.profile!.id!) {
       return '';
     }
     return id;
   }
 
-  bool _isRead(BuildContext context, String id) {
-    if (isRead || widget.conversation.readByUsers.contains(id)) {
+  bool isRead(BuildContext context, String id) {
+    if (isReadMsg || widget.conversation.readByUsers.contains(id)) {
       return true;
     }
     return false;
   }
-
-  String _handleMessageContent(
-    BuildContext context,
-    String currentId,
-    String conversationUserId,
-  ) =>
-      widget.conversation.listUser.first == currentId
-          ? "${context.languagesExtension.you}: ${widget.conversation.lastMessage}"
-          : widget.conversation.lastMessage;
 }
