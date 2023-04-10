@@ -27,7 +27,6 @@ class ConversationsListView extends StatelessWidget {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
-        // color: Colors.red,
         height: 8.h,
         width: MediaQuery.of(context).size.width - 108.w,
         margin: EdgeInsets.only(right: 20.w),

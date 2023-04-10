@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/models/injector.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'components/animate_home_screen.dart';
 import 'components/ask_ai_button.dart';
 
@@ -38,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     final currentUser = context.watch<AuthenticationBloc>().userProfile!;
     final routerProvider = context.watch<RouterProvider>();
+    final apiProvider = context.watch<APIKeyProvider>();
     return BlocProvider<ConversationBloc>(
       create: (_) => ConversationBloc(
         currentUser: currentUser,
@@ -48,43 +51,69 @@ class _HomeScreenState extends State<HomeScreen> {
         ..add(HandleNotificationServiceEvent(
           context: context,
           navigatorKey: routerProvider.navigatorKey,
+          serverKey: context.watch<APIKeyProvider>().messagingServerKey,
         )),
-      child: WillPopScope(
-        onWillPop: exitApp,
-        child: Stack(
-          children: [
-            SettingScreen(userProfile: widget.userProfile),
-            AnimateHomeScreen(
-              endTweenValue: endTweenValue,
-              appbar: _homeScreenAppBar(
-                context: context,
-                urlImage: widget.userProfile.urlImage,
-                theme: theme,
-                openSetting: () {
-                  setState(() {
-                    endTweenValue == 0 ? endTweenValue = 1 : endTweenValue = 0;
-                    isGestureActive = true;
-                  });
-                },
-              ),
-              body: ConversationScreen(fcmHanlder: widget.fcmHanlder),
-              floatingBtn: AskAIButton(userProfile: widget.userProfile),
-            ),
-            if (isGestureActive)
-              GestureDetector(
-                onHorizontalDragUpdate: (details) {
-                  final x = details.delta.dx;
-                  final xNegative = x * -1;
-                  if (details.delta.dx < 0 && xNegative > 4) {
-                    log('🚀log⚡ $x && $xNegative');
+      child: ChangeNotifierProvider(
+        create: (context) => FriendsProvider(currentUser: currentUser.profile!),
+        child: WillPopScope(
+          onWillPop: exitApp,
+          child: Stack(
+            children: [
+              SettingScreen(userProfile: widget.userProfile),
+              AnimateHomeScreen(
+                endTweenValue: endTweenValue,
+                appbar: _homeScreenAppBar(
+                  context: context,
+                  urlImage: widget.userProfile.urlImage,
+                  theme: theme,
+                  openSetting: () {
                     setState(() {
-                      endTweenValue = 0;
-                      isGestureActive = false;
+                      endTweenValue == 0
+                          ? endTweenValue = 1
+                          : endTweenValue = 0;
+                      isGestureActive = true;
                     });
-                  }
-                },
+                  },
+                ),
+                body: ConversationScreen(fcmHanlder: widget.fcmHanlder),
+                // floatingBtn: AskAIButton(userProfile: widget.userProfile),
+                floatingBtn: FloatingActionButton(
+                  onPressed: () async {
+                    await FCMHanlder.sendMessage(
+                      conversationID: currentUser.profile!.id!,
+                      userProfile: currentUser.profile!,
+                      friendProfile: currentUser.profile!,
+                      message:
+                          " sdlakjlk jsalkjd lkjsalkjd lkjsadl jlsajd lkjsaldj lksajdl kjsaljd ljsalkd jlksajd lksaldj lsajd lksalkdj lksajd lkjsalkd jlksajd lkjsald jsajd lsald jlsad lksjadj lskajd lkjsald jlksajd jsalkd jlkasjd lkjsald klsajd lkjsakd jlksajd lkjsalkd jsakjd ;ksaj;k dja;kfj;ksaf j;l sajf;jsa;kfj jaksf kjafs lkjsa kkasffj lkasjf lkaslk laksfj lkfa sj;kafskj ",
+                      apiKey: apiProvider.messagingServerKey,
+                    );
+                  },
+                  child: apiProvider.messagingServerKey.isNotEmpty
+                      ? const FaIcon(FontAwesomeIcons.dog)
+                      : SizedBox(
+                          width: 24.h,
+                          height: 24.h,
+                          child: const CircularProgressIndicator(
+                              color: Colors.white),
+                        ),
+                ),
               ),
-          ],
+              if (isGestureActive)
+                GestureDetector(
+                  onHorizontalDragUpdate: (details) {
+                    final x = details.delta.dx;
+                    final xNegative = x * -1;
+                    if (details.delta.dx < 0 && xNegative > 4) {
+                      log('🚀log⚡ $x && $xNegative');
+                      setState(() {
+                        endTweenValue = 0;
+                        isGestureActive = false;
+                      });
+                    }
+                  },
+                ),
+            ],
+          ),
         ),
       ),
     );

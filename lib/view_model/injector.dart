@@ -1,5 +1,4 @@
 import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/view_model/providers/apikey_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 export 'providers/language_provider.dart';
 export 'providers/theme_provider.dart';
 export 'providers/virtual_assistant_provider.dart';
+export 'providers/apikey_provider.dart';
+export 'providers/friends_provider.dart';
 export 'providers/router_provider.dart';
 export 'blocs/authentication/authentication_bloc.dart';
 export 'blocs/authentication/authentication_event.dart';

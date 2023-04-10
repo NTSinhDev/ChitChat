@@ -5,6 +5,7 @@ import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/services/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/view_model/providers/apikey_provider.dart';
 import 'package:chat_app/views/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,6 +68,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
               friend: friendProfile,
             );
             conversationsData[i] = conversationData;
+            log('🚀 Cập nhật dữ liệu cuộc trò chuyện');
             _behaviorConversations.sink.add(conversationsData);
           }
         }
@@ -85,7 +87,7 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
       await _conversationRepo.remote
           .updateConversation(id: event.conversation.id!, data: data);
     });
-    on<HandleNotificationServiceEvent>((event, emit) {
+    on<HandleNotificationServiceEvent>((event, emit) async {
       //* Tạo bộ điều hướng
       final navigator = Navigator.of(event.context);
 

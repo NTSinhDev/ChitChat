@@ -71,7 +71,7 @@ class _ConversationItemState extends State<ConversationItem> {
       style: Theme.of(context).textTheme.headlineSmall!.copyWith(
             fontSize: 12.r,
             fontWeight: textFontWeight(context),
-            color: textColor(context),
+            color: textColor(context) ?? Colors.grey[500],
           ),
     );
   }

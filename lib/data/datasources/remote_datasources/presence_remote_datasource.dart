@@ -7,15 +7,15 @@ abstract class PresenceRemoteDatasource {
 }
 
 class PresenceRemoteDatasourceImpl implements PresenceRemoteDatasource {
-  late DatabaseReference presenceRealtimeDB;
+  late DatabaseReference _presenceRealtimeDB;
 
   PresenceRemoteDatasourceImpl() {
-    presenceRealtimeDB = FirebaseDatabase.instance.ref(PresenceTree.node);
+    _presenceRealtimeDB = FirebaseDatabase.instance.ref(PresenceTree.node);
   }
 
   @override
   Stream<DatabaseEvent> getPresence({required String userID}) =>
-      presenceRealtimeDB.child(userID).onValue;
+      _presenceRealtimeDB.child(userID).onValue;
 
   @override
   Future<String?> updatePresence({required String userID}) async {
@@ -23,12 +23,12 @@ class PresenceRemoteDatasourceImpl implements PresenceRemoteDatasource {
     //? các trạng thái: kết nối, mất kết nối, kết nối dán đoạn, đang kết nối.
 
     try {
-      await presenceRealtimeDB
+      await _presenceRealtimeDB
           .child(userID)
           .update(_presenceStatus(status: true))
           .timeout(const Duration(seconds: 5));
 
-      await presenceRealtimeDB
+      await _presenceRealtimeDB
           .child(userID)
           .onDisconnect()
           .update(_presenceStatus(status: false))

@@ -1,91 +1,92 @@
+import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/view_model/providers/friends_presence_provider.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:provider/provider.dart';
 
-class ListOnlineUser extends StatefulWidget {
+class ListOnlineUser extends StatelessWidget {
   final List<ConversationData> conversationsData;
   const ListOnlineUser({super.key, required this.conversationsData});
-
-  @override
-  State<ListOnlineUser> createState() => _ListOnlineUserState();
-}
-
-class _ListOnlineUserState extends State<ListOnlineUser> {
   @override
   Widget build(BuildContext context) {
-    final conversationBloc = context.read<ConversationBloc>();
-    return ChangeNotifierProvider(
-      create: (context) => FriendPresenceProvider(
-          currentUser: conversationBloc.currentUser.profile!)
-        ..getFriends(widget.conversationsData),
-      child: Consumer<FriendPresenceProvider>(
-        builder: (context, provider, child) {
-          return Container(
-            constraints: BoxConstraints(maxHeight: 114.h),
-            child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.horizontal,
-              itemCount: provider.onlineFriends.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Row(
-                  children: [
-                    if (index == 0) ...[
-                      Spaces.w14,
-                      _addNewFriend(context),
-                    ],
-                    _circleWidget(provider.onlineFriends[index], context),
+    final friendProvider = context.read<FriendsProvider>();
+    friendProvider.getFriends(conversationsData);
+    List<UserProfile> onlineFriends = [];
+    return StreamBuilder<List<UserProfile>>(
+      stream: friendProvider.friendsStream,
+      builder: (context, snapshot) {
+        onlineFriends = snapshot.data ?? [];
+        return Container(
+          constraints: BoxConstraints(maxHeight: 114.h),
+          child: ListView.builder(
+            physics: const BouncingScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: onlineFriends.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Row(
+                children: [
+                  if (index == 0) ...[
+                    Spaces.w14,
+                    _addNewFriend(context),
                   ],
-                );
-              },
-            ),
-          );
-        },
-      ),
+                  PresenceStreamWidget(
+                    userId: onlineFriends[index].profile!.id!,
+                    child: (presence) {
+                      return Visibility(
+                        visible: presence?.status ?? false,
+                        child: _friendItem(
+                          context,
+                          friend: onlineFriends[index],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
-  Widget _circleWidget(UserProfile friend, BuildContext context) {
+  Widget _friendItem(BuildContext context, {required UserProfile friend}) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
-    bool showItem = true;
-    return Visibility(
-      visible: showItem,
-      child: GestureDetector(
-        onTap: () {},
-        child: Container(
-          margin: EdgeInsets.only(right: 12.w),
-          constraints: BoxConstraints(maxWidth: 62.w),
-          child: Column(
-            children: [
-              StateAvatar(
-                urlImage: friend.urlImage,
-                userId: friend.profile?.id ?? '',
-                radius: 60.r,
-              ),
-              Spaces.h4,
-              Text(
-                friend.profile?.fullName ?? "UNKNOWN",
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                textAlign: TextAlign.center,
-                style: theme
-                    ? Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: Colors.white)
-                    : Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(color: Colors.black),
-              ),
-            ],
-          ),
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        margin: EdgeInsets.only(right: 12.w),
+        constraints: BoxConstraints(maxWidth: 62.w),
+        child: Column(
+          children: [
+            StateAvatar(
+              urlImage: friend.urlImage,
+              userId: friend.profile?.id ?? '',
+              radius: 60.r,
+            ),
+            Spaces.h4,
+            Text(
+              friend.profile?.fullName ?? "UNKNOWN",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: theme
+                  ? Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: Colors.white)
+                  : Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: Colors.black),
+            ),
+          ],
         ),
       ),
     );

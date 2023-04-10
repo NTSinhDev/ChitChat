@@ -20,7 +20,7 @@ class FCMHanlder {
     required String conversationID,
     required String apiKey,
   }) async {
-    log('🚀log⚡ hehehe');
+    log('🚀 Gửi thông báo đến người dùng ${friendProfile.fullName}');
     final headers = <String, String>{
       'Content-type': 'application/json',
       'Authorization': apiKey,

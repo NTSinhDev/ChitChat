@@ -7,9 +7,11 @@ class ListenConversationsEvent extends ConversationEvent {}
 class HandleNotificationServiceEvent extends ConversationEvent {
   final BuildContext context;
   final GlobalKey<NavigatorState> navigatorKey;
+  final String serverKey;
   HandleNotificationServiceEvent({
     required this.context,
     required this.navigatorKey,
+    required this.serverKey,
   });
 }
 
