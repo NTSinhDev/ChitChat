@@ -8,7 +8,7 @@ AppBar _homeScreenAppBar({
 }) {
   return AppBar(
     toolbarHeight: 68.h,
-    backgroundColor: ResColors.purpleMessage(theme: theme),
+    backgroundColor: AppColors(themeMode: theme).baseTheme,
     title: Row(
       children: [
         GestureDetector(
@@ -20,6 +20,7 @@ AppBar _homeScreenAppBar({
                 urlImage: urlImage,
                 userId: '',
                 radius: 44.r,
+                isBorder: true,
               ),
             ),
           ),

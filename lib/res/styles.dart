@@ -4,22 +4,22 @@ import 'colors.dart';
 
 class ResDecorate {
   static BoxDecoration boxColor({required Color color}) => BoxDecoration(
-    color: color,
-    borderRadius: BorderRadius.only(
-      topLeft: Radius.circular(14.h),
-      bottomLeft: Radius.circular(14.h),
-    ),
-  );
+        color: color,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(14.h),
+          bottomLeft: Radius.circular(14.h),
+        ),
+      );
   static const boxBGAuth = BoxDecoration(
     gradient: LinearGradient(
       begin: Alignment.topRight,
       end: Alignment.bottomLeft,
       colors: [
-        ResColors.redAccent,
-        ResColors.deepPurple,
-        ResColors.deepPurple,
-        ResColors.deepPurple,
-        ResColors.redAccent,
+        AppColors.redAccent,
+        AppColors.deepPurple,
+        AppColors.deepPurple,
+        AppColors.deepPurple,
+        AppColors.redAccent,
       ],
     ),
   );

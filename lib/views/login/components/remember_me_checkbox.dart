@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:chat_app/res/colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-
 class RememberMeCheckbox extends StatefulWidget {
   final bool rememberMe;
   final Function(bool?)? onChange;
@@ -27,7 +26,7 @@ class _RememberMeCheckboxState extends State<RememberMeCheckbox> {
             data: ThemeData(unselectedWidgetColor: Colors.white70),
             child: Checkbox(
               value: widget.rememberMe,
-              checkColor: ResColors.deepPurple,
+              checkColor: AppColors.deepPurple,
               activeColor: Colors.white70,
               onChanged: widget.onChange,
             ),

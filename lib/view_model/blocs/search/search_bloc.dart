@@ -5,8 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  List<UserProfile> friendList = [];
-  UserProfile currentUser;
+  final UserProfile currentUser;
 
   final _userInformationRepo = UserInformationRepository();
   final _conversationRepo = ConversationsRepository();
@@ -16,31 +15,46 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
   String _searchKeyWhenComeBack = '';
 
-  SearchBloc({required this.currentUser})
-      : super(SearchInitialState(
+  SearchBloc({
+    required this.currentUser,
+    required Stream<List<UserProfile>> stream,
+  }) : super(SearchInitialState(
           friendsSubject: ReplaySubject(),
           currentUser: currentUser,
         )) {
+    stream.listen((friends) => _friendsSubject.sink.add(friends));
     on<SearchingEvent>((event, emit) async {
       _searchKeyWhenComeBack = event.searchName;
-      if (event.searchName.isNotEmpty) return _searchingByName(event, emit);
-
-      if (friendList.isEmpty) return _getFriendList(event, emit);
-
-      return emit(SearchInitialState(
-        friendsSubject: _friendsSubject,
-        currentUser: currentUser,
-      ));
+      // show all friends
+      if (event.searchName.isEmpty) {
+        return emit(
+          SearchInitialState(
+            friendsSubject: _friendsSubject,
+            currentUser: currentUser,
+          ),
+        );
+      }
+      // get friends by key search
+      emit(SearchingState(loading: true, currentUser: currentUser));
+      final listUser = await _userInformationRepo.remote.searchUserByName(
+        searchName: event.searchName,
+      );
+      _usersSubject.add(listUser);
+      if (state is SearchingState) {
+        emit(SearchingState(
+          usersSubject: _usersSubject,
+          currentUser: currentUser,
+        ));
+      }
     });
-
     on<JoinConversationEvent>((event, emit) async {
       if (event.userIDs[0].isEmpty || event.userIDs[0].isEmpty) {
         return emit(SearchInitialState(
-            friendsSubject: _searchKeyWhenComeBack.isEmpty
-                ? _friendsSubject
-                : _usersSubject,
-            currentUser: currentUser,
-            error: "Error when get conversation data!"));
+          friendsSubject:
+              _searchKeyWhenComeBack.isEmpty ? _friendsSubject : _usersSubject,
+          currentUser: currentUser,
+          error: "Error when get conversation data!",
+        ));
       }
 
       final conversation = await _conversationRepo.remote.getConversationData(
@@ -53,7 +67,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         currentUser: currentUser,
       ));
     });
-
     on<ComeBackSearchScreenEvent>((event, emit) {
       return emit(SearchInitialState(
         friendsSubject:
@@ -61,45 +74,14 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         currentUser: currentUser,
       ));
     });
-
-    on<UpdateFriendListEvent>((event, emit) {
-      if (event.friendProfile == null) return;
-      friendList.add(event.friendProfile!);
-      _friendsSubject.add(friendList);
-      emit(
-        SearchInitialState(
-          friendsSubject: _friendsSubject,
-          currentUser: currentUser,
-        ),
-      );
-    });
   }
 
-  _searchingByName(SearchingEvent event, Emitter<SearchState> emit) async {
-    emit(SearchingState(loading: true, currentUser: currentUser));
-    final listUser = await _userInformationRepo.remote.searchUserByName(
-      searchName: event.searchName,
-    );
-    _usersSubject.add(listUser);
-    emit(SearchingState(usersSubject: _usersSubject, currentUser: currentUser));
-  }
-
-  _getFriendList(SearchingEvent event, Emitter<SearchState> emit) async {
-    emit(
-      SearchInitialState(
-        friendsSubject: _friendsSubject,
-        currentUser: currentUser,
-      ),
-    );
-    friendList = await _userInformationRepo.remote.searchUserByName(
-      searchName: event.searchName,
-    );
-    _friendsSubject.add(friendList);
-    emit(
-      SearchInitialState(
-        friendsSubject: _friendsSubject,
-        currentUser: currentUser,
-      ),
-    );
+  @override
+  Future<void> close() {
+    _usersSubject.drain();
+    _usersSubject.close();
+    _friendsSubject.drain();
+    _friendsSubject.close();
+    return super.close();
   }
 }

@@ -104,7 +104,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
             width: 12.w,
             child: CircularProgressIndicator(
               strokeWidth: 1.3,
-              color: ResColors.darkGrey(isDarkmode: false),
+              color: AppColors.darkGrey(isDarkmode: false),
             ),
           ),
         ],
@@ -119,7 +119,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
         Icon(
           Icons.check,
           size: 16,
-          color: ResColors.darkGrey(isDarkmode: false),
+          color: AppColors.darkGrey(isDarkmode: false),
         ),
       ];
     }
@@ -133,7 +133,7 @@ class _ClusterMessagesState extends State<ClusterMessages> {
       style: Theme.of(context)
           .textTheme
           .labelSmall!
-          .copyWith(color: ResColors.lightGrey(isDarkmode: true)),
+          .copyWith(color: AppColors.lightGrey(isDarkmode: true)),
     );
   }
 

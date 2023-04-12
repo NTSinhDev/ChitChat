@@ -4,7 +4,7 @@ AppBar buildAppBar(BuildContext context, UserProfile friendInfo) {
   final theme = context.watch<ThemeProvider>().isDarkMode;
   return AppBar(
     toolbarHeight: 68.h,
-    backgroundColor: ResColors.purpleMessage(theme: theme),
+    backgroundColor: AppColors(themeMode: theme).baseTheme,
     leading: IconButton(
       icon: const Icon(
         Icons.arrow_back,
@@ -18,7 +18,7 @@ AppBar buildAppBar(BuildContext context, UserProfile friendInfo) {
         StateAvatar(
           urlImage: friendInfo.urlImage,
           userId: friendInfo.profile?.id ?? '',
-          color: ResColors.purpleMessage(theme: theme),
+          color: AppColors(themeMode: theme).baseTheme,
           radius: 44.r,
         ),
         Spaces.w20,
@@ -34,7 +34,21 @@ AppBar buildAppBar(BuildContext context, UserProfile friendInfo) {
                   .bodyLarge!
                   .copyWith(color: Colors.white, fontSize: 15.r),
             ),
-            _ActiveStatus(userId: friendInfo.profile?.id),
+            PresenceStreamWidget(
+              userId: friendInfo.profile!.id!,
+              child: (presence) {
+                if (presence == null) return Container();
+                return Text(
+                  presence.status
+                      ? context.languagesExtension.onl
+                      : "${TimeUtilities.differenceTime(context: context, earlier: presence.timestamp)} ${context.languagesExtension.ago}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge!
+                      .copyWith(fontSize: 10.r, color: Colors.white),
+                );
+              },
+            ),
           ],
         ),
       ],
@@ -55,43 +69,4 @@ AppBar buildAppBar(BuildContext context, UserProfile friendInfo) {
       ),
     ],
   );
-}
-
-class _ActiveStatus extends StatelessWidget {
-  final String? userId;
-  const _ActiveStatus({required this.userId});
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<DatabaseEvent>(
-      stream: PresenceRemoteDatasourceImpl().getPresence(userID: userId ?? ''),
-      builder: (context, snapshotDBEvnet) {
-        final bool condition1 = snapshotDBEvnet.hasData;
-        final bool condition2 = snapshotDBEvnet.data != null;
-        final bool condition3 = snapshotDBEvnet.data?.snapshot.value != null;
-        UserPresence? presence;
-        if (condition1 && condition2 && condition3) {
-          final data = snapshotDBEvnet.data!.snapshot;
-          final mapStringDynamic = Map<String, dynamic>.from(data.value as Map);
-          presence = UserPresence.fromMap(mapStringDynamic, data.key!);
-        }
-        if (presence != null) {
-          return buildStatus(context, presence: presence);
-        }
-        return Container();
-      },
-    );
-  }
-
-  Widget buildStatus(BuildContext context, {required UserPresence presence}) {
-    return Text(
-      presence.status
-          ? context.languagesExtension.onl
-          : "${TimeUtilities.differenceTime(context: context, earlier: presence.timestamp)} ${context.languagesExtension.ago}",
-      style: Theme.of(context)
-          .textTheme
-          .labelLarge!
-          .copyWith(fontSize: 10.r, color: Colors.white),
-    );
-  }
 }

@@ -153,7 +153,7 @@ class _FlashMessageScreen extends StatelessWidget {
                           ScaffoldMessenger.of(context).hideCurrentSnackBar(),
                       icon: Icon(
                         Icons.clear_rounded,
-                        color: ResColors.appColor(isDarkmode: theme.isDarkMode),
+                        color: AppColors.appColor(isDarkmode: theme.isDarkMode),
                       ),
                     ),
                   ],

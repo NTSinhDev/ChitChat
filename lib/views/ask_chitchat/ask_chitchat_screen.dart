@@ -35,7 +35,7 @@ class _AskChitChatcreenState extends State<AskChitChatcreen> {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: ResColors.purpleMessage(theme: theme),
+        backgroundColor: AppColors.purpleMessage(theme: theme),
         foregroundColor: Colors.white,
         title: Text(
           "Xin chào! Tôi có thể giúp gì?",

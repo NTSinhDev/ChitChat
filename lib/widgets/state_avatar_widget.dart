@@ -15,12 +15,16 @@ class StateAvatar extends StatelessWidget {
   final String userId;
   final double radius;
   final Color? color;
+  final bool isBorder;
+  final BoxShadow? boxShadow;
   const StateAvatar({
     Key? key,
     required this.urlImage,
     required this.userId,
     required this.radius,
     this.color,
+    this.isBorder = false,
+    this.boxShadow,
   }) : super(key: key);
 
   @override
@@ -49,7 +53,7 @@ class StateAvatar extends StatelessWidget {
                 vertical: radius / (20 + radius ~/ 40),
               ),
               decoration: BoxDecoration(
-                color: color ?? ResColors.appColor(isDarkmode: !theme),
+                color: color ?? AppColors.appColor(isDarkmode: !theme),
                 borderRadius: BorderRadius.circular(40.r),
               ),
               child: Container(
@@ -68,14 +72,29 @@ class StateAvatar extends StatelessWidget {
   }
 
   Widget _buildAvatar(bool theme) {
-    return SizedBox(
+    return Container(
+      padding: isBorder ? EdgeInsets.all(radius / 40) : null,
+      decoration: isBorder
+          ? BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(radius),
+              boxShadow: [
+                boxShadow ??
+                    const BoxShadow(
+                      color: Colors.black54,
+                      offset: Offset(4, 4),
+                      blurRadius: 6,
+                    ),
+              ],
+            )
+          : null,
       width: radius,
       height: radius,
       child: urlImage.url == null
           ? CircleAvatar(
               backgroundColor: theme
-                  ? ResColors.darkGrey(isDarkmode: false)
-                  : ResColors.lightGrey(isDarkmode: true),
+                  ? AppColors.darkGrey(isDarkmode: false)
+                  : AppColors.lightGrey(isDarkmode: true),
               child: Icon(
                 CupertinoIcons.person_fill,
                 color: Colors.black,

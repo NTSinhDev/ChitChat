@@ -53,20 +53,11 @@ class _RemoteRepositoryImpl implements RemoteUserInformationRepository {
     required String searchName,
   }) async {
     try {
-      List<Profile> profiles = [];
-      // get profiles
-      switch (searchName) {
-        case '':
-          profiles = await _personalInforRemote.getAllProfile();
-          break;
-        default:
-          profiles = await _personalInforRemote.getAllProfileByName(
-            name: searchName,
-          );
-      }
-      if (profiles.isEmpty) {
-        return [];
-      }
+      final profiles = await _personalInforRemote.getAllProfileByName(
+        name: searchName,
+      );
+      if (profiles.isEmpty) return [];
+
       // get Avatars
       final users = await _getUserProfilesFromProfiles(profiles: profiles);
       return users;
@@ -79,7 +70,6 @@ class _RemoteRepositoryImpl implements RemoteUserInformationRepository {
     required List<Profile> profiles,
   }) async {
     List<UserProfile> userProfiles = [];
-
     for (var i = 0; i < profiles.length; i++) {
       final url = await _storageRemote.getFile(
         filePath: StorageKey.pPROFILE,

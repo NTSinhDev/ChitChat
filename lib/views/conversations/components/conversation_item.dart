@@ -122,11 +122,11 @@ class _ConversationItemState extends State<ConversationItem> {
           Container(
             padding: EdgeInsets.all(2.h),
             decoration: BoxDecoration(
-              color: ResColors.backgroundLightPurple,
+              color: AppColors.backgroundLightPurple,
               boxShadow: [
                 if (!theme.isDarkMode)
                   const BoxShadow(
-                    color: ResColors.customNewDarkPurple,
+                    color: AppColors.customNewDarkPurple,
                     offset: Offset(1, 1),
                     blurRadius: 1,
                   )
@@ -137,7 +137,7 @@ class _ConversationItemState extends State<ConversationItem> {
               'Ảo',
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     fontSize: 8.5.r,
-                    color: ResColors.customNewDarkPurple,
+                    color: AppColors.customNewDarkPurple,
                   ),
             ),
           ),

@@ -33,10 +33,10 @@ class SettingScreen extends StatelessWidget {
                     end: theme ? Alignment.bottomRight : Alignment.topLeft,
                     colors: theme
                         ? [
-                            ResColors.customNewDarkPurple,
-                            ResColors.customNewVeryDarkPurple,
+                            AppColors.customNewDarkPurple,
+                            AppColors.customNewVeryDarkPurple,
                           ]
-                        : ResColors.sunshine.reversed.toList()),
+                        : AppColors.sunshine.reversed.toList()),
               ),
             ),
             SafeArea(
@@ -70,8 +70,8 @@ class SettingScreen extends StatelessWidget {
                 ? CupertinoIcons.sun_max_fill
                 : CupertinoIcons.moon_fill,
             iconColor: themeProvider.isDarkMode
-                ? ResColors.deepSaffron
-                : ResColors.customNewVeryDarkPurple,
+                ? AppColors.deepSaffron
+                : AppColors.customNewVeryDarkPurple,
             title: themeProvider.isDarkMode
                 ? context.languagesExtension.lightmode
                 : context.languagesExtension.darkmode,

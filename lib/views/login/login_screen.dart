@@ -40,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        backgroundColor: ResColors.deepPurple,
+        backgroundColor: AppColors.deepPurple,
         body: InkWell(
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(

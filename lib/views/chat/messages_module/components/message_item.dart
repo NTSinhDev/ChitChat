@@ -34,9 +34,9 @@ class _MessageItemState extends State<MessageItem> {
     final theme = context.watch<ThemeProvider>().isDarkMode;
     // UI
     final colorBG = theme
-        ? ResColors.darkGrey(isDarkmode: theme)
-        : ResColors.lightGrey(isDarkmode: theme);
-    final colorSenderBG = ResColors.blue(isDarkmode: theme);
+        ? AppColors.darkGrey(isDarkmode: theme)
+        : AppColors.lightGrey(isDarkmode: theme);
+    final colorSenderBG = AppColors.blue(isDarkmode: theme);
     final radius15 = Radius.circular(12.r);
     final crossAxisAlign =
         isMsgOfUser ? CrossAxisAlignment.end : CrossAxisAlignment.start;

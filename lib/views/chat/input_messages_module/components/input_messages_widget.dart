@@ -23,8 +23,8 @@ class InputMessageWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.r),
           color: theme
-              ? ResColors.darkGrey(isDarkmode: true)
-              : ResColors.lmlightGrey100,
+              ? AppColors.darkGrey(isDarkmode: true)
+              : AppColors.lmlightGrey100,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -44,7 +44,7 @@ class InputMessageWidget extends StatelessWidget {
                   hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         color: theme
                             ? Colors.white
-                            : ResColors.darkGrey(isDarkmode: false),
+                            : AppColors.darkGrey(isDarkmode: false),
                       ),
                   border: InputBorder.none,
                   hintText: context.languagesExtension.inbox,
@@ -58,7 +58,7 @@ class InputMessageWidget extends StatelessWidget {
                 margin: EdgeInsets.fromLTRB(0, 0, 6.w, 12.h),
                 child: Icon(
                   Icons.sentiment_satisfied_alt_outlined,
-                  color: ResColors.purpleMessage(theme: theme),
+                  color: AppColors.purpleMessage(theme: theme),
                 ),
               ),
             ),

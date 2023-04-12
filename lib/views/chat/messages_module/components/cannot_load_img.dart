@@ -16,8 +16,10 @@ class CannotLoadMsg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorBG = theme ? ResColors.darkGrey(isDarkmode: true) : ResColors.lightGrey(isDarkmode: false);
-    final colorSenderBG = ResColors.blue(isDarkmode: theme);
+    final colorBG = theme
+        ? AppColors.darkGrey(isDarkmode: true)
+        : AppColors.lightGrey(isDarkmode: false);
+    final colorSenderBG = AppColors.blue(isDarkmode: theme);
     return Container(
       padding: EdgeInsets.all(12.h),
       decoration: BoxDecoration(

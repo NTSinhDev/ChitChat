@@ -16,11 +16,9 @@ part 'conversation_state.dart';
 
 class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
   final UserProfile currentUser;
-
   // Repositories
   final _conversationRepo = ConversationsRepository();
   final _userInformationRepo = UserInformationRepository();
-
   // Conversations data
   List<ConversationData> _conversations = [];
   final _behaviorConversations = BehaviorSubject<List<ConversationData>>();
@@ -157,8 +155,15 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
         },
       );
     });
-
     _saveDeviceToken();
+  }
+  Conversation? getConversationData({required String friendId}) {
+    for (ConversationData conversationData in _conversations) {
+      if (conversationData.friend.profile!.id! == friendId) {
+        return conversationData.conversation;
+      }
+    }
+    return null;
   }
 
   _saveDeviceToken() async {
@@ -217,9 +222,6 @@ class ConversationBloc extends Bloc<ConversationEvent, ConversationState> {
     }
     log('Finished 🚀saveToLocal⚡ ConversationsData');
   }
-
-  Future<UserProfile?> getFriendInfomation({required String id}) async =>
-      await _userInformationRepo.remote.getInformationById(id: id);
 
   @override
   Future<void> close() async {

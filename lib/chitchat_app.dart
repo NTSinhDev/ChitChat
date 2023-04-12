@@ -22,9 +22,7 @@ class ChitChatApp extends StatefulWidget {
     required String? token,
     required this.sharedPreferences,
   }) {
-    final AuthenticationRepository repository = AuthenticationRepositoryImpl(
-      sharedPreferences,
-    );
+    final repository = AuthenticationRepositoryImpl(sharedPreferences);
     userID = repository.getUIDAtLocalStorage();
     fcmHanlder = FCMHanlder(
       notificationService: NotificationService(),
@@ -68,16 +66,10 @@ class _ChitChatAppState extends State<ChitChatApp> {
                     widget.fcmHanlder.handleFirebaseMessagingStates(context);
                     beInitializedData = true;
                   }
-
-                  if (state is RegisterState) {
-                    return const SignUpScreen();
-                  }
+                  if (state is RegisterState) return const SignUpScreen();
                   if (state is LoggedState) {
                     log('💯 Vào trang chủ');
-                    return HomeScreen(
-                      userProfile: state.userProfile,
-                      fcmHanlder: widget.fcmHanlder,
-                    );
+                    return HomeScreen(fcmHanlder: widget.fcmHanlder);
                   }
                   return const LoginScreen();
                 },

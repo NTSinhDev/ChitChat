@@ -58,7 +58,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
             vertical: 10.h,
           ),
           decoration: BoxDecoration(
-            color: theme ? ResColors.mdblack : Colors.white,
+            color: theme ? AppColors.mdblack : Colors.white,
             boxShadow: const [
               BoxShadow(
                 color: Colors.black,
@@ -97,7 +97,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
                   onTap: () => _sendMessage(inputController.text),
                   child: FaIcon(
                     FontAwesomeIcons.paperPlane,
-                    color: ResColors.purpleMessage(theme: theme),
+                    color: AppColors.purpleMessage(theme: theme),
                   ),
                 ),
                 Spaces.w8,

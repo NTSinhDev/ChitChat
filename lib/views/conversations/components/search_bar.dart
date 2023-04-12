@@ -13,30 +13,24 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = context.watch<ConversationBloc>().currentUser;
     final theme = context.watch<ThemeProvider>().isDarkMode;
-
+    final friendStream = context.watch<FriendsProvider>().friendsStream;
     return Container(
       height: 48.h,
       margin: EdgeInsets.symmetric(horizontal: 14.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100.r),
         color: theme
-            ? ResColors.darkGrey(isDarkmode: theme)
-            : ResColors.lightGrey(isDarkmode: theme),
+            ? AppColors.darkGrey(isDarkmode: theme)
+            : AppColors.lightGrey(isDarkmode: theme),
       ),
       child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BlocProvider<SearchBloc>(
-                create: (context) => SearchBloc(currentUser: currentUser),
-                child: const SearchScreen(),
-              ),
-            ),
-          );
-        },
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SearchScreen(friendStream: friendStream),
+          ),
+        ),
         child: Row(
           children: [
             Spaces.w20,

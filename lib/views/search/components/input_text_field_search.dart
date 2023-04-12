@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-class InputFieldWidget extends StatefulWidget {
-  const InputFieldWidget({
+class SearchInputField extends StatefulWidget {
+  const SearchInputField({
     Key? key,
-    required this.onSubmitted,
+    this.onSubmitted,
     required this.onChanged,
     required this.onDeleted,
-    this.padding = 8,
+    this.padding = 0,
     this.boxDecorationColor = Colors.white,
     this.borderRadius = 8,
     this.hintText = "Tìm kiếm",
@@ -46,10 +46,10 @@ class InputFieldWidget extends StatefulWidget {
   final bool enableRTLHintText;
   final Color cursorColor;
   @override
-  State<InputFieldWidget> createState() => _InputFieldWidgetState();
+  State<SearchInputField> createState() => _SearchInputFieldState();
 }
 
-class _InputFieldWidgetState extends State<InputFieldWidget> {
+class _SearchInputFieldState extends State<SearchInputField> {
   late final TextEditingController textEditingController;
   @override
   void initState() {

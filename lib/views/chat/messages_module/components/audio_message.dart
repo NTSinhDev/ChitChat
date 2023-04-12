@@ -51,7 +51,7 @@ class _AudioMessageState extends State<AudioMessage> {
                       padding: EdgeInsets.all(4.r),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: ResColors.purpleMessage(theme: !theme),
+                        color: AppColors.purpleMessage(theme: !theme),
                       ),
                       child: Icon(
                         isPlaying ? Icons.stop : Icons.play_arrow,

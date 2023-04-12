@@ -23,7 +23,7 @@ class LargeRoundButton extends StatelessWidget {
         ),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: ResColors.customPurple,
+          color: AppColors.customPurple,
           borderRadius: BorderRadius.circular(40.r),
           boxShadow: const [
             BoxShadow(

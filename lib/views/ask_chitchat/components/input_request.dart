@@ -35,7 +35,7 @@ class _InputRequestState extends State<InputRequest> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: theme ? ResColors.mdblack : Colors.white,
+        color: theme ? AppColors.mdblack : Colors.white,
         boxShadow: const [
           BoxShadow(
             color: Colors.black,
@@ -69,7 +69,7 @@ class _InputRequestState extends State<InputRequest> {
                 onPressed: sendMessageFCT,
                 icon: FaIcon(
                   FontAwesomeIcons.paperPlane,
-                  color: ResColors.purpleMessage(theme: theme),
+                  color: AppColors.purpleMessage(theme: theme),
                 ),
               ),
             ],

@@ -58,7 +58,7 @@ class LoadingScreenWidget {
           color: Colors.black.withAlpha(150),
           child: const Center(
             child: SingleChildScrollView(
-              child: CircularProgressIndicator(color: ResColors.redAccent),
+              child: CircularProgressIndicator(color: AppColors.redAccent),
             ),
           ),
         );

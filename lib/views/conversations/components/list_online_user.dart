@@ -2,6 +2,7 @@ import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -58,8 +59,29 @@ class ListOnlineUser extends StatelessWidget {
 
   Widget _friendItem(BuildContext context, {required UserProfile friend}) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
+    final currentUser = context.watch<AuthenticationBloc>().userProfile!;
     return GestureDetector(
-      onTap: () {},
+      onTap: () async {
+        final conversation = context
+            .read<ConversationBloc>()
+            .getConversationData(friendId: friend.profile!.id!);
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (nContext) {
+              return ChatScreen(
+                conversation: conversation,
+                currentUser: currentUser,
+                friendInfo: friend,
+              );
+            },
+            settings: RouteSettings(
+              name: conversation == null
+                  ? null
+                  : "conversation:${conversation.id}",
+            ),
+          ),
+        );
+      },
       child: Container(
         margin: EdgeInsets.only(right: 12.w),
         constraints: BoxConstraints(maxWidth: 62.w),
@@ -105,7 +127,7 @@ class ListOnlineUser extends StatelessWidget {
             DottedBorder(
               borderType: BorderType.RRect,
               radius: Radius.circular(30.r),
-              color: ResColors.customNewLightPurple,
+              color: AppColors(themeMode: false).customNewPurple,
               strokeWidth: 2,
               padding: EdgeInsets.all(2.h),
               child: ClipRRect(
@@ -114,12 +136,12 @@ class ListOnlineUser extends StatelessWidget {
                   height: 52.h,
                   width: 52.w,
                   color: theme
-                      ? ResColors.darkGrey(isDarkmode: theme).withOpacity(0.5)
-                      : ResColors.lightGrey(isDarkmode: theme),
+                      ? AppColors.darkGrey(isDarkmode: theme).withOpacity(0.5)
+                      : AppColors.lightGrey(isDarkmode: theme),
                   child: Center(
                     child: Icon(
                       Icons.add_sharp,
-                      color: ResColors.appColor(isDarkmode: theme),
+                      color: AppColors.appColor(isDarkmode: theme),
                       size: 20.r,
                     ),
                   ),

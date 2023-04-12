@@ -1,15 +1,18 @@
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/utils/injector.dart';
+import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class EmptyConversation extends StatelessWidget {
   const EmptyConversation({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final friends = context.watch<FriendsProvider>().friendsStream;
     return Center(
       child: SizedBox(
         width: 400.w,
@@ -25,7 +28,7 @@ class EmptyConversation extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SearchScreen(),
+                    builder: (context) => SearchScreen(friendStream: friends),
                   ),
                 );
               },

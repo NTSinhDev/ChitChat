@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class UserAvatar extends StatefulWidget {
   const UserAvatar({
@@ -22,66 +21,64 @@ class UserAvatar extends StatefulWidget {
 }
 
 class _UserAvatarState extends State<UserAvatar> {
+  final radius = 160.r;
   @override
   Widget build(BuildContext context) {
-    final userProfile =
-        Provider.of<SettingBloc>(context, listen: false).userProfile;
+    final userProfile = context.watch<AuthenticationBloc>().userProfile!;
     final isDarkmode = context.watch<ThemeProvider>().isDarkMode;
-
     return Center(
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.all(12.h),
-            child: BlocConsumer<SettingBloc, SettingState>(
-              listener: updateAvatarListen,
-              builder: (context, state) {
-                if (state is UpdatedAvatarState) {
-                  if (state.loading) {
-                    return SizedBox(
-                      width: 160.w,
-                      height: 160.h,
-                      child: CircleAvatar(
-                        backgroundColor: isDarkmode
-                            ? ResColors.darkGrey(isDarkmode: false)
-                            : ResColors.lightGrey(isDarkmode: true),
-                        child: const Center(child: CircularProgressIndicator()),
-                      ),
-                    );
-                  }
-                }
-                return StateAvatar(
-                  urlImage: userProfile.urlImage,
-                  userId: '',
-                  radius: 160.r,
-                );
-              },
+      child: BlocConsumer<SettingBloc, SettingState>(
+        listener: updateAvatarListen,
+        builder: (context, state) {
+          if (state is UpdatedAvatarState) {
+            if (state.loading) {
+              return SizedBox(
+                width: radius,
+                height: radius,
+                child: CircleAvatar(
+                  backgroundColor: isDarkmode
+                      ? AppColors.darkGrey(isDarkmode: false)
+                      : AppColors.lightGrey(isDarkmode: true),
+                  child: const Center(child: CircularProgressIndicator()),
+                ),
+              );
+            }
+          }
+          return StateAvatar(
+            urlImage: userProfile.urlImage,
+            userId: '',
+            radius: radius,
+            isBorder: true,
+            boxShadow: const BoxShadow(
+              color: Colors.black,
+              offset: Offset(2, 6),
+              blurRadius: 8,
             ),
-          ),
-          updateAvatarWidget(context),
-        ],
+          );
+        },
       ),
     );
   }
 
   Widget updateAvatarWidget(BuildContext context) {
+    final actionRadius = (5 / 16) * radius;
     return Positioned(
-      bottom: 12.h,
-      right: 12.w,
+      bottom: 0,
+      right: 0,
       child: Container(
-        width: 52.w,
-        height: 52.h,
+        width: actionRadius,
+        height: actionRadius,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30.r),
+          borderRadius: BorderRadius.circular(actionRadius),
         ),
         child: InkWell(
           onTap: () => changeAvatar(context),
           child: Container(
             margin: EdgeInsets.all(6.h),
-            width: 44.w,
-            height: 44.h,
+            width: actionRadius - 6,
+            height: actionRadius - 6,
             decoration: BoxDecoration(
-              color: ResColors.lightGrey(isDarkmode: false),
+              color: AppColors.lightGrey(isDarkmode: false),
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black45,

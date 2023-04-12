@@ -154,10 +154,10 @@ class MessageWidget extends StatelessWidget {
       isSender ? Radius.circular(_messageRadius) : const Radius.circular(0);
 
   Color _buildBackgroundColor(bool theme) => isSender
-      ? ResColors.purpleMessage(theme: theme)
+      ? AppColors(themeMode: theme).baseTheme
       : theme
-          ? ResColors.darkGrey(isDarkmode: theme)
-          : ResColors.lightGrey(isDarkmode: theme);
+          ? AppColors.darkGrey(isDarkmode: theme)
+          : AppColors.lightGrey(isDarkmode: theme);
 
   Widget _buildSenderMessageAvatar() => friend == null
       ? Container(

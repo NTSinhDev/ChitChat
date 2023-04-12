@@ -19,6 +19,7 @@ class ConversationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final conversationBloc = context.read<ConversationBloc>();
+    final friendsProviver = context.watch<FriendsProvider>();
     return RefreshIndicator(
       onRefresh: () async {},
       child: SingleChildScrollView(

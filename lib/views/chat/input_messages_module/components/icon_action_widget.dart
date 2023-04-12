@@ -23,7 +23,7 @@ class IconActionWidget extends StatelessWidget {
           child: Icon(
             icon,
             size: 28.r,
-            color: ResColors.purpleMessage(theme: theme),
+            color: AppColors.purpleMessage(theme: theme),
           ),
         ),
       ),

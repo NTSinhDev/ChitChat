@@ -23,7 +23,7 @@ class SettingBtmSheet extends StatelessWidget {
       height: 220.h,
       padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
       decoration: BoxDecoration(
-        color: ResColors.appColor(isDarkmode: !theme),
+        color: AppColors.appColor(isDarkmode: !theme),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(12.h),
           topRight: Radius.circular(12.h),
@@ -54,8 +54,8 @@ class SettingBtmSheet extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: bottomSheetItem.isActive
-                    ? ResColors.customNewPurple(isDarkmode: isDarkmode)
-                    : ResColors.appColor(isDarkmode: isDarkmode)
+                    ? AppColors(themeMode: isDarkmode).customNewPurple
+                    : AppColors.appColor(isDarkmode: isDarkmode)
                         .withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12.r),
               ),

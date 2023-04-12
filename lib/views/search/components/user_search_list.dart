@@ -39,7 +39,7 @@ class UserSearchList extends StatelessWidget {
             return Center(
               child: Column(
                 children: [
-                  const CircularProgressIndicator(color: ResColors.redAccent),
+                  const CircularProgressIndicator(color: AppColors.redAccent),
                   Spaces.h20,
                   const Text('Đang tải danh sách bạn bè'),
                 ],
