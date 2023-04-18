@@ -24,6 +24,33 @@ class TimeUtilities {
     return DateFormat('kk:mm').format(time);
   }
 
+  static String formatTimeOfMessagesCluster(DateTime time, Locale local) {
+    final now = DateTime.now();
+    if (time.day == now.day) {
+      return local.languageCode == "vi" ? "Hôm nay" : "Today";
+    }
+
+    final dayOfWeek = DateFormat('EEEE').format(time);
+    if (_HandleTools.isDateInCurrentWeek(date: time)) {
+      return local.languageCode == "vi"
+          ? _HandleTools.convertToDayOfWeek(day: dayOfWeek)
+          : dayOfWeek;
+    }
+
+    if (time.year == now.year) {
+      final dayWeek = local.languageCode == "vi"
+          ? _HandleTools.convertToDayOfWeek(day: dayOfWeek)
+          : dayOfWeek;
+      String dayMonth = _HandleTools.formatMonthTimeByLangugageCode(
+        code: local.languageCode,
+        time: time,
+        acronym: false,
+      );
+      return "$dayWeek, $dayMonth";
+    }
+    return "${time.day}/${time.month}/${time.year}}";
+  }
+
   static String differenceTime({
     required BuildContext context,
     required DateTime earlier,
@@ -87,7 +114,27 @@ class _HandleTools {
       case 'Sun':
         return 'CN';
       default:
-        log('🚀_getDayByVietnamese⚡ $day');
+        return 'Error';
+    }
+  }
+
+  static String convertToDayOfWeek({required String day}) {
+    switch (day) {
+      case 'Monday':
+        return 'Thứ Hai';
+      case 'Tuesday':
+        return 'Thứ Ba';
+      case 'Wednesday':
+        return 'Thứ Tư';
+      case 'Thursday':
+        return 'Thứ Năm';
+      case 'Friday':
+        return 'Thứ Sáu';
+      case 'Saturday':
+        return 'Thứ Bảy';
+      case 'Sunday':
+        return 'Chủ Nhật';
+      default:
         return 'Error';
     }
   }
@@ -95,10 +142,18 @@ class _HandleTools {
   static String formatMonthTimeByLangugageCode({
     required String code,
     required DateTime time,
-  }) =>
-      code == "vi"
-          ? "${time.day} thg ${time.month}"
-          : '${DateFormat('MMM').format(time)} ${_getDayByEnglish(day: time.day)}';
+    bool acronym = true,
+  }) {
+    String viMonth = 'thg';
+    String enMonth = DateFormat('MMM').format(time);
+    if (!acronym) {
+      viMonth = 'tháng';
+      enMonth = DateFormat('MMMM').format(time);
+    }
+    return code == "vi"
+        ? "${time.day} $viMonth ${time.month}"
+        : '$enMonth ${_getDayByEnglish(day: time.day)}';
+  }
 
   static String _getDayByEnglish({required int day}) {
     final dayLastLetter = "$day".lastCharacters;

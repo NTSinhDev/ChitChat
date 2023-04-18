@@ -22,28 +22,28 @@ part 'components/input_messages_widget.dart';
 part 'components/emoji_widget.dart';
 part 'components/icon_action_widget.dart';
 
-class InputMessagesModule extends StatefulWidget {
-  const InputMessagesModule({super.key});
+class MessageInputModule extends StatefulWidget {
+  const MessageInputModule({super.key});
 
   @override
-  State<InputMessagesModule> createState() => _InputMessagesModuleState();
+  State<MessageInputModule> createState() => _MessageInputModuleState();
 }
 
-class _InputMessagesModuleState extends State<InputMessagesModule> {
-  late bool isVisible;
-  late bool emojiShowing;
-  late final ChatBloc chatBloc;
-  final inputController = TextEditingController();
-  final FlutterSoundRecorder recorder = FlutterSoundRecorder();
+class _MessageInputModuleState extends State<MessageInputModule> {
   List<Media> mediaList = []; // to save photos or videos have picked before
   bool isRecorderReady = false;
   bool isRecording = false;
+  final inputController = TextEditingController();
+  late final ChatBloc chatBloc;
+  late bool isVisible;
+  late bool emojiShowing;
+  late FlutterSoundRecorder recorder;
 
   @override
   void initState() {
     isVisible = true;
     emojiShowing = false;
-    chatBloc = Provider.of(context, listen: false);
+    chatBloc = context.read<ChatBloc>();
     super.initState();
   }
 
@@ -53,22 +53,21 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
     return Column(
       children: [
         Container(
-          padding: EdgeInsets.symmetric(
-            horizontal: 14.w,
-            vertical: 10.h,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
           decoration: BoxDecoration(
-            color: theme ? AppColors.mdblack : Colors.white,
+            color: theme ? AppColors(theme: theme).themeMode : Colors.white,
             boxShadow: const [
               BoxShadow(
                 color: Colors.black,
                 offset: Offset(5, 5),
                 blurRadius: 7,
-              ),
+              )
             ],
           ),
           child: SafeArea(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconActionWidget(
                   icon: Icons.camera_alt,
@@ -85,6 +84,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
                   onTap: () => _recordVoice(),
                   visible: isVisible,
                 ),
+                Spaces.w8,
                 InputMessageWidget(
                   inputController: inputController,
                   onchange: _fullyExpand,
@@ -92,15 +92,23 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
                   ontapEmoji: _hideOrShowEmoji,
                   onSubmitted: _sendMessage,
                 ),
-                Spaces.w14,
-                InkWell(
-                  onTap: () => _sendMessage(inputController.text),
-                  child: FaIcon(
-                    FontAwesomeIcons.paperPlane,
-                    color: AppColors.purpleMessage(theme: theme),
-                  ),
-                ),
                 Spaces.w8,
+                IconActionWidget(
+                  icon: FontAwesomeIcons.paperPlane,
+                  onTap: () => _sendMessage(inputController.text),
+                  visible: true,
+                ),
+                // Container(
+                //   margin: EdgeInsets.only(bottom: 14.h),
+                //   child: InkWell(
+                //     onTap: () => _sendMessage(inputController.text),
+                //     child: FaIcon(
+                //       FontAwesomeIcons.paperPlane,
+                //       color: AppColors(theme: theme).iconTheme,
+                //     ),
+                //   ),
+                // ),
+                // Spaces.w8,
               ],
             ),
           ),
@@ -115,9 +123,11 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
 
   @override
   void dispose() {
-    recorder.closeRecorder().then((_) {
-      inputController.dispose();
-    });
+    inputController.dispose();
+    try {
+      recorder.closeRecorder();
+      // ignore: empty_catches
+    } catch (e) {}
     super.dispose();
   }
 
@@ -141,8 +151,8 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
       builder: (nContext) => PickerWidget(
         onPick: (selectedList) {
           setState(() => mediaList = selectedList);
-          Provider.of<ChatBloc>(context, listen: false).add(
-            SendFilesEvent(
+          chatBloc.add(
+            SendMessageEvent(
               files: mediaList.map((media) => media.file!.path).toList(),
               type: MessageType.media,
             ),
@@ -161,8 +171,8 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
       if (image == null) return;
 
       if (!mounted) return;
-      Provider.of<ChatBloc>(context, listen: false).add(
-        SendFilesEvent(
+      chatBloc.add(
+        SendMessageEvent(
           files: [image.path],
           type: MessageType.media,
         ),
@@ -174,7 +184,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
 
   _sendMessage(String message) {
     if (message.isEmpty) return;
-    chatBloc.add(SendMessageEvent(message: message));
+    chatBloc.add(SendMessageEvent(message: message, type: MessageType.text));
     setState(() {
       isVisible = !isVisible;
     });
@@ -182,6 +192,7 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
   }
 
   Future _initRecorder() async {
+    recorder = FlutterSoundRecorder();
     final status = await Permission.microphone.request();
     if (status != PermissionStatus.granted) {
       isRecorderReady = false;
@@ -192,8 +203,8 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
 
   Future _stop() async {
     final path = await recorder.stopRecorder();
-    Provider.of<ChatBloc>(context, listen: false).add(
-      SendFilesEvent(
+    chatBloc.add(
+      SendMessageEvent(
         files: path != null ? [path] : [],
         type: MessageType.audio,
       ),
@@ -207,7 +218,11 @@ class _InputMessagesModuleState extends State<InputMessagesModule> {
     setState(() {
       isRecording = true;
     });
-    await recorder.startRecorder(toFile: 'audio.aac');
+    try {
+      await recorder.startRecorder(toFile: 'audio.aac');
+    } catch (e) {
+      log('💣 Lỗi khi thực hiện {_recording}\nChi tiết: $e');
+    }
   }
 
   _recordVoice() async {

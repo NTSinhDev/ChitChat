@@ -2,15 +2,23 @@ import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
-import 'package:chat_app/views/chat/messages_module/components/injector.dart';
-import 'package:chat_app/views/chat/messages_module/components/media_message.dart';
+import 'package:chat_app/views/chat/components/messages_module/components/injector.dart';
+import 'package:chat_app/views/chat/components/messages_module/components/media_message.dart';
+import 'package:chat_app/views/chat/components/messages_module/components/text_message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MessageItem extends StatefulWidget {
   final Message message;
-  const MessageItem({super.key, required this.message});
+  final MessageIndex? index;
+  final bool? isLast;
+  const MessageItem({
+    super.key,
+    required this.message,
+    this.index,
+    this.isLast,
+  });
 
   @override
   State<MessageItem> createState() => _MessageItemState();
@@ -19,18 +27,20 @@ class MessageItem extends StatefulWidget {
 class _MessageItemState extends State<MessageItem> {
   late bool isMessageInfo;
   late bool isMsgOfUser;
+  late final ChatBloc chatBloc;
+
   @override
   void initState() {
+    chatBloc = context.read<ChatBloc>();
+    isMsgOfUser = widget.message.senderId == chatBloc.currentUser.profile!.id
+        ? true
+        : false;
     isMessageInfo = true;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final chatBloc = context.read<ChatBloc>();
-    isMsgOfUser = widget.message.senderId == chatBloc.currentUser.profile!.id
-        ? true
-        : false;
     final theme = context.watch<ThemeProvider>().isDarkMode;
     // UI
     final colorBG = theme
@@ -69,6 +79,8 @@ class _MessageItemState extends State<MessageItem> {
     return TextMessage(
       isMsgOfUser: isMsgOfUser,
       text: widget.message.content!,
+      index: widget.index,
+      isLast: widget.isLast ?? false,
     );
   }
 

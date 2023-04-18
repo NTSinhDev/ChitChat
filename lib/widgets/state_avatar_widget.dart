@@ -12,19 +12,21 @@ import 'package:chat_app/view_model/injector.dart';
 
 class StateAvatar extends StatelessWidget {
   final URLImage urlImage;
-  final String userId;
+  final String? userId;
   final double radius;
-  final Color? color;
+  final Color? onlineBorderColor;
+  final Color? avatarBorderColor;
   final bool isBorder;
   final BoxShadow? boxShadow;
   const StateAvatar({
     Key? key,
     required this.urlImage,
-    required this.userId,
     required this.radius,
-    this.color,
+    this.userId,
+    this.onlineBorderColor,
     this.isBorder = false,
     this.boxShadow,
+    this.avatarBorderColor,
   }) : super(key: key);
 
   @override
@@ -33,14 +35,14 @@ class StateAvatar extends StatelessWidget {
     return Stack(
       children: [
         _buildAvatar(theme),
-        if (userId.isNotEmpty) _buildGreenTickOnline(theme),
+        if (userId != null) _buildGreenTickOnline(theme),
       ],
     );
   }
 
   Widget _buildGreenTickOnline(bool theme) {
     return PresenceStreamWidget(
-      userId: userId,
+      userId: userId!,
       child: (presence) {
         return Visibility(
           visible: presence?.status ?? false,
@@ -53,7 +55,8 @@ class StateAvatar extends StatelessWidget {
                 vertical: radius / (20 + radius ~/ 40),
               ),
               decoration: BoxDecoration(
-                color: color ?? AppColors.appColor(isDarkmode: !theme),
+                color:
+                    onlineBorderColor ?? AppColors.appColor(isDarkmode: !theme),
                 borderRadius: BorderRadius.circular(40.r),
               ),
               child: Container(
@@ -76,7 +79,7 @@ class StateAvatar extends StatelessWidget {
       padding: isBorder ? EdgeInsets.all(radius / 40) : null,
       decoration: isBorder
           ? BoxDecoration(
-              color: Colors.white,
+              color: avatarBorderColor ?? Colors.white,
               borderRadius: BorderRadius.circular(radius),
               boxShadow: [
                 boxShadow ??

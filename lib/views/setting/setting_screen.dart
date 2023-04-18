@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingScreen extends StatelessWidget {
   final UserProfile userProfile;
@@ -24,35 +23,28 @@ class SettingScreen extends StatelessWidget {
     return BlocProvider<SettingBloc>(
       create: (context) => SettingBloc(userProfile),
       child: Scaffold(
-        body: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: theme ? Alignment.topRight : Alignment.bottomRight,
-                    end: theme ? Alignment.bottomRight : Alignment.topLeft,
-                    colors: theme
-                        ? [
-                            AppColors.customNewDarkPurple,
-                            AppColors.customNewVeryDarkPurple,
-                          ]
-                        : AppColors.sunshine.reversed.toList()),
+        appBar: AppBar(
+          title: Text(
+            context.languagesExtension.personal,
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          centerTitle: true,
+        ),
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Spaces.h12,
+              _buildUserInformation(context),
+              Spaces.h24,
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: const Divider(thickness: 1.2),
               ),
-            ),
-            SafeArea(
-              child: SizedBox(
-                width: 264.w,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Spaces.h12,
-                    _buildUserInformation(context),
-                    _buildSettingOptions(context),
-                  ],
-                ),
-              ),
-            ),
-          ],
+              Spaces.h24,
+              _buildSettingOptions(context),
+            ],
+          ),
         ),
       ),
     );

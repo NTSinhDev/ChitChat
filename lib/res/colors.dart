@@ -26,19 +26,21 @@ class AppColors {
   static const redAccent = Colors.redAccent;
 
   // New
+  late final Color themeMode;
+  late final Color themeModeOpacity;
   late final Color baseTheme;
-  late final Color customNewPurple;
-  AppColors({required bool themeMode}) {
-    baseTheme = themeMode ? const Color(0xff565392) : const Color(0xff9370DC);
-    customNewPurple = themeMode
-        ? AppColors.customNewDarkPurple
-        : AppColors.customNewLightPurple;
-  }
+  late final Color iconTheme;
+  late final List<Color> gradientMessage;
+  AppColors({required bool theme}) {
+    themeMode = theme ? const Color(0xFF303030) : const Color(0xfafafafa);
+    themeModeOpacity = theme ? Colors.grey[800]! : Colors.grey.shade100;
+    baseTheme = theme ? const Color(0xff565392) : const Color(0xff9370DC);
 
-  static const sunshine = [
-    Color(0xff75AAF0),
-    Color(0xff7BC1FA),
-  ];
+    iconTheme = theme ? const Color(0xff8A7FCE) : const Color(0xff9d78f9);
+    gradientMessage = theme
+        ? [baseTheme, const Color(0xff1F2F98)]
+        : [AppColors.customNewLightPurple, AppColors.customNewVeryDarkPurple];
+  }
 
   static Color appColor({required bool isDarkmode}) {
     return isDarkmode ? const Color(0xfafafafa) : const Color(0xFF303030);

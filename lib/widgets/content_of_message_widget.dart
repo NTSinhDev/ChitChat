@@ -17,12 +17,10 @@ class ContentOfMsgWidget extends StatelessWidget {
       content,
       overflow: TextOverflow.ellipsis,
       maxLines: maxValueInteger,
-      style: isSender
-          ? Theme.of(context)
-              .textTheme
-              .displaySmall!
-              .copyWith(color: Colors.white, fontSize: 14.r)
-          : Theme.of(context).textTheme.displaySmall!.copyWith(fontSize: 14.r),
+      style: Theme.of(context)
+          .textTheme
+          .displaySmall!
+          .copyWith(color: isSender ? Colors.white : null, fontSize: 14.r),
     );
   }
 }

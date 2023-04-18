@@ -14,17 +14,14 @@ Future<void> main() async {
   await Hive.initFlutter();
   final sharedPreferences = await SharedPreferences.getInstance();
   final deviceToken = await FirebaseMessaging.instance.getToken();
-  log('💯 Đã Khởi tạo xong WidgetsFlutterBinding, Firebase, Hive, sharedPreferences');
-
   FirebaseMessaging.onBackgroundMessage(onBackground);
-
   // Change default system UI
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: Colors.transparent),
   );
 
   log('🚀 Khởi chạy ứng dụng');
-runApp(ChitChatApp(sharedPreferences: sharedPreferences, token: deviceToken));
+  runApp(ChitChatApp(sharedPreferences: sharedPreferences, token: deviceToken));
 }
 
 Future<void> onBackground(RemoteMessage mesage) async {

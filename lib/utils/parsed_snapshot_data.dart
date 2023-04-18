@@ -9,14 +9,14 @@ class ParsedSnapshotData {
 
   dynamic parsed({required Object? data, required String id}) {
     final encodeData = json.encode(data);
-    final convertToMap = json.decode(encodeData) as Map<String, dynamic>;
+    final parseToMap = json.decode(encodeData) as Map<String, dynamic>;
     switch (parsedTo) {
       case ParsedTo.profile:
-        return Profile.fromMap(convertToMap, id);
+        return Profile.fromMap(parseToMap, id);
       case ParsedTo.message:
-        return Message.fromMap(convertToMap, id);
+        return Message.fromMap(parseToMap, id);
       default:
-        return Conversation.fromMap(convertToMap, id);
+        return Conversation.fromMap(parseToMap, id);
     }
   }
 }

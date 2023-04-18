@@ -2,6 +2,7 @@ import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/services/injector.dart';
 import 'package:chat_app/utils/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
+import 'package:chat_app/views/conversations/components/search_bar.dart';
 import 'package:chat_app/views/home/components/init_state_managers.dart';
 import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
@@ -10,10 +11,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:provider/provider.dart';
-import 'components/animate_home_screen.dart';
 import 'components/ask_ai_button.dart';
 
-part 'components/app_bar.dart';
+part 'components/home_screen_app_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   final FCMHanlder fcmHanlder;
@@ -25,50 +25,37 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime timeBackPressed = DateTime.now();
-  double endTweenValue = 0;
-  bool isGestureActive = false;
 
   @override
   Widget build(BuildContext context) {
-    final theme = context.watch<ThemeProvider>().isDarkMode;
     final currentUser = context.watch<AuthenticationBloc>().userProfile!;
     return InitializeStateManagers(
       fcmHanlder: widget.fcmHanlder,
       child: WillPopScope(
         onWillPop: exitApp,
-        child: Stack(
-          children: [
-            SettingScreen(userProfile: currentUser),
-            AnimateHomeScreen(
-              endTweenValue: endTweenValue,
-              appbar: _homeScreenAppBar(
+        child: Scaffold(
+          body: CustomScrollView(
+            slivers: [
+              _homeScreenAppBar(
                 context: context,
                 urlImage: currentUser.urlImage,
-                theme: theme,
                 openSetting: () {
-                  setState(() {
-                    endTweenValue == 0 ? endTweenValue = 1 : endTweenValue = 0;
-                    isGestureActive = true;
-                  });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingScreen(
+                        userProfile: currentUser,
+                      ),
+                    ),
+                  );
                 },
               ),
-              body: ConversationScreen(fcmHanlder: widget.fcmHanlder),
-              floatingBtn: AskAIButton(userProfile: currentUser),
-            ),
-            if (isGestureActive)
-              GestureDetector(
-                onHorizontalDragUpdate: (details) {
-                  final x = details.delta.dx;
-                  final xNegative = x * -1;
-                  if (details.delta.dx < 0 && xNegative > 4) {
-                    setState(() {
-                      endTweenValue = 0;
-                      isGestureActive = false;
-                    });
-                  }
-                },
+              SliverToBoxAdapter(
+                child: ConversationScreen(fcmHanlder: widget.fcmHanlder),
               ),
-          ],
+            ],
+          ),
+          floatingActionButton: AskAIButton(userProfile: currentUser),
         ),
       ),
     );

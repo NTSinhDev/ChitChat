@@ -17,13 +17,13 @@ class IconActionWidget extends StatelessWidget {
     return Visibility(
       visible: visible,
       child: Container(
-        padding: EdgeInsets.only(right: 14.w),
+        padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 8.w),
         child: InkWell(
           onTap: onTap,
           child: Icon(
             icon,
-            size: 28.r,
-            color: AppColors.purpleMessage(theme: theme),
+            size: 25.r,
+            color: AppColors(theme: theme).iconTheme,
           ),
         ),
       ),

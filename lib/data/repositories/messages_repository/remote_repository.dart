@@ -6,7 +6,7 @@ abstract class RemoteMessagesRepository {
     required String conversationID,
     String? messageContent,
     MessageType? messageType,
-    List<String> images = const [],
+    required List<String> images,
   });
   Stream<Iterable<Message>> getMessageList({required String conversationId});
   Stream<String?> getFile({
@@ -26,7 +26,7 @@ class _RemoteRepositoryImpl implements RemoteMessagesRepository {
     required String conversationID,
     String? messageContent,
     MessageType? messageType,
-    List<String> images = const [],
+    required List<String> images,
   }) async {
     if (messageType != MessageType.text) {
       final link = "${StorageKey.pCONVERSATION}/$conversationID/$senderID";

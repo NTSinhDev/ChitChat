@@ -4,20 +4,13 @@ abstract class ChatEvent {
   const ChatEvent();
 }
 
-class GetMessagesOfConversationEvent extends ChatEvent {}
-
 class SendMessageEvent extends ChatEvent {
   final String message;
-  SendMessageEvent({
-    required this.message,
-  });
-}
-
-class SendFilesEvent extends ChatEvent {
-  final List<String> files;
   final MessageType type;
-  SendFilesEvent({
-    required this.files,
+    final List<String> files;
+  SendMessageEvent({
+    this.message = '',
     required this.type,
+    this.files = const [],
   });
 }

@@ -1,11 +1,9 @@
-import 'package:chat_app/data/datasources/remote_datasources/injector.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/views/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:chat_app/utils/injector.dart';
@@ -24,7 +22,7 @@ class ListOnlineUser extends StatelessWidget {
       builder: (context, snapshot) {
         onlineFriends = snapshot.data ?? [];
         return Container(
-          constraints: BoxConstraints(maxHeight: 114.h),
+          constraints: BoxConstraints(maxHeight: 98.h),
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
@@ -89,8 +87,8 @@ class ListOnlineUser extends StatelessWidget {
           children: [
             StateAvatar(
               urlImage: friend.urlImage,
-              userId: friend.profile?.id ?? '',
-              radius: 60.r,
+              userId: friend.profile?.id,
+              radius: 52.r,
             ),
             Spaces.h4,
             Text(
@@ -102,11 +100,11 @@ class ListOnlineUser extends StatelessWidget {
                   ? Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .copyWith(color: Colors.white)
+                      .copyWith(color: Colors.white, fontSize: 10.5.r)
                   : Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .copyWith(color: Colors.black),
+                      .copyWith(color: Colors.black, fontSize: 10.5.r),
             ),
           ],
         ),
@@ -120,21 +118,21 @@ class ListOnlineUser extends StatelessWidget {
       onTap: () {},
       child: Container(
         margin: EdgeInsets.only(right: 12.w),
-        constraints: BoxConstraints(maxWidth: 62.w),
+        constraints: BoxConstraints(maxWidth: 52.w),
         child: Column(
           children: [
             Spaces.h2,
             DottedBorder(
               borderType: BorderType.RRect,
               radius: Radius.circular(30.r),
-              color: AppColors(themeMode: false).customNewPurple,
+              color: AppColors.customNewLightPurple,
               strokeWidth: 2,
               padding: EdgeInsets.all(2.h),
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(30.r)),
                 child: Container(
-                  height: 52.h,
-                  width: 52.w,
+                  height: 46.h,
+                  width: 46.w,
                   color: theme
                       ? AppColors.darkGrey(isDarkmode: theme).withOpacity(0.5)
                       : AppColors.lightGrey(isDarkmode: theme),
@@ -158,11 +156,11 @@ class ListOnlineUser extends StatelessWidget {
                   ? Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .copyWith(color: Colors.white)
+                      .copyWith(color: Colors.white, fontSize: 10.5.r)
                   : Theme.of(context)
                       .textTheme
                       .bodySmall!
-                      .copyWith(color: Colors.black),
+                      .copyWith(color: Colors.black, fontSize: 10.5.r),
             ),
           ],
         ),

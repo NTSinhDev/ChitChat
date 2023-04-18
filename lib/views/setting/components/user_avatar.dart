@@ -46,12 +46,11 @@ class _UserAvatarState extends State<UserAvatar> {
           }
           return StateAvatar(
             urlImage: userProfile.urlImage,
-            userId: '',
             radius: radius,
             isBorder: true,
-            boxShadow: const BoxShadow(
-              color: Colors.black,
-              offset: Offset(2, 6),
+            boxShadow: BoxShadow(
+              color: isDarkmode ? Colors.white : AppColors.deepSaffron,
+              offset: const Offset(2, 6),
               blurRadius: 8,
             ),
           );

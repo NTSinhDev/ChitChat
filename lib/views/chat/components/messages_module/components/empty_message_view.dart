@@ -25,11 +25,7 @@ class EmptyMessageView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            StateAvatar(
-              urlImage: friend.urlImage,
-              userId: '',
-              radius: 200.r,
-            ),
+            StateAvatar(urlImage: friend.urlImage, radius: 200.r),
             SizedBox(height: 20.h),
             Text(
               context.languagesExtension.empty_message,

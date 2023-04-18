@@ -22,17 +22,15 @@ class InputMessageWidget extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.r),
-          color: theme
-              ? AppColors.darkGrey(isDarkmode: true)
-              : AppColors.lmlightGrey100,
+          color: AppColors(theme: theme).themeModeOpacity,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Spaces.w16,
+            Spaces.w14,
             Expanded(
               child: TextField(
-                maxLines: 6,
+                maxLines: 4,
                 minLines: 1,
                 keyboardType: TextInputType.multiline,
                 onTap: ontapInput,
@@ -55,10 +53,10 @@ class InputMessageWidget extends StatelessWidget {
             InkWell(
               onTap: ontapEmoji,
               child: Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 6.w, 12.h),
+                margin: EdgeInsets.only(right: 6.w, bottom: 12.h),
                 child: Icon(
                   Icons.sentiment_satisfied_alt_outlined,
-                  color: AppColors.purpleMessage(theme: theme),
+                  color: AppColors(theme: theme).iconTheme,
                 ),
               ),
             ),

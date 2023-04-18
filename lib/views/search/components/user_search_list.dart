@@ -6,7 +6,6 @@ import 'package:rxdart/rxdart.dart';
 
 class UserSearchList extends StatelessWidget {
   final ReplayStream<List<UserProfile>?> userListStream;
-
   const UserSearchList({
     super.key,
     required this.userListStream,
@@ -15,7 +14,6 @@ class UserSearchList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final maxHeight = MediaQuery.of(context).size.height;
-
     return StreamBuilder<List<UserProfile>?>(
       stream: userListStream,
       builder: (context, snapshot) {

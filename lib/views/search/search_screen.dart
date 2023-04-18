@@ -13,6 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rxdart/rxdart.dart';
 import 'components/init_state_manager.dart';
+import 'components/options_recommend.dart';
 import 'components/user_search_list.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -36,7 +37,6 @@ class _SearchScreenState extends State<SearchScreen> {
         return WillPopScope(
           onWillPop: () async {
             Navigator.pop(context);
-
             return false;
           },
           child: Scaffold(
@@ -50,7 +50,7 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             body: Container(
-              margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+              margin: EdgeInsets.symmetric(horizontal: 14.w),
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: BlocConsumer<SearchBloc, SearchState>(
@@ -89,6 +89,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   builder: (context, state) {
                     if (state is SearchInitialState) {
                       return bodySearchScreenWidget(
+                        showOptions: true,
                         label: context.languagesExtension.recommend,
                         listStream: state.friendsSubject,
                       );
@@ -113,12 +114,18 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Widget bodySearchScreenWidget({
     required String label,
+    bool? showOptions,
     required ReplaySubject<List<UserProfile>?>? listStream,
     bool? loading,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Spaces.h20,
+        if (showOptions ?? false) ...[
+          const OptionsRecommend(),
+          Spaces.h40,
+        ],
         TitleWidget(title: label, isUpper: true),
         if (loading == null && listStream != null) ...[
           Spaces.h20,

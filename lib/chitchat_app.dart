@@ -61,14 +61,12 @@ class _ChitChatAppState extends State<ChitChatApp> {
               home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
                 builder: (context, state) {
                   if (!beInitializedData) {
-                    log('🧠 Khởi tạo: ScreenUtil, handleFirebaseMessagingStates');
                     context.initScreenUtilDependency();
                     widget.fcmHanlder.handleFirebaseMessagingStates(context);
                     beInitializedData = true;
                   }
                   if (state is RegisterState) return const SignUpScreen();
                   if (state is LoggedState) {
-                    log('💯 Vào trang chủ');
                     return HomeScreen(fcmHanlder: widget.fcmHanlder);
                   }
                   return const LoginScreen();

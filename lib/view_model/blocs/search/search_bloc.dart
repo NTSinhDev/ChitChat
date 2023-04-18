@@ -22,7 +22,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
           friendsSubject: ReplaySubject(),
           currentUser: currentUser,
         )) {
-    stream.listen((friends) => _friendsSubject.sink.add(friends));
+    stream.listen((friends) {
+      if (!_friendsSubject.isClosed) {
+        _friendsSubject.sink.add(friends);
+      }
+    });
     on<SearchingEvent>((event, emit) async {
       _searchKeyWhenComeBack = event.searchName;
       // show all friends

@@ -194,11 +194,11 @@ class _ConversationItemState extends State<ConversationItem> {
     }
   }
 
-  String handleUserId(String? id) {
+  String? handleUserId(String? id) {
     if (id == null ||
         id.isEmpty ||
         id == conversationBloc.currentUser.profile!.id!) {
-      return '';
+      return null;
     }
     return id;
   }

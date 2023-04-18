@@ -54,7 +54,7 @@ class SettingBtmSheet extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: bottomSheetItem.isActive
-                    ? AppColors(themeMode: isDarkmode).customNewPurple
+                    ? AppColors(theme: isDarkmode).iconTheme
                     : AppColors.appColor(isDarkmode: isDarkmode)
                         .withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12.r),
