@@ -6,7 +6,7 @@ abstract class RemoteMessagesRepository {
     required String conversationID,
     String? messageContent,
     MessageType? messageType,
-     MessageStatus? messageStatus,
+    MessageStatus? messageStatus,
     required List<String> images,
   });
   Future<bool> sendMessage({required Message messageModel});
@@ -16,11 +16,22 @@ abstract class RemoteMessagesRepository {
     required String senderID,
     required String fileName,
   });
+  Future markSeen({required Message message});
 }
 
 class _RemoteRepositoryImpl implements RemoteMessagesRepository {
   final _messageRemoteDS = MessagesRemoteDataSourceImpl();
   final _storageRemoteDS = StorageRemoteDatasourceImpl();
+
+  @override
+  Future markSeen({required Message message}) async {
+    await _messageRemoteDS.updateMessage(
+      message: message,
+      data: {
+        ConversationMessagesField.messageStatus: MessageStatus.viewed.toString()
+      },
+    );
+  }
 
   @override
   Future<Message> createMessageModel({
@@ -51,6 +62,7 @@ class _RemoteRepositoryImpl implements RemoteMessagesRepository {
 
   @override
   Future<bool> sendMessage({required Message messageModel}) async {
+    messageModel.messageStatus = MessageStatus.sent.toString();
     return await _messageRemoteDS.createNewMessage(message: messageModel);
   }
 

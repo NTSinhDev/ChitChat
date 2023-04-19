@@ -22,7 +22,10 @@ class Message {
   @HiveField(7)
   final String messageType;
   @HiveField(8)
-  final String messageStatus;
+  String messageStatus;
+  void setMessageStatus(String newStatus) {
+    messageStatus = newStatus;
+  }
 
   Message({
     required this.id,

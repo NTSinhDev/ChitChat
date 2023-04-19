@@ -31,7 +31,8 @@ class _RemoteRepositoryImpl implements RemoteConversationsRepository {
     required String id,
     required Map<String, dynamic> data,
   }) async {
-    return await _conversationsRemoteDS.updateConversation(id: id, data: data);
+    return await _conversationsRemoteDS.updateConversation(
+        conversationID: id, data: data);
   }
 
   @override

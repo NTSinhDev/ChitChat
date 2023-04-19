@@ -17,7 +17,6 @@ class MessageWidget extends StatelessWidget {
     this.isSender = true,
     this.friend,
     this.width,
-    this.messageIndex = MessageIndex.first,
     this.showAvatar = false,
   }) : super(key: key);
   final Widget child;
@@ -25,7 +24,6 @@ class MessageWidget extends StatelessWidget {
   final UserProfile? friend;
   final double? width;
   final String? time = '';
-  final MessageIndex messageIndex;
   final bool showAvatar;
 
   @override
@@ -72,34 +70,6 @@ class MessageWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  BorderRadiusGeometry _borderRadius() {
-    switch (messageIndex) {
-      case MessageIndex.first:
-        return BorderRadius.only(
-          bottomLeft: _buildLeftRadius(),
-          bottomRight: _buildRightRadius(),
-          topLeft: Radius.circular(_messageRadius),
-          topRight: Radius.circular(_messageRadius),
-        );
-      case MessageIndex.between:
-        return BorderRadius.only(
-          bottomLeft: _buildLeftRadius(),
-          bottomRight: _buildRightRadius(),
-          topLeft: _buildLeftRadius(),
-          topRight: _buildRightRadius(),
-        );
-      case MessageIndex.end:
-        return BorderRadius.only(
-          bottomLeft: Radius.circular(_messageRadius),
-          bottomRight: Radius.circular(_messageRadius),
-          topLeft: _buildLeftRadius(),
-          topRight: _buildRightRadius(),
-        );
-      case MessageIndex.alone:
-        return BorderRadius.circular(_messageRadius);
-    }
   }
 
   Offset _buildShadowOffset() =>

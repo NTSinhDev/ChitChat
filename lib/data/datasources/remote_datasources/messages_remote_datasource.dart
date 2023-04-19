@@ -20,6 +20,23 @@ class MessagesRemoteDataSourceImpl implements MessagesRemoteDataSource {
     );
   }
 
+  Future<bool> updateMessage({
+    required Message message,
+    required Map<String, String> data,
+  }) async {
+    try {
+      await _messageCollection
+          .doc(message.conversationId)
+          .collection(ConversationMessagesField.colChildName)
+          .doc(message.id!)
+          .update(data);
+      return true;
+    } catch (e) {
+      log('🚫 Error: ${e.toString()}');
+      return false;
+    }
+  }
+
   @override
   Stream<Iterable<Message>> getMessageList({
     required String conversationId,

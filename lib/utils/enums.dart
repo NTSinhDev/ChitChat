@@ -8,4 +8,3 @@ enum FileUploadType { url, path }
 
 enum ParsedTo { profile, conversation, message }
 
-enum MessageIndex{ first, between, end, alone}

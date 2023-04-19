@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/utils/injector.dart';
@@ -9,81 +11,74 @@ import 'package:chat_app/widgets/state_avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MessageItem extends StatefulWidget {
-  final Message message;
-  final MessageIndex? index;
-  final bool? isLast;
-  final bool isOfLastCluster;
   const MessageItem({
     super.key,
     required this.message,
-    this.index,
-    this.isLast,
+    this.isLastCluster,
     this.isOfLastCluster = false,
+    required this.isMsgOfUser,
+    this.isLastClusterByUser = false,
   });
+  final Message message;
+  // Là tin nhắn cuối cùng của cụm, chỉ dùng cho tin nhắn của bạn bè
+  final bool? isLastCluster;
+  // là tin nhắn của cụm cuối cùng, chỉ dùng cho tin nhắn của người dùng
+  final bool isOfLastCluster;
+  final bool isMsgOfUser;
+  final bool isLastClusterByUser;
 
   @override
   State<MessageItem> createState() => _MessageItemState();
 }
 
 class _MessageItemState extends State<MessageItem> {
-  late bool isMessageInfo;
-  late bool isMsgOfUser;
   late final ChatBloc chatBloc;
-
   @override
   void initState() {
     chatBloc = context.read<ChatBloc>();
-    isMsgOfUser = widget.message.senderId == chatBloc.currentUser.profile!.id
-        ? true
-        : false;
-    isMessageInfo = true;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = context.watch<ThemeProvider>().isDarkMode;
-    // UI
-    final colorBG = theme
-        ? AppColors.darkGrey(isDarkmode: theme)
-        : AppColors.lightGrey(isDarkmode: theme);
-    final colorSenderBG = AppColors.blue(isDarkmode: theme);
-    final radius15 = Radius.circular(12.r);
-    final crossAxisAlign =
-        isMsgOfUser ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-
-    return Column(
-      crossAxisAlignment: crossAxisAlign,
+    return Row(
+      mainAxisAlignment:
+          widget.isMsgOfUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Row(
-          mainAxisAlignment:
-              isMsgOfUser ? MainAxisAlignment.end : MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 3.2 / 5,
-              ),
-              child: GestureDetector(
-                onTap: () => setState(() => isMessageInfo = !isMessageInfo),
-                onLongPress: () => showBottomAction(context),
-                child: buildMessageByType(colorSenderBG, colorBG, radius15),
-              ),
-            ),
-            ...statusOfMsg(theme),
-          ],
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 3.8 / 5,
+          ),
+          child: GestureDetector(
+            onLongPress: () => showBottomAction(context),
+            child: buildMessageByType(),
+          ),
         ),
-        // ..._infoMsgWidget(),
-        ..._sendMsgFailedWidget(),
+        ...statusOfMsg(theme),
       ],
     );
   }
 
   List<Widget> statusOfMsg(bool theme) {
-    if (!isMsgOfUser || !widget.isOfLastCluster) return [Spaces.w22];
-    if (widget.message.messageStatus == MessageStatus.sent.toString()) {
+    if (widget.isLastClusterByUser &&
+        widget.message.messageStatus == MessageStatus.viewed.toString()) {
+      return [
+        SizedBox(width: 4.w),
+        SizedBox(
+          height: 14.h,
+          width: 14.w,
+          child: StateAvatar(urlImage: chatBloc.friend.urlImage, radius: 14.r),
+        ),
+        SizedBox(width: 4.w),
+      ];
+    }
+    if (widget.isOfLastCluster &&
+        widget.message.messageStatus == MessageStatus.sent.toString()) {
       return [
         SizedBox(width: 4.w),
         Container(
@@ -95,8 +90,8 @@ class _MessageItemState extends State<MessageItem> {
           ),
           child: Center(
             child: Icon(
-              Icons.check,
-              size: 12.r,
+              FontAwesomeIcons.check,
+              size: 10.r,
               color: Colors.white,
             ),
           ),
@@ -104,7 +99,8 @@ class _MessageItemState extends State<MessageItem> {
         SizedBox(width: 6.w),
       ];
     }
-    if (widget.message.messageStatus == MessageStatus.sending.toString()) {
+    if (widget.isOfLastCluster &&
+        widget.message.messageStatus == MessageStatus.sending.toString()) {
       return [
         SizedBox(width: 4.w),
         Container(
@@ -119,88 +115,42 @@ class _MessageItemState extends State<MessageItem> {
         SizedBox(width: 6.w),
       ];
     }
-    if (widget.message.messageStatus == MessageStatus.viewed.toString()) {
+
+    if (widget.isOfLastCluster &&
+        widget.message.messageStatus == MessageStatus.notSend.toString()) {
       return [
         SizedBox(width: 4.w),
         SizedBox(
           height: 14.h,
           width: 14.w,
-          child: StateAvatar(urlImage: chatBloc.friend.urlImage, radius: 14.r),
+          child: Icon(
+            Icons.error,
+            size: 14.r,
+            color: Colors.red,
+          ),
         ),
         SizedBox(width: 4.w),
       ];
     }
-    return [];
+    return [Spaces.w22];
   }
 
-  Widget buildMessageByType(colorSenderBG, colorBG, radius15) {
+  Widget buildMessageByType() {
     if (widget.message.messageType == MessageType.media.toString()) {
-      return MediaMessage(message: widget.message, isMsgOfUser: isMsgOfUser);
+      return MediaMessage(
+          message: widget.message, isMsgOfUser: widget.isMsgOfUser);
     }
-
     if (widget.message.messageType == MessageType.audio.toString()) {
       return AudioMessage(
         url: widget.message.listNameImage.first,
-        isMsgOfUser: isMsgOfUser,
+        isMsgOfUser: widget.isMsgOfUser,
       );
     }
     return TextMessage(
-      isMsgOfUser: isMsgOfUser,
+      isMsgOfUser: widget.isMsgOfUser,
       text: widget.message.content!,
-      index: widget.index,
-      isLast: widget.isLast ?? false,
+      isLast: widget.isLastCluster ?? false,
     );
-  }
-
-  List<Widget> _sendMsgFailedWidget() {
-    if (widget.message.messageStatus == MessageStatus.notSend.toString()) {
-      return [
-        Spaces.h4,
-        Row(
-          children: [
-            Text(
-              "Không gửi được",
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall!
-                  .copyWith(color: Colors.red),
-            ),
-            SizedBox(width: 4.h),
-            Icon(
-              Icons.error,
-              size: 16.h,
-              color: Colors.red,
-            ),
-          ],
-        ),
-      ];
-    }
-    return [];
-  }
-
-  List<Widget> _infoMsgWidget() {
-    if (isMessageInfo) {
-      return [
-        Spaces.h2,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Đã xem',
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-            SizedBox(width: 14.w),
-            Text(
-              // formatTime(widget.message.stampTime.to),
-              widget.message.stampTime.toIso8601String(),
-              style: Theme.of(context).textTheme.labelSmall,
-            ),
-          ],
-        ),
-      ];
-    }
-
-    return [];
   }
 
   showBottomAction(BuildContext context) {

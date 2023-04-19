@@ -7,13 +7,11 @@ import 'package:provider/provider.dart';
 class TextMessage extends StatelessWidget {
   final bool isMsgOfUser;
   final String text;
-  final MessageIndex? index;
   final bool isLast;
   const TextMessage({
     super.key,
     required this.isMsgOfUser,
     required this.text,
-    required this.index,
     required this.isLast,
   });
 
@@ -23,7 +21,6 @@ class TextMessage extends StatelessWidget {
     return MessageWidget(
       isSender: isMsgOfUser,
       friend: friend,
-      messageIndex: index ?? MessageIndex.alone,
       showAvatar: isLast,
       child: ContentOfMsgWidget(content: text, isSender: isMsgOfUser),
     );

@@ -14,7 +14,7 @@ abstract class ConversationsRemoteDataSource {
   });
   Future<Conversation?> getConversation({required String conversationId});
   Future updateConversation({
-    required String id,
+    required String conversationID,
     required Map<String, dynamic> data,
   });
   Stream<Iterable<Conversation>> listenConversationsData({
@@ -58,11 +58,11 @@ class ConversationsRemoteDataSourceImpl
 
   @override
   Future<bool> updateConversation({
-    required String id,
+    required String conversationID,
     required Map<String, dynamic> data,
   }) async {
     try {
-      await _conversationCollection.doc(id).update(data);
+      await _conversationCollection.doc(conversationID).update(data);
       return true;
     } catch (e) {
       log("Lỗi khi cập nhật thông tin conversation ${e.toString()}");
