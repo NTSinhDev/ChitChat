@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chat_app/models/injector.dart';
 import 'package:chat_app/res/dimens.dart';
 import 'package:chat_app/res/colors.dart';
@@ -11,61 +9,41 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class MessagesCluster extends StatefulWidget {
+class MessagesCluster extends StatelessWidget {
   final List<Message> messages;
   final bool showTime;
-  // final bool isLastCluster;
+  final bool isLastCluster;
   const MessagesCluster({
     super.key,
     required this.messages,
     this.showTime = true,
-    // required this.isLastCluster,
+    required this.isLastCluster,
   });
 
   @override
-  State<MessagesCluster> createState() => _MessagesClusterState();
-}
-
-class _MessagesClusterState extends State<MessagesCluster> {
-  late final Profile currentUser;
-  late final MessageStatus messageStatus;
-  List<Widget> messagesClusterWidget = [];
-
-  late final bool isCurrentUserMsg;
-  late final CrossAxisAlignment crossAxisAlignment;
-
-  @override
-  void initState() {
-    currentUser = context.read<AuthenticationBloc>().userProfile!.profile!;
-    isCurrentUserMsg =
-        widget.messages.first.senderId == currentUser.id! ? true : false;
-    crossAxisAlignment =
-        isCurrentUserMsg ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-    // _loading = false;
-    // _sended = false;
-    // _seen = false;
-    initMessagesClusterWidget();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final currentUser =
+        context.read<AuthenticationBloc>().userProfile!.profile!;
+    final isCurrentUserMsg =
+        messages.first.senderId == currentUser.id! ? true : false;
+    final crossAxisAlignment =
+        isCurrentUserMsg ? CrossAxisAlignment.end : CrossAxisAlignment.start;
     return Column(
       crossAxisAlignment: crossAxisAlignment,
       children: [
         Column(
           crossAxisAlignment: crossAxisAlignment,
-          children: messagesClusterWidget,
+          children: initMessagesClusterWidget(),
         ),
         Spaces.h4,
-        clusterGeneralInformation(),
+        clusterGeneralInformation(isCurrentUserMsg, context),
         // ..._seenMessageWidget(),
       ],
     );
   }
 
   // List<Widget> _seenMessageWidget() {
-  //   if (_seen && widget.isSender) {
+  //   if (_seen && isSender) {
   //     return [
   //       Spaces.h4,
   //       StateAvatar(urlImage: URLImage(), radius: 16.r),
@@ -74,39 +52,20 @@ class _MessagesClusterState extends State<MessagesCluster> {
   //   return [];
   // }
 
-  Widget clusterGeneralInformation() {
+  Widget clusterGeneralInformation(isCurrentUserMsg, BuildContext context) {
     return Row(
       mainAxisAlignment:
           isCurrentUserMsg ? MainAxisAlignment.end : MainAxisAlignment.start,
       children: [
         Spaces.w44,
         Text(
-          DateFormat('kk:mm').format(widget.messages.last.stampTime),
+          DateFormat('kk:mm').format(messages.last.stampTime),
           style: Theme.of(context)
               .textTheme
               .labelSmall!
               .copyWith(color: AppColors.lightGrey(isDarkmode: true)),
         ),
-        // if (messageStatus == MessageStatus.sent && isCurrentUserMsg) ...[
-        //   Spaces.w4,
-        //   Icon(
-        //     Icons.check,
-        //     size: 16.r,
-        //     color: AppColors.darkGrey(isDarkmode: false),
-        //   ),
-        // ],
-        // if (_loading && widget.isSender) ...[
-        //   Spaces.w4,
-        //   SizedBox(
-        //     height: 12.h,
-        //     width: 12.w,
-        //     child: CircularProgressIndicator(
-        //       strokeWidth: 1.3,
-        //       color: AppColors.darkGrey(isDarkmode: false),
-        //     ),
-        //   ),
-        // ],
-        Spaces.w4,
+        Spaces.w22,
       ],
     );
   }
@@ -133,34 +92,47 @@ class _MessagesClusterState extends State<MessagesCluster> {
   //   }
   // }
 
-  initMessagesClusterWidget() {
-    if (widget.messages.length == 1) {
-      return messagesClusterWidget.add(
+  List<Widget> initMessagesClusterWidget() {
+    List<Widget> messagesClusterWidget = [];
+    if (messages.length == 1) {
+      messagesClusterWidget.add(
         MessageItem(
-          message: widget.messages.first,
+          message: messages.first,
           index: MessageIndex.end,
           isLast: true,
+          isOfLastCluster: isLastCluster,
         ),
       );
+      return messagesClusterWidget;
     }
-    for (var i = 0; i < widget.messages.length; i++) {
+    for (var i = 0; i < messages.length; i++) {
       if (i == 0) {
         messagesClusterWidget.add(
-          MessageItem(message: widget.messages[i], index: MessageIndex.first),
+          MessageItem(
+            message: messages[i],
+            index: MessageIndex.first,
+            isOfLastCluster: isLastCluster,
+          ),
         );
-      } else if (i == (widget.messages.length - 1)) {
+      } else if (i == (messages.length - 1)) {
         messagesClusterWidget.add(
           MessageItem(
-            message: widget.messages[i],
+            message: messages[i],
             index: MessageIndex.end,
             isLast: true,
+            isOfLastCluster: isLastCluster,
           ),
         );
       } else {
         messagesClusterWidget.add(
-          MessageItem(message: widget.messages[i], index: MessageIndex.between),
+          MessageItem(
+            message: messages[i],
+            index: MessageIndex.between,
+            isOfLastCluster: isLastCluster,
+          ),
         );
       }
     }
+    return messagesClusterWidget;
   }
 }

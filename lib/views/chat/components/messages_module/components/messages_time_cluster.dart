@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class MessagesTimeCluster extends StatelessWidget {
+class TimeHookOfMessagesCluster extends StatelessWidget {
   final DateTime time;
-  const MessagesTimeCluster({super.key, required this.time});
+  const TimeHookOfMessagesCluster({super.key, required this.time});
 
   @override
   Widget build(BuildContext context) {

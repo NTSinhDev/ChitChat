@@ -8,7 +8,7 @@ import 'package:chat_app/res/injector.dart';
 import 'package:chat_app/view_model/injector.dart';
 import 'package:chat_app/widgets/widget_injector.dart';
 
-double _messageRadius = 20.r;
+double _messageRadius = 14.r;
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget({

@@ -9,6 +9,7 @@ class Spaces {
   static final w14 = SizedBox(width: 14.w);
   static final w16 = SizedBox(width: 16.w);
   static final w20 = SizedBox(width: 20.w);
+  static final w22 = SizedBox(width: 22.w);
   static final w40 = SizedBox(width: 40.w);
   static final w44 = SizedBox(width: 44.w);
 

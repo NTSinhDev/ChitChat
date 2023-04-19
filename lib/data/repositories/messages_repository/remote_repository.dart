@@ -1,13 +1,15 @@
 part of 'messages_repository.dart';
 
 abstract class RemoteMessagesRepository {
-  Future<bool> sendMessage({
+  Future<Message> createMessageModel({
     required String senderID,
     required String conversationID,
     String? messageContent,
     MessageType? messageType,
+     MessageStatus? messageStatus,
     required List<String> images,
   });
+  Future<bool> sendMessage({required Message messageModel});
   Stream<Iterable<Message>> getMessageList({required String conversationId});
   Stream<String?> getFile({
     required String conversationID,
@@ -21,18 +23,18 @@ class _RemoteRepositoryImpl implements RemoteMessagesRepository {
   final _storageRemoteDS = StorageRemoteDatasourceImpl();
 
   @override
-  Future<bool> sendMessage({
+  Future<Message> createMessageModel({
     required String senderID,
     required String conversationID,
     String? messageContent,
     MessageType? messageType,
+    MessageStatus? messageStatus,
     required List<String> images,
   }) async {
     if (messageType != MessageType.text) {
       final link = "${StorageKey.pCONVERSATION}/$conversationID/$senderID";
       images = await _uploadFiles(images: images, link: link);
     }
-
     // create Message model
     final msgID = const Uuid().v4();
     final messageModel = Message(
@@ -42,9 +44,13 @@ class _RemoteRepositoryImpl implements RemoteMessagesRepository {
       listNameImage: images,
       content: messageContent,
       messageType: messageType?.toString() ?? MessageType.text.toString(),
-      messageStatus: MessageStatus.sent.toString(),
+      messageStatus: messageStatus?.toString() ?? MessageStatus.sent.toString(),
     );
+    return messageModel;
+  }
 
+  @override
+  Future<bool> sendMessage({required Message messageModel}) async {
     return await _messageRemoteDS.createNewMessage(message: messageModel);
   }
 

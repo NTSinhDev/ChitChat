@@ -13,6 +13,7 @@ import 'package:chat_app/view_model/injector.dart';
 
 class ChatBloc extends Bloc<ChatEvent, ChatState> {
   // Original data
+  List<Message> _messages = [];
   final String serverKey;
   final UserProfile currentUser;
   final UserProfile friend;
@@ -20,15 +21,22 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   // Repositories to query data
   final _messageRepository = MessagesRepository();
   final _conversationRepository = ConversationsRepository();
-
-  final _behaviorLstMsgStatus = BehaviorSubject<MessageStatus>();
-  Stream<MessageStatus> get lstMsgStatusStream => _behaviorLstMsgStatus.stream;
-
+  // Stream data
+  final _behaviorSendStatus = BehaviorSubject<MessageStatus>();
+  Stream<MessageStatus> get lstMsgStatusStream => _behaviorSendStatus.stream;
   final _behaviorSeenStatus = BehaviorSubject<MessageStatus>();
   Stream<MessageStatus> get seenStatusStream => _behaviorSeenStatus.stream;
+  final ReplaySubject<Message> _replayMessages = ReplaySubject();
+  Stream<List<Message>> get messagesStream {
+    return _replayMessages.scan<List<Message>>(
+      (List<Message> accumulator, Message message, _) {
+        accumulator.add(message);
+        return accumulator;
+      },
+      <Message>[],
+    );
+  }
 
-  final _replayMessages = ReplaySubject<Iterable<Message>>();
-  Stream<Iterable<Message>> get messagesStream => _replayMessages.stream;
   ChatBloc({
     required this.currentUser,
     required this.conversation,
@@ -37,24 +45,47 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }) : super(InitChatState()) {
     _getMessageList();
     on<SendMessageEvent>((event, emit) async {
-      _behaviorLstMsgStatus.sink.add(MessageStatus.sending);
+      // Kiểm tra cuộc hội thoại nếu chưa tồn tại thì tạo mới.
       final message = event.type == MessageType.text
           ? event.message
           : "đã gửi ${event.files.length} tệp";
       final hasConversation = await _createConversationIfNull(message: message);
+      // Tạo mới một đối tượng tin nhắn nếu cuộc hội thoại đã có.
       if (hasConversation.isCreate == false) return;
-
-      final isSend = await _messageRepository.remote.sendMessage(
+      final Message messageModel =
+          await _messageRepository.remote.createMessageModel(
         senderID: currentUser.profile!.id!,
         conversationID: conversation!.id!,
         messageContent: event.message,
         images: event.files,
         messageType: event.type,
+        messageStatus: MessageStatus.sending,
       );
+      /* 
+      - Thêm tin nhắn vào stream.
+      - Đặt trạng thái gửi là đang gửi
+      - Gửi tin nhắn.
+      */
+      _replayMessages.add(messageModel);
+      _behaviorSendStatus.sink.add(MessageStatus.sending);
+     
+      return;
+      final isSend = await _messageRepository.remote
+          .sendMessage(messageModel: messageModel);
+      /*
+      Kiểm tra nếu gửi thành công thì tiếp tục tác vụ, ngược lại:
+        - Thay đổi trang thái gửi là không gửi được
+        - Kết thúc tác vụ.
+       */
       if (!isSend) {
-        return _behaviorLstMsgStatus.sink.add(MessageStatus.notSend);
+        return _behaviorSendStatus.sink.add(MessageStatus.notSend);
       }
-      _behaviorLstMsgStatus.sink.add(MessageStatus.sent);
+      /*
+      Nếu gửi thành công: 
+        - Thay đổi trạng thái gửi là đã gửi.
+        - Cập nhật lại thông tin cuộc hội thoại.
+      */
+      _behaviorSendStatus.sink.add(MessageStatus.sent);
       if (hasConversation.isUpdate == false) {
         final result = await _conversationRepository.remote.updateConversation(
           id: conversation!.id!,
@@ -68,6 +99,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         );
         if (!result) return;
       }
+      /*
+      Gửi thông báo đến thiết bị của bạn thông qua FCM
+      */
       if (friend.profile != null && friend.profile!.messagingToken != null) {
         await FCMHanlder.sendMessage(
           conversationID: conversation?.id ?? '',
@@ -78,23 +112,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         );
       }
     });
-  }
-
-  List<String> _listUser() {
-    if (conversation!.listUser.length == 1) {
-      return conversation!.listUser;
-    }
-    return [currentUser.profile!.id!, friend.profile!.id!];
-  }
-
-  List<String> _readByUsers() {
-    final a = conversation!.readByUsers
-        .where((id) => id == currentUser.profile!.id!)
-        .toList();
-    if (a.isEmpty) {
-      conversation!.readByUsers.add(currentUser.profile!.id!);
-    }
-    return conversation!.readByUsers;
   }
 
   Stream<String?> getFile({required String fileName}) {
@@ -127,30 +144,39 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   _getMessageList() async {
     if (conversation == null) return;
 
-    bool isCheckedDifferentLocalData = false;
-    log('🚀 Tải dữ liệu tin nhắn ngoại tuyến');
-    final messageListAtLocal = await _messageRepository.local.getMessageList(
+    /**
+     * Tải dữ liệu ngoại tuyến.
+     *  
+     * */
+    final offlineMessages = await _messageRepository.local.getMessageList(
       conversationId: conversation!.id!,
     );
-    _replayMessages.sink.add(messageListAtLocal);
+    // for (Message message in offlineMessages) {
+    //   _replayMessages.add(message);
+    // }
+
     log('🚀 Bắt đầu tải dữ liệu tin nhắn trực tuyến...');
+    /**
+     * Cập nhật _replayMessages từ firebase
+     * Các trường hợp cập nhật: tải dữ liệu khi tham gia phòng, tải dữ liệu khi 
+     * có người nhắn và tải dữ liệu khi tin nhắn được gửi thành công...
+     */
     _messageRepository.remote
         .getMessageList(conversationId: conversation!.id!)
         .listen((msgList) async {
-      if (!isCheckedDifferentLocalData &&
-          messageListAtLocal == msgList.toList()) {
-      } else {
-        _replayMessages.sink.add(msgList);
-        log('🚀 Cập nhật danh sách tin nhắn');
+      for (Message message in msgList) {
+        _replayMessages.add(message);
+        log('📲 Cập nhật danh sách tin nhắn - ${message.content}');
       }
     });
   }
 
   Future<void> _saveData() async {
-    final Iterable<Message> datas = await _replayMessages.first;
-    for (Message m in datas) {
+    for (Message m in _replayMessages.values) {
       await _messageRepository.local.createMessage(message: m);
+      log('🚀 Đang lưu tin nhắn ${m.toString()}');
     }
+    log('✔🟢 Đã lưu tin nhắn xong');
   }
 
   @override
@@ -160,6 +186,23 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       await _replayMessages.close();
     });
     return super.close();
+  }
+
+  List<String> _listUser() {
+    if (conversation!.listUser.length == 1) {
+      return conversation!.listUser;
+    }
+    return [currentUser.profile!.id!, friend.profile!.id!];
+  }
+
+  List<String> _readByUsers() {
+    final a = conversation!.readByUsers
+        .where((id) => id == currentUser.profile!.id!)
+        .toList();
+    if (a.isEmpty) {
+      conversation!.readByUsers.add(currentUser.profile!.id!);
+    }
+    return conversation!.readByUsers;
   }
 }
 
